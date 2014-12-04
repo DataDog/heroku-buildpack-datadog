@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# bin/detect <build-dir>
+
+echo "Heroku Datadog Buildpack" && exit 0

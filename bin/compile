@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# bin/compile <build-dir> <cache-dir> <env-dir>
+
+set -e   # fail fast
+# set -x # enable debugging
+
+# Configure directories
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+BUILDPACK_DIR=`cd $(dirname $0); cd ..; pwd`
+
+# Load some convenience functions like topic(), echo(), and indent()
+source $BUILDPACK_DIR/bin/common.sh
+
+# Apt settings
+APT_BUILD_DIR="$BUILD_DIR/.apt"
+APT_CACHE_DIR="$CACHE_DIR/apt/cache"
+APT_STATE_DIR="$CACHE_DIR/apt/state"
+APT_REPO_FILE="$BUILDPACK_DIR/etc/datadog.list"
+
+APT_OPTIONS="-o debug::nolocking=true -o Dir::Etc::SourceList=$APT_REPO_FILE -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
+
+# Where the Agent is installed & configured
+DD_AGENT_ROOT="$APT_BUILD_DIR"
+DD_AGENT_CONF="$DD_AGENT_ROOT/opt/datadog-agent/agent/datadog.conf"
+
+# Ensure directories exists
+mkdir -p "$CACHE_DIR"
+mkdir -p "$APT_BUILD_DIR"
+mkdir -p "$APT_CACHE_DIR/archives/partial"
+mkdir -p "$APT_STATE_DIR/lists/partial"
+mkdir -p "$DD_AGENT_ROOT"
+
+topic "Updating apt caches"
+apt-get $APT_OPTIONS update | indent
+
+topic "Fetching datadog-agent"
+apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommends datadog-agent | indent
+
+topic "Fetching deb packages"
+for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
+  topic "Installing $(basename $DEB)"
+  dpkg -x $DEB $BUILD_DIR/.apt/
+done
+
+mv $DD_AGENT_ROOT/etc/dd-agent/datadog.conf.example $DD_AGENT_CONF
+
+# Turn off syslog
+sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" $DD_AGENT_CONF
+
+# Drop off the runner
+cp $BUILDPACK_DIR/extra/run-dogstatsd.sh $BUILD_DIR/
+chmod +x $BUILD_DIR/run-dogstatsd.sh
+topic "Datadog Agent package installed"
+
+topic "Writing profile script"
+mkdir -p $BUILD_DIR/.profile.d
+cat <<EOF >$BUILD_DIR/.profile.d/000_datadog.sh
+export LD_LIBRARY_PATH="\$HOME/.apt/opt/datadog-agent/embedded/lib:\$LD_LIBRARY_PATH"
+export LIBRARY_PATH="\$HOME/.apt/opt/datadog-agent/embedded/lib:\$LIBRARY_PATH"
+EOF
+
+export LD_LIBRARY_PATH="$BUILD_DIR/.apt/opt/datadog-agent/embedded/lib:$LD_LIBRARY_PATH"
+export LIBRARY_PATH="$BUILD_DIR/.apt/opt/datadog-agent/embedded/lib:$LIBRARY_PATH"
+
+# provide environment to later buildpacks
+export | grep -E -e ' (LD_LIBRARY_PATH|LIBRARY_PATH)='  > "$BUILDPACK_DIR/export"
