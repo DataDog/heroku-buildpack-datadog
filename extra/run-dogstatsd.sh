@@ -1,9 +1,9 @@
 #!/bin/bash
 
-if [[ $API_KEY ]]; then
-  sed -i -e "s/^.*api_key:.*$/api_key: ${API_KEY}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
+if [[ $DATADOG_API_KEY ]]; then
+  sed -i -e "s/^.*api_key:.*$/api_key: ${DATADOG_API_KEY}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
 else
-  echo "You must set API_KEY environment variable to run DogStatsD process"
+  echo "You must set DATADOG_API_KEY environment variable to run DogStatsD process"
   exit 1
 fi
 
