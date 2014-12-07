@@ -53,16 +53,3 @@ sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" $DD_AGENT_CONF
 cp $BUILDPACK_DIR/extra/run-dogstatsd.sh $BUILD_DIR/
 chmod +x $BUILD_DIR/run-dogstatsd.sh
 topic "Datadog Agent package installed"
-
-topic "Writing profile script"
-mkdir -p $BUILD_DIR/.profile.d
-cat <<EOF >$BUILD_DIR/.profile.d/000_datadog.sh
-export LD_LIBRARY_PATH="\$HOME/.apt/opt/datadog-agent/embedded/lib:\$LD_LIBRARY_PATH"
-export LIBRARY_PATH="\$HOME/.apt/opt/datadog-agent/embedded/lib:\$LIBRARY_PATH"
-EOF
-
-export LD_LIBRARY_PATH="$BUILD_DIR/.apt/opt/datadog-agent/embedded/lib:$LD_LIBRARY_PATH"
-export LIBRARY_PATH="$BUILD_DIR/.apt/opt/datadog-agent/embedded/lib:$LIBRARY_PATH"
-
-# provide environment to later buildpacks
-export | grep -E -e ' (LD_LIBRARY_PATH|LIBRARY_PATH)='  > "$BUILDPACK_DIR/export"

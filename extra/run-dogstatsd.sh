@@ -14,4 +14,7 @@ else
   exit 1
 fi
 
+# Load our librariy path first when starting up
+export LD_LIBRARY_PATH=/app/.apt/opt/datadog-agent/embedded/lib:$LD_LIBRARY_PATH
+
 exec /app/.apt/opt/datadog-agent/embedded/bin/python /app/.apt/opt/datadog-agent/agent/dogstatsd.py
