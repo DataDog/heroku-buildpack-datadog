@@ -30,14 +30,7 @@ git push heroku master
 You can create/retrieve the `DATADOG_API_KEY` from your account on [this page](https://app.datadoghq.com/account/settings#api).
 API Key, not application key.
 
-Once complete, the Agent's dogstatsd package is available to be started with
-`./run-dogstatsd.sh` via some process manager.
-
-Some popular ones are:
-
-- [foreman](http://ddollar.github.io/foreman/) (Ruby)
-- [honcho](https://honcho.readthedocs.org/) (Python)
-- [node-foreman](http://strongloop.github.io/node-foreman/) (Node.js)
+Once complete, the Agent's dogstatsd binary will be started automatically with the Dyno startup.
 
 Once started, provides a listening port on 8125 for statsd/dotstatsd metrics and events.
 
