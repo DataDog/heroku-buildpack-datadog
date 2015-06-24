@@ -34,6 +34,8 @@ Once complete, the Agent's dogstatsd binary will be started automatically with t
 
 Once started, provides a listening port on 8125 for statsd/dotstatsd metrics and events.
 
+An example using Ruby is [here](https://github.com/miketheman/buildpack-example-ruby).
+
 ## Todo
 
 Things that have not been tested, tried, figured out.
