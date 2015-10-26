@@ -19,7 +19,13 @@ APT_CACHE_DIR="$CACHE_DIR/apt/cache"
 APT_STATE_DIR="$CACHE_DIR/apt/state"
 APT_REPO_FILE="$BUILDPACK_DIR/etc/datadog.list"
 
-APT_OPTIONS="-o debug::nolocking=true -o Dir::Etc::SourceList=$APT_REPO_FILE -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
+
+GPG_HOME_DIR="$BUILD_DIR/.gnupg"
+GPG_KEYRING_FILE="$BUILD_DIR/.apt/trusted.gpg"
+GPG_KEY_FILE="$BUILDPACK_DIR/etc/datadog.gpg"
+
+
+APT_OPTIONS="-o debug::nolocking=true -o Dir::Etc::Trusted=$GPG_KEYRING_FILE -o Dir::Etc::SourceList=$APT_REPO_FILE -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
 
 # Where the Agent is installed & configured
 DD_AGENT_ROOT="$APT_BUILD_DIR"
@@ -31,6 +37,12 @@ mkdir -p "$APT_BUILD_DIR"
 mkdir -p "$APT_CACHE_DIR/archives/partial"
 mkdir -p "$APT_STATE_DIR/lists/partial"
 mkdir -p "$DD_AGENT_ROOT"
+mkdir -p "$GPG_HOME_DIR"
+
+topic "Adding GPG key"
+# This mimics the behavior of apt-key add to create a non-standard keyring and
+# import the datadog key into it.
+gpg --ignore-time-conflict --no-options --no-default-keyring --homedir $GPG_HOME_DIR --keyring $GPG_KEYRING_FILE --import $GPG_KEY_FILE | indent
 
 topic "Updating apt caches"
 apt-get $APT_OPTIONS update | indent
