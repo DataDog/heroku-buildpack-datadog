@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ $DISABLE_DATADOG_AGENT ]]; then
+  echo "DISABLE_DATADOG_AGENT environment variable is set, not starting the agent."
+  exit 0
+fi
+
 if [[ $DATADOG_API_KEY ]]; then
   sed -i -e "s/^.*api_key:.*$/api_key: ${DATADOG_API_KEY}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
 else
