@@ -30,6 +30,7 @@ APT_OPTIONS="-o debug::nolocking=true -o Dir::Etc::Trusted=$GPG_KEYRING_FILE -o 
 # Where the Agent is installed & configured
 DD_AGENT_ROOT="$APT_BUILD_DIR"
 DD_AGENT_CONF="$DD_AGENT_ROOT/opt/datadog-agent/agent/datadog.conf"
+DD_LOG_DIR="/tmp/logs/datadog"
 
 # Ensure directories exists
 mkdir -p "$CACHE_DIR"
@@ -60,6 +61,11 @@ mv $DD_AGENT_ROOT/etc/dd-agent/datadog.conf.example $DD_AGENT_CONF
 
 # Turn off syslog
 sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" $DD_AGENT_CONF
+
+# Fix log locations
+sed -i -e"s|^.*collector_log_file:.*$|collector_log_file: $DD_LOG_DIR/collector.log|" $DD_AGENT_CONF
+sed -i -e"s|^.*forwarder_log_file:.*$|forwarder_log_file: $DD_LOG_DIR/forwarder.log|" $DD_AGENT_CONF
+sed -i -e"s|^.*dogstatsd_log_file:.*$|dogstatsd_log_file: $DD_LOG_DIR/dogstatsd.log|" $DD_AGENT_CONF
 
 # Drop off the runner
 mkdir -p $BUILD_DIR/.profile.d
