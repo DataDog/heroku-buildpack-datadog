@@ -62,8 +62,6 @@ mv $DD_AGENT_ROOT/etc/dd-agent/datadog.conf.example $DD_AGENT_CONF
 # Turn off syslog
 sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" $DD_AGENT_CONF
 
-mkdir -p $DD_LOG_DIR
-
 # Fix log locations
 sed -i -e"s|^.*collector_log_file:.*$|collector_log_file: $DD_LOG_DIR/collector.log|" $DD_AGENT_CONF
 sed -i -e"s|^.*forwarder_log_file:.*$|forwarder_log_file: $DD_LOG_DIR/forwarder.log|" $DD_AGENT_CONF
