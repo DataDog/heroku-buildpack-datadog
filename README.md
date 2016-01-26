@@ -6,21 +6,17 @@ A [Heroku Buildpack] to add [Datadog] [DogStatsD] relay to any Dyno.
 ## Usage
 
 This buildpack is typically used in conjunction with other languages, so is
-most useful with the [heroku-buildpack-multi] buildpack, and language-specific
-buildpacks - see [Heroku Language Buildpacks] for more.
-
+most useful with language-specific buildpacks - see [Heroku Language Buildpacks] for more.
 
 Here are some setup commands to add this buildpack to your project, as well as
 setting the required environment variables:
 
 ```shell
 cd <root of my project>
-# Prepend the .buildpacks file with the URL
-touch .buildpacks ; echo "https://github.com/miketheman/heroku-buildpack-datadog.git" | cat - .buildpacks > /tmp/out && mv /tmp/out .buildpacks
-git commit -i .buildpacks -m "Add Heroku Buildpack Datadog"
 
 heroku create # only if this is a new heroku project
-heroku config:add BUILDPACK_URL=https://github.com/ddollar/heroku-buildpack-multi.git
+heroku buildpacks:add heroku/ruby # or other language-specific build page needed
+heroku buildpacks:add --index 1 https://github.com/miketheman/heroku-buildpack-datadog.git
 heroku config:set HEROKU_APP_NAME=$(heroku apps:info|grep ===|cut -d' ' -f2)
 heroku config:add DATADOG_API_KEY=<your API key>
 
@@ -70,7 +66,6 @@ MIT License, see `LICENSE` file for full text.
 [Datadog]: http://www.datadog.com
 [DogStatsD]: http://docs.datadoghq.com/guides/dogstatsd/
 [Heroku Buildpack]: https://devcenter.heroku.com/articles/buildpacks
-[heroku-buildpack-multi]: https://github.com/ddollar/heroku-buildpack-multi
 [Heroku Language Buildpacks]: https://devcenter.heroku.com/articles/buildpacks#default-buildpacks
 
 [@ddollar]: https://github.com/ddollar
