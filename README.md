@@ -40,7 +40,7 @@ Things that have not been tested, tried, figured out.
 - determine how the compiled cache behaves with new releases of the
   datadog-agent package, as it stored the deb file
 - tag release when stable, update docs on how to use a given release in
-  q.buildpacks
+  `.buildpacks`, like "https://github.com/miketheman/heroku-buildpack-datadog.git#v1.0.0"
 
 ## Contributing
 
