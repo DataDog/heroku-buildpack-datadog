@@ -28,7 +28,7 @@ API Key, not application key.
 
 Once complete, the Agent's dogstatsd binary will be started automatically with the Dyno startup.
 
-Once started, provides a listening port on 8125 for statsd/dotstatsd metrics and events.
+Once started, provides a listening port on 8125 for statsd/dogstatsd metrics and events.
 
 An example using Ruby is [here](https://github.com/miketheman/buildpack-example-ruby).
 
