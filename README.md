@@ -1,9 +1,11 @@
 heroku-buildpack-datadog
 ========================
 
-A [Heroku Buildpack] to add [Datadog] [DogStatsD] relay to any Dyno.
+This is a fork of [@miketheman]'s [heroku-buildpack-datadog] and adds support for the [Datadog APM] agent.
 
 ## Usage
+
+In order to use the Datadog APM, you will first need to [request Beta access].
 
 This buildpack is typically used in conjunction with other languages, so is
 most useful with language-specific buildpacks - see [Heroku Language Buildpacks] for more.
@@ -16,7 +18,7 @@ cd <root of my project>
 
 heroku create # only if this is a new heroku project
 heroku buildpacks:add heroku/ruby # or other language-specific build page needed
-heroku buildpacks:add --index 1 https://github.com/miketheman/heroku-buildpack-datadog.git
+heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git
 heroku config:set HEROKU_APP_NAME=$(heroku apps:info|grep ===|cut -d' ' -f2)
 heroku config:add DATADOG_API_KEY=<your API key>
 
@@ -26,9 +28,9 @@ git push heroku master
 You can create/retrieve the `DATADOG_API_KEY` from your account on [this page](https://app.datadoghq.com/account/settings#api).
 API Key, not application key.
 
-Once complete, the Agent's dogstatsd binary will be started automatically with the Dyno startup.
+Once complete, the Agent's dogstatsd binary and Trace Agent binary will be started automatically with the Dyno startup.
 
-Once started, provides a listening port on 8125 for statsd/dogstatsd metrics and events.
+Once started, provides a listening port on 8125 for statsd/dogstatsd metrics and events. Traces are collected on port 7777 by the Trace Agent, then information is forwarded on to the Datadog Agent.
 
 An example using Ruby is [here](https://github.com/miketheman/buildpack-example-ruby).
 
@@ -65,8 +67,11 @@ MIT License, see `LICENSE` file for full text.
 
 [Datadog]: http://www.datadog.com
 [DogStatsD]: http://docs.datadoghq.com/guides/dogstatsd/
+[Datadog APM]: https://www.datadoghq.com/blog/announcing-apm/
+[heroku-buildpack-datadog]: https://github.com/miketheman/heroku-buildpack-datadog
 [Heroku Buildpack]: https://devcenter.heroku.com/articles/buildpacks
 [Heroku Language Buildpacks]: https://devcenter.heroku.com/articles/buildpacks#default-buildpacks
+[request Beta access]: https://www.datadoghq.com/apm/
 
 [@ddollar]: https://github.com/ddollar
 [@miketheman]: https://github.com/miketheman
