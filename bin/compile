@@ -23,6 +23,7 @@ APT_REPO_FILE="$BUILDPACK_DIR/etc/datadog.list"
 GPG_HOME_DIR="$BUILD_DIR/.gnupg"
 GPG_KEYRING_FILE="$BUILD_DIR/.apt/trusted.gpg"
 GPG_KEY_FILE="$BUILDPACK_DIR/etc/datadog.gpg"
+GPG_TRACE_KEY_FILE="$BUILDPACK_DIR/etc/datadog-trace.gpg"
 
 
 APT_OPTIONS="-o debug::nolocking=true -o Dir::Etc::Trusted=$GPG_KEYRING_FILE -o Dir::Etc::SourceList=$APT_REPO_FILE -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
@@ -40,18 +41,20 @@ mkdir -p "$APT_STATE_DIR/lists/partial"
 mkdir -p "$DD_AGENT_ROOT"
 mkdir -p "$GPG_HOME_DIR"
 
-topic "Adding GPG key"
+topic "Adding GPG keys"
 # This mimics the behavior of apt-key add to create a non-standard keyring and
 # import the datadog key into it.
 gpg --ignore-time-conflict --no-options --no-default-keyring --homedir $GPG_HOME_DIR --keyring $GPG_KEYRING_FILE --import $GPG_KEY_FILE | indent
+gpg --ignore-time-conflict --no-options --no-default-keyring --homedir $GPG_HOME_DIR --keyring $GPG_KEYRING_FILE --import $GPG_TRACE_KEY_FILE | indent
 
 topic "Updating apt caches"
 apt-get $APT_OPTIONS update | indent
 
-topic "Fetching datadog-agent"
-apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommends datadog-agent | indent
+# Installing the Datadog Trace Agent will also install the Datadog Agent.
+topic "Fetching Datadog Agent and Trace Agent"
+apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommends dd-trace-agent | indent
 
-topic "Fetching deb packages"
+topic "Extract deb packages"
 for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
   topic "Installing $(basename $DEB)"
   dpkg -x $DEB $BUILD_DIR/.apt/
@@ -71,4 +74,4 @@ sed -i -e"s|^.*dogstatsd_log_file:.*$|dogstatsd_log_file: $DD_LOG_DIR/dogstatsd.
 mkdir -p $BUILD_DIR/.profile.d
 cp $BUILDPACK_DIR/extra/run-dogstatsd.sh $BUILD_DIR/.profile.d/
 chmod +x $BUILD_DIR/.profile.d/run-dogstatsd.sh
-topic "Datadog Agent package installed"
+topic "Datadog Agent and Trace Agent packages installed"

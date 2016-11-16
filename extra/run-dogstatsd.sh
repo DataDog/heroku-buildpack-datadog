@@ -19,11 +19,19 @@ else
   exit 1
 fi
 
+mkdir -p /tmp/logs/datadog
+
 (
   # Unset other PYTHONPATH/PYTHONHOME variables before we start
   unset PYTHONHOME PYTHONPATH
   # Load our library path first when starting up
   export LD_LIBRARY_PATH=/app/.apt/opt/datadog-agent/embedded/lib:$LD_LIBRARY_PATH
-  mkdir -p /tmp/logs/datadog
+  # Run the Datadog Agent
   exec /app/.apt/opt/datadog-agent/embedded/bin/python /app/.apt/opt/datadog-agent/agent/dogstatsd.py start
+)
+
+(
+  # Run the Datadog Trace Agent
+  echo "Starting Trace Agent..." >> /tmp/logs/datadog/trace-agent.log
+  exec /app/.apt/opt/datadog-agent/bin/trace-agent -debug >> /tmp/logs/datadog/trace-agent.log 2>&1 &
 )
