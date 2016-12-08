@@ -5,10 +5,10 @@ if [[ $DISABLE_DATADOG_AGENT ]]; then
   exit 0
 fi
 
-if [[ $DATADOG_API_KEY ]]; then
-  sed -i -e "s/^.*api_key:.*$/api_key: ${DATADOG_API_KEY}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
+if [[ $DD_API_KEY ]]; then
+  sed -i -e "s/^.*api_key:.*$/api_key: ${DD_API_KEY}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
 else
-  echo "DATADOG_API_KEY environment variable not set. Run: heroku config:add DATADOG_API_KEY=<your API key>"
+  echo "DD_API_KEY environment variable not set. Run: heroku config:add DD_API_KEY=<your API key>"
   exit 1
 fi
 
