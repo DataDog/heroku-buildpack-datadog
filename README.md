@@ -25,7 +25,7 @@ heroku config:add DD_API_KEY=<your API key> # note: older releases called this D
 git push heroku master
 ```
 
-You can create/retrieve the `DATADOG_API_KEY` from your account on [this page](https://app.datadoghq.com/account/settings#api).
+You can create/retrieve the `DD_API_KEY` from your account on [this page](https://app.datadoghq.com/account/settings#api).
 API Key, not application key.
 
 Once complete, the Agent's dogstatsd binary and Trace Agent binary will be started automatically with the Dyno startup.
