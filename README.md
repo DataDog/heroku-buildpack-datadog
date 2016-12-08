@@ -19,8 +19,8 @@ cd <root of my project>
 heroku create # only if this is a new heroku project
 heroku buildpacks:add heroku/ruby # or other language-specific build page needed
 heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git
-heroku config:set HEROKU_APP_NAME=$(heroku apps:info|grep ===|cut -d' ' -f2)
-heroku config:add DATADOG_API_KEY=<your API key>
+heroku config:set HEROKU_APP_NAME=$(heroku apps:info|grep ===|cut -d' ' -f2) 
+heroku config:add DD_API_KEY=<your API key> # note: older releases called this DATADOG_API_KEY
 
 git push heroku master
 ```
