@@ -34,6 +34,12 @@ Once started, provides a listening port on 8125 for statsd/dogstatsd metrics and
 
 An example using Ruby is [here](https://github.com/miketheman/buildpack-example-ruby).
 
+## Tags
+Host tags can be passed via the `DD_TAGS` environment variable
+```
+heroku config:set DD_TAGS=simple-tag-0,tag-key-1:tag-value-1 # to use [simple-tag-0, tag-key-1:tag-value-1] as host tags.
+```
+
 ## Todo
 
 Things that have not been tested, tried, figured out.
