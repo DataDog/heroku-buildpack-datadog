@@ -19,6 +19,10 @@ else
   exit 1
 fi
 
+if [[ $DD_TAGS ]]; then
+  sed -i -r -e "s/^# ?tags:.*$/tags: ${DD_TAGS}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
+fi
+
 mkdir -p /tmp/logs/datadog
 
 (
@@ -33,5 +37,5 @@ mkdir -p /tmp/logs/datadog
 (
   # Run the Datadog Trace Agent
   echo "Starting Trace Agent..." >> /tmp/logs/datadog/trace-agent.log
-  exec /app/.apt/opt/datadog-agent/bin/trace-agent -debug >> /tmp/logs/datadog/trace-agent.log 2>&1 &
+  exec /app/.apt/opt/datadog-agent/bin/trace-agent -ddconfig /app/.apt/opt/datadog-agent/agent/datadog.conf -debug >> /tmp/logs/datadog/trace-agent.log 2>&1 &
 )
