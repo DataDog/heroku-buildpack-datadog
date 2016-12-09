@@ -19,6 +19,10 @@ else
   exit 1
 fi
 
+if [[ $DD_TAGS ]]; then
+  sed -i -r -e "s/^# ?tags:.*$/tags: ${DD_TAGS}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
+fi
+
 mkdir -p /tmp/logs/datadog
 
 (
