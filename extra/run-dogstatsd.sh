@@ -8,15 +8,12 @@ fi
 if [[ $DD_API_KEY ]]; then
   sed -i -e "s/^.*api_key:.*$/api_key: ${DD_API_KEY}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
 else
-  echo "DD_API_KEY environment variable not set. Run: heroku config:add DD_API_KEY=<your API key>"
+  echo "DD_API_KEY environment variable not set. Run: heroku config:set DD_API_KEY=<your API key>"
   exit 1
 fi
 
 if [[ $DD_HOSTNAME ]]; then
   sed -i -e "s/^.*hostname:.*$/hostname: ${DD_HOSTNAME}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
-else
-  echo "DD_HOSTNAME environment variable not set. Run: heroku config:add DD_HOSTNAME=<your app name>"
-  exit 1
 fi
 
 if [[ $DD_TAGS ]]; then

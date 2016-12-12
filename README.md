@@ -19,9 +19,10 @@ cd <root of my project>
 heroku create # only if this is a new heroku project
 heroku buildpacks:add heroku/ruby # or other language-specific build page needed
 heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git
-heroku config:set HEROKU_APP_NAME=$(heroku apps:info|grep ===|cut -d' ' -f2) 
-heroku config:set DD_HOSTNAME=$(heroku apps:info|grep ===|cut -d' ' -f2)
 heroku config:set DD_API_KEY=<your API key> # note: older releases called this DATADOG_API_KEY
+heroku config:set DD_SERVICE_NAME=<your service name>
+heroku config:set DD_SERVICE_ENV=<your service env>
+heroku config:set DD_HOSTNAME=<your service name> # optional, defaults to dyno hostname
 
 git push heroku master
 ```
@@ -37,8 +38,19 @@ An example using Ruby is [here](https://github.com/miketheman/buildpack-example-
 
 ## Tags
 Host tags can be passed via the `DD_TAGS` environment variable
+
 ```
 heroku config:set DD_TAGS=simple-tag-0,tag-key-1:tag-value-1 # to use [simple-tag-0, tag-key-1:tag-value-1] as host tags.
+```
+
+## Rails Config
+
+For proper aggregation, you'll want to configure `config/initializers/datadog-tracer.rb` like so:
+
+```
+Rails.configuration.datadog_trace = {
+  default_service: ENV['DD_SERVICE_NAME'] || 'my-app',
+}
 ```
 
 ## Todo
