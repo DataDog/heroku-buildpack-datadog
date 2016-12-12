@@ -20,8 +20,8 @@ if [[ $DD_TAGS ]]; then
   sed -i -r -e "s/^# ?tags:.*$/tags: ${DD_TAGS}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
 fi
 
-if [[ $DD_APP_ENV ]]; then
-  printf "\n[trace.config]\nenv=${DD_APP_ENV}" >> /app/.apt/opt/datadog-agent/agent/datadog.conf
+if [[ $DD_SERVICE_ENV ]]; then
+  printf "\n[trace.config]\nenv=${DD_SERVICE_ENV}" >> /app/.apt/opt/datadog-agent/agent/datadog.conf
 fi
 
 mkdir -p /tmp/logs/datadog
