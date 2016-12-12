@@ -8,19 +8,20 @@ fi
 if [[ $DD_API_KEY ]]; then
   sed -i -e "s/^.*api_key:.*$/api_key: ${DD_API_KEY}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
 else
-  echo "DD_API_KEY environment variable not set. Run: heroku config:add DD_API_KEY=<your API key>"
+  echo "DD_API_KEY environment variable not set. Run: heroku config:set DD_API_KEY=<your API key>"
   exit 1
 fi
 
-if [[ $HEROKU_APP_NAME ]]; then
-  sed -i -e "s/^.*hostname:.*$/hostname: ${HEROKU_APP_NAME}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
-else
-  echo "HEROKU_APP_NAME environment variable not set. Run: heroku apps:info|grep ===|cut -d' ' -f2"
-  exit 1
+if [[ $DD_HOSTNAME ]]; then
+  sed -i -e "s/^.*hostname:.*$/hostname: ${DD_HOSTNAME}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
 fi
 
 if [[ $DD_TAGS ]]; then
   sed -i -r -e "s/^# ?tags:.*$/tags: ${DD_TAGS}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
+fi
+
+if [[ $DD_SERVICE_ENV ]]; then
+  printf "\n[trace.config]\nenv=${DD_SERVICE_ENV}" >> /app/.apt/opt/datadog-agent/agent/datadog.conf
 fi
 
 mkdir -p /tmp/logs/datadog
