@@ -26,6 +26,9 @@ git push heroku master
 You can create/retrieve the `DATADOG_API_KEY` from your account on [this page](https://app.datadoghq.com/account/settings#api).
 API Key, not application key.
 
+You can optionally set percentiles which you want to generate for your histogram metrics. Use
+`DATADOG_HISTOGRAM_PERCENTILES` environment variable to do this.
+
 Once complete, the Agent's dogstatsd binary will be started automatically with the Dyno startup.
 
 Once started, provides a listening port on 8125 for statsd/dogstatsd metrics and events.
