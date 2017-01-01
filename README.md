@@ -26,8 +26,17 @@ git push heroku master
 You can create/retrieve the `DATADOG_API_KEY` from your account on [this page](https://app.datadoghq.com/account/settings#api).
 API Key, not application key.
 
-You can optionally set percentiles which you want to generate for your histogram metrics. Use
-`DATADOG_HISTOGRAM_PERCENTILES` environment variable to do this.
+You can optionally set additional percentiles for your histogram metrics. By default
+only 95th percentile will be generated. To generate additional percentiles, set *all*
+persentiles, including default one, using env variable `DATADOG_HISTOGRAM_PERCENTILES`.
+For example, if you want to generate 0.95 and 0.99 percentiles, you may use following
+command:
+
+```shell
+heroku config:add DATADOG_HISTOGRAM_PERCENTILES="0.95, 0.99"
+```
+
+Documentaion about additional percentiles [here](https://help.datadoghq.com/hc/en-us/articles/204588979-How-to-graph-percentiles-in-Datadog).
 
 Once complete, the Agent's dogstatsd binary will be started automatically with the Dyno startup.
 
