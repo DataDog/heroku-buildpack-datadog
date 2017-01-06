@@ -24,6 +24,10 @@ if [[ $DD_SERVICE_ENV ]]; then
   printf "\n[trace.config]\nenv=${DD_SERVICE_ENV}" >> /app/.apt/opt/datadog-agent/agent/datadog.conf
 fi
 
+if [[ $DATADOG_HISTOGRAM_PERCENTILES ]]; then
+  sed -i -e "s/^.*histogram_percentiles:.*$/histogram_percentiles: ${DATADOG_HISTOGRAM_PERCENTILES}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
+fi
+
 mkdir -p /tmp/logs/datadog
 
 (
