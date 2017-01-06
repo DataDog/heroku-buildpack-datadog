@@ -32,12 +32,12 @@ API Key, not application key.
 
 You can optionally set additional percentiles for your histogram metrics. By default
 only 95th percentile will be generated. To generate additional percentiles, set *all*
-persentiles, including default one, using env variable `DATADOG_HISTOGRAM_PERCENTILES`.
+persentiles, including default one, using env variable `DD_HISTOGRAM_PERCENTILES`.
 For example, if you want to generate 0.95 and 0.99 percentiles, you may use following
 command:
 
 ```shell
-heroku config:add DATADOG_HISTOGRAM_PERCENTILES="0.95, 0.99"
+heroku config:add DD_HISTOGRAM_PERCENTILES="0.95, 0.99"
 ```
 
 Documentation about additional percentiles [here](https://help.datadoghq.com/hc/en-us/articles/204588979-How-to-graph-percentiles-in-Datadog).
