@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if [[ $DISABLE_DATADOG_AGENT ]]; then
-  echo "DISABLE_DATADOG_AGENT environment variable is set, not starting the agent."
+if [[ $DISABLE_DD_AGENT ]]; then
+  echo "DISABLE_DD_AGENT environment variable is set, not starting the agent."
   exit 0
 fi
 
@@ -22,6 +22,10 @@ fi
 
 if [[ $DD_SERVICE_ENV ]]; then
   printf "\n[trace.config]\nenv=${DD_SERVICE_ENV}" >> /app/.apt/opt/datadog-agent/agent/datadog.conf
+fi
+
+if [[ $DD_HISTOGRAM_PERCENTILES ]]; then
+  sed -i -e "s/^.*histogram_percentiles:.*$/histogram_percentiles: ${DD_HISTOGRAM_PERCENTILES}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
 fi
 
 mkdir -p /tmp/logs/datadog
