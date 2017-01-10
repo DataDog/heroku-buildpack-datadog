@@ -46,12 +46,40 @@ In addition to the environment variables shown above, there are a number of othe
 | Setting | Description|
 | --- | --- |
 | DD_API_KEY | *Required.* Your API key is available from [the Datadog API Integrations page](https://app.datadoghq.com/account/settings#api). Note that this is the *API* key, not the application key. |
-| DD_SERVICE_NAME | *Optional.* Sets the service name for the traced application. For more information, about naming services, see the [Datadog Tracing Docs](https://app.datadoghq.com/trace/docs/tutorials/terminology). |
+| DD_SERVICE_NAME | *Optional.* While not read by the Datadog Trace agent, we highly recommend that you set an environment variable for your service name. See the [Service Name](#service-name) section below for more information. |
 | DD_SERVICE_ENV | *Optional.* The Datadog Trace agent will automatically try to identify your environment by searching for a tag in the form `env:<your environment name>`. If you do not set a tag or wish to override an exsting tag, you can set the environment with this setting. For more information, see the [Datadog Tracing Docs](https://app.datadoghq.com/trace/docs/tutorials/environments). |
 | DD_HOSTNAME | *Optional.* By default, the Datadog agent will report your Dyno hostname. You may use this setting to override the Dyno hostname. |
 | DD_TAGS | *Optional.* Sets additional tags provided as a comma-delimited string. For example, `heroku config:set DD_TAGS=simple-tag-0,tag-key-1:tag-value-1`. See the ["Guide to tagging"](http://docs.datadoghq.com/guides/tagging/) for more information. |
 | DD_HISTOGRAM_PERCENTILES | *Optional.* You can optionally set additional percentiles for your histogram metrics. See [Histogram Percentiles](#histogram-percentiles) below for more information.|
 | DISABLE_DD_AGENT | *Optional.* When set, the Datadog agent and Datadog Trace agent will not be run. |
+
+### Service name
+
+A service is a named set of processes that do the same job, such as `webapp` or `database`. The service name provides context when evaluating your trace data.
+
+Although the service name is passed to Datadog on the application level, we highly recommend that you set the value as an environment variable, rather than directly in your application code.
+
+For example, set your service name as an environment variable:
+
+```shell
+heroku config:set DD_SERVICE_NAME=my-webapp
+```
+
+Then in a python web application, you could set the service name from the environment variable:
+
+```python
+import os
+from ddtrace import tracer
+
+service_nane = os.environ.get('DD_SERVICE_NAME')
+span = tracer.trace("web.request", service=service_name)
+...
+span.finish()
+```
+
+Setting the service name will vary according to your language or supported framework. Please reference the [Datadog Tracing Integrations](https://app.datadoghq.com/trace/docs/languages) for more information.
+
+For more information about services, see the [Datadog Tracing Terminology](https://app.datadoghq.com/trace/docs/tutorials/terminology).
 
 ### Histogram percentiles
 
