@@ -7,7 +7,7 @@ A [Heroku Buildpack] to add [Datadog] [DogStatsD] and [APM] to any Dyno.
 
 This buildpack collects [DogStatsD] metrics emited by applications and sends them to your Datadog account. To instrument your application, use the language-appropriate [Datadog library] and add the corresponding [Heroku Language Buildpack].
 
-The Datadog [APM] currently supports Go, Python, and Ruby (additional languages are on the roadmap). For more information about adding the language specific trace library to your application, please see the [Datadog Tracing Docs]. Note that the Datadog APM is an additional product and may not be included in your account.
+The Datadog [APM] currently supports Go, Python, and Ruby (additional languages are on the roadmap). For more information about adding the language specific trace library to your application, please see the [Datadog Tracing documentation]. Note that the Datadog APM is an additional product and may not be included in your account.
 
 ### Installation
 
@@ -44,7 +44,7 @@ In addition to the environment variables shown above, there are a number of othe
 
 | Setting | Description|
 | --- | --- |
-| DD_API_KEY | *Required.* Your API key is available from [the Datadog API Integrations page]. Note that this is the *API* key, not the application key. |
+| DD_API_KEY | *Required.* Your API key is available from the [Datadog API integrations] page. Note that this is the *API* key, not the application key. |
 | DD_HOSTNAME | *Optional.* By default, the Datadog agent will report your Dyno hostname. You may use this setting to override the Dyno hostname. |
 | DD_TAGS | *Optional.* Sets additional tags provided as a comma-delimited string. For example, `heroku config:set DD_TAGS=simple-tag-0,tag-key-1:tag-value-1`. See the ["Guide to tagging"] for more information. |
 | DD_HISTOGRAM_PERCENTILES | *Optional.* You can optionally set additional percentiles for your histogram metrics. See [Histogram Percentiles](#histogram-percentiles) below for more information.|
@@ -52,17 +52,17 @@ In addition to the environment variables shown above, there are a number of othe
 | DD_APM_ENABLED | *Optional.* When set, this will start the Datadog Trace agent. |
 | DD_APM_DEBUG | *Optional.* When set, this will enable debug logging. Log information is available by running `heroku logs`. |
 | DD_SERVICE_NAME | *Optional.* While not read directly by the Datadog Trace agent, we highly recommend that you set an environment variable for your service name. See the [Service Name](#service-name) section below for more information. |
-| DD_SERVICE_ENV | *Optional.* The Datadog Trace agent will automatically try to identify your environment by searching for a tag in the form `env:<your environment name>`. If you do not set a tag or wish to override an exsting tag, you can set the environment with this setting. For more information, see the [Datadog Tracing environments page]. |
+| DD_SERVICE_ENV | *Optional.* The Datadog Trace agent will automatically try to identify your environment by searching for a tag in the form `env:<your environment name>`. If you do not set a tag or wish to override an exsting tag, you can set the environment with this setting. For more information, see the [Datadog Tracing environments] page. |
 
 ### Histogram percentiles
 
-You can optionally set additional percentiles for your histogram metrics. By default only 95th percentile will be generated. To generate additional percentiles, set *all* persentiles, including default one, using env variable `DATADOG_HISTOGRAM_PERCENTILES`.  For example, if you want to generate 0.95 and 0.99 percentiles, you may use following command:
+You can optionally set additional percentiles for your histogram metrics. By default only the 95th percentile will be generated. To generate additional percentiles, set *all* percentiles, including the default, using the env variable `DD_HISTOGRAM_PERCENTILES`.  For example, if you want to generate 0.95 and 0.99 percentiles, you may use following command:
 
 ```shell
-heroku config:add DATADOG_HISTOGRAM_PERCENTILES="0.95, 0.99"
+heroku config:add DD_HISTOGRAM_PERCENTILES="0.95, 0.99"
 ```
 
-For more information about about additional percentiles, see [the percentiles documentation].
+For more information about about additional percentiles, see the [percentiles documentation].
 
 ### Service name
 
@@ -96,13 +96,13 @@ Rails.configuration.datadog_trace = {
 }
 ```
 
-Setting the service name will vary according to your language or supported framework. Please reference the [Datadog Tracing Integrations] for more information.
+Setting the service name will vary according to your language or supported framework. Please reference the [Datadog Tracing integrations] page for more information.
 
-For more information about services, see the [Datadog Tracing Terminology page].
+For more information about services, see the [Datadog Tracing terminology] page.
 
 ### Example
 
-An example using Ruby is available at [https://github.com/miketheman/buildpack-example-ruby].
+An example using Ruby is available at https://github.com/miketheman/buildpack-example-ruby.
 
 ## Todo
 
@@ -137,13 +137,13 @@ MIT License, see `LICENSE` file for full text.
 [APM]: https://www.datadoghq.com/apm/
 [Datadog library]: http://docs.datadoghq.com/libraries/
 [Heroku Language Buildpack]: https://devcenter.heroku.com/articles/buildpacks#default-buildpacks
-[Datadog Tracing Docs]: https://app.datadoghq.com/trace/docs
-[the Datadog API Integrations page]: https://app.datadoghq.com/account/settings#api
+[Datadog Tracing documentation]: https://app.datadoghq.com/trace/docs
+[Datadog API integrations]: https://app.datadoghq.com/account/settings#api
 ["Guide to tagging"]: http://docs.datadoghq.com/guides/tagging/
-[Datadog Tracing environments page]: https://app.datadoghq.com/trace/docs/tutorials/environments
-[the percentiles documentation]: https://help.datadoghq.com/hc/en-us/articles/204588979-How-to-graph-percentiles-in-Datadog
-[Datadog Tracing Integrations]: https://app.datadoghq.com/trace/docs/languages
-[Datadog Tracing Terminology page]: https://app.datadoghq.com/trace/docs/tutorials/terminology
+[Datadog Tracing environments]: https://app.datadoghq.com/trace/docs/tutorials/environments
+[percentiles documentation]: https://help.datadoghq.com/hc/en-us/articles/204588979-How-to-graph-percentiles-in-Datadog
+[Datadog Tracing integrations]: https://app.datadoghq.com/trace/docs/languages
+[Datadog Tracing terminology]: https://app.datadoghq.com/trace/docs/tutorials/terminology
 
 [@ddollar]: https://github.com/ddollar
 [@miketheman]: https://github.com/miketheman
