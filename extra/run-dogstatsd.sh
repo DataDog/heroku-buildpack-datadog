@@ -23,8 +23,9 @@ else
 fi
 
 
-if [[ $DD_APM_ENABLED == "true" ]]; then
+if [[ $DD_APM_ENABLED ]]; then
   sed -i -e "s/^[# ]*apm_enabled:.*$/apm_enabled: true/" /app/.apt/opt/datadog-agent/agent/datadog.conf
+  # Doesn't appear to have apm in the conf file. Old agent release?
   echo "apm_enabled: true" >> /app/.apt/opt/datadog-agent/agent/datadog.conf
 fi
 
@@ -54,8 +55,12 @@ fi
     echo "DISABLE_DATADOG_AGENT environment variable is set, not starting the tracing agent."
   else
     # Enable the trace agent
-    if [[ $DD_APM_ENABLED == "true" ]]; then
-      exec /app/.apt/opt/datadog-agent/bin/trace-agent -ddconfig /app/.apt/opt/datadog-agent/agent/datadog.conf -debug >> /tmp/logs/datadog/trace-agent.log 2>&1 &
+    if [[ $DD_APM_ENABLED ]]; then
+      if [[ $DD_APM_DEBUG ]]; then
+        exec /app/.apt/opt/datadog-agent/bin/trace-agent -ddconfig /app/.apt/opt/datadog-agent/agent/datadog.conf -debug 2>&1 &
+      else
+        exec /app/.apt/opt/datadog-agent/bin/trace-agent -ddconfig /app/.apt/opt/datadog-agent/agent/datadog.conf >> /tmp/logs/datadog/trace-agent.log 2>&1 &
+      fi
     fi
   fi
 )
