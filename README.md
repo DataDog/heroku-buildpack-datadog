@@ -50,7 +50,6 @@ In addition to the environment variables shown above, there are a number of othe
 | DD_HISTOGRAM_PERCENTILES | *Optional.* You can optionally set additional percentiles for your histogram metrics. See [Histogram Percentiles](#histogram-percentiles) below for more information.|
 | DISABLE_DATADOG_AGENT | *Optional.* When set, the Datadog agent and Datadog Trace agent will not be run. |
 | DD_APM_ENABLED | *Optional.* When set, this will start the Datadog Trace agent. |
-| DD_APM_DEBUG | *Optional.* When set, this will enable debug logging. Log information is available by running `heroku logs`. |
 | DD_SERVICE_NAME | *Optional.* While not read directly by the Datadog Trace agent, we highly recommend that you set an environment variable for your service name. See the [Service Name](#service-name) section below for more information. |
 | DD_SERVICE_ENV | *Optional.* The Datadog Trace agent will automatically try to identify your environment by searching for a tag in the form `env:<your environment name>`. If you do not set a tag or wish to override an exsting tag, you can set the environment with this setting. For more information, see the [Datadog Tracing environments] page. |
 

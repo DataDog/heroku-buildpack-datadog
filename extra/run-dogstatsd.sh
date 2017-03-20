@@ -56,11 +56,7 @@ fi
   else
     # Enable the trace agent
     if [[ $DD_APM_ENABLED ]]; then
-      if [[ $DD_APM_DEBUG ]]; then
-        exec /app/.apt/opt/datadog-agent/bin/trace-agent -ddconfig /app/.apt/opt/datadog-agent/agent/datadog.conf -debug 2>&1 &
-      else
-        exec /app/.apt/opt/datadog-agent/bin/trace-agent -ddconfig /app/.apt/opt/datadog-agent/agent/datadog.conf >> /tmp/logs/datadog/trace-agent.log 2>&1 &
-      fi
+      exec /app/.apt/opt/datadog-agent/bin/trace-agent -ddconfig /app/.apt/opt/datadog-agent/agent/datadog.conf >> /tmp/logs/datadog/trace-agent.log 2>&1 &
     fi
   fi
 )
