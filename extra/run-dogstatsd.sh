@@ -1,15 +1,10 @@
 #!/bin/bash
 
-if [[ $DISABLE_DD_AGENT ]]; then
-  echo "DISABLE_DD_AGENT environment variable is set, not starting the agent."
-  exit 0
-fi
-
 if [[ $DD_API_KEY ]]; then
   sed -i -e "s/^.*api_key:.*$/api_key: ${DD_API_KEY}/" /app/.apt/opt/datadog-agent/agent/datadog.conf
 else
-  echo "DD_API_KEY environment variable not set. Run: heroku config:set DD_API_KEY=<your API key>"
-  exit 1
+  echo "DD_API_KEY environment variable not set, not starting the agent."
+  exit 0
 fi
 
 if [[ $DD_HOSTNAME ]]; then
