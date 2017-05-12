@@ -54,11 +54,11 @@ apt-get $APT_OPTIONS update | indent
 topic "Fetching Datadog Agent and Trace Agent"
 apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommends dd-trace-agent | indent
 
-topic "Extract deb packages"
-for DEB in $(ls -1 $APT_CACHE_DIR/archives/*.deb); do
-  topic "Installing $(basename $DEB)"
-  dpkg -x $DEB $BUILD_DIR/.apt/
-done
+# Install the latest agent package.
+topic "Fetching deb packages"
+DEB=$(ls -t $APT_CACHE_DIR/archives/*.deb | head -n 1)
+topic "Installing $(basename $DEB)"
+dpkg -x $DEB $BUILD_DIR/.apt/
 
 mv $DD_AGENT_ROOT/etc/dd-agent/datadog.conf.example $DD_AGENT_CONF
 
