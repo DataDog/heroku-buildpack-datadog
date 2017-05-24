@@ -23,7 +23,7 @@ heroku create
 heroku buildpacks:add heroku/ruby
 
 # Add this buildpack and set your environment variables
-heroku buildpacks:add --index 1 https://github.com/miketheman/heroku-buildpack-datadog.git
+heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git
 heroku config:set DD_HOSTNAME=$(heroku apps:info|grep ===|cut -d' ' -f2)
 heroku config:add DD_API_KEY=<your API key>
 
@@ -109,7 +109,7 @@ For proper aggregation, you'll want to configure `config/initializers/datadog-tr
 
 - see if we can bypass apt updates on every run
 - determine how the compiled cache behaves with new releases of the datadog-agent package, as it stored the deb file
-- tag release when stable, update docs on how to use a given release in `.buildpacks`, like "https://github.com/miketheman/heroku-buildpack-datadog.git#v1.0.0"
+- tag release when stable, update docs on how to use a given release in `.buildpacks`, like "https://github.com/DataDog/heroku-buildpack-datadog.git#v1.0.0"
 
 ## Contributing
 
