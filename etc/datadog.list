@@ -1,1 +1,2 @@
 deb http://apt.datadoghq.com/ stable main
+deb http://apt-trace.datad0g.com.s3.amazonaws.com/ stable main
