@@ -125,3 +125,11 @@ In order to ease/speed up our review, here are some items you can check/improve 
 ## History
 
 Earlier versions of this project were forked from the [miketheman heroku-buildpack-datadog project](https://github.com/miketheman/heroku-buildpack-datadog). It was largely rewritten for Datadog's Agent version 6. Changes and more information can be found in the [changelog](https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md).
+
+To run the previous Agent-5-based version of this project, run the following from your project directory:
+```shell
+# Remove the old untagged buildpack
+heroku buildpacks:remove https://github.com/DataDog/heroku-buildpack-datadog.git
+# Add the tagged version of the buildpack
+heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git#legacy
+```
