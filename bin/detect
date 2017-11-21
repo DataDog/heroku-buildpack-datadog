@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 # bin/detect <build-dir>
 
-echo "Heroku Datadog Buildpack" && exit 0
+echo "Sysstat" && exit 0

@@ -1,75 +1,66 @@
 #!/usr/bin/env bash
-# bin/compile <build-dir> <cache-dir> <env-dir>
+# bin/compile <build-dir> <cache-dir>
 
-set -e   # fail fast
-# set -x # enable debugging
+# Fail fast
+set -e
 
-# Configure directories
+# Debug
+# set -x
+
+# Parse and derive params
 BUILD_DIR=$1
 CACHE_DIR=$2
-ENV_DIR=$3
 BUILDPACK_DIR=`cd $(dirname $0); cd ..; pwd`
 
-# Load some convenience functions like topic(), echo(), and indent()
+# Load formating tools
 source $BUILDPACK_DIR/bin/common.sh
 
-# Apt settings
-APT_BUILD_DIR="$BUILD_DIR/.apt"
+# Setup apt environment
+APT_DIR="$BUILD_DIR/.apt"
 APT_CACHE_DIR="$CACHE_DIR/apt/cache"
 APT_STATE_DIR="$CACHE_DIR/apt/state"
 APT_REPO_FILE="$BUILDPACK_DIR/etc/datadog.list"
+APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
 
+# Create build and run environment
+mkdir -p $APT_CACHE_DIR/archives/partial
+mkdir -p $APT_STATE_DIR/lists/partial
+mkdir -p $APT_DIR
 
-GPG_HOME_DIR="$BUILD_DIR/.gnupg"
-GPG_KEYRING_FILE="$BUILD_DIR/.apt/trusted.gpg"
-GPG_KEY_FILE="$BUILDPACK_DIR/etc/datadog.gpg"
-
-
-APT_OPTIONS="-o debug::nolocking=true -o Dir::Etc::Trusted=$GPG_KEYRING_FILE -o Dir::Etc::SourceList=$APT_REPO_FILE -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
-
-# Where the Agent is installed & configured
-DD_AGENT_ROOT="$APT_BUILD_DIR"
-DD_AGENT_CONF="$DD_AGENT_ROOT/opt/datadog-agent/agent/datadog.conf"
-DD_LOG_DIR="/tmp/logs/datadog"
-
-# Ensure directories exists
-mkdir -p "$CACHE_DIR"
-mkdir -p "$APT_BUILD_DIR"
-mkdir -p "$APT_CACHE_DIR/archives/partial"
-mkdir -p "$APT_STATE_DIR/lists/partial"
-mkdir -p "$DD_AGENT_ROOT"
-mkdir -p "$GPG_HOME_DIR"
-
-topic "Adding GPG keys"
-# This mimics the behavior of apt-key add to create a non-standard keyring and
-# import the datadog key into it.
-gpg --ignore-time-conflict --no-options --no-default-keyring --homedir $GPG_HOME_DIR --keyring $GPG_KEYRING_FILE --import $GPG_KEY_FILE | indent
-
-topic "Updating apt caches"
+# Install dependencies
+topic "Updating apt caches for dependencies"
 apt-get $APT_OPTIONS update | indent
 
-# Installing the Datadog Trace Agent will also install the Datadog Agent.
-topic "Fetching Datadog Agent and Trace Agent"
+topic "Installing dependencies"
+DEPS="libpci-dev libpci3 libsensors4 libsensors4-dev libsnmp-base libsnmp30"
+apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommends $DEPS | indent
+IFS=" " read -a DEP_PKGS <<< $DEPS
+for DEP in ${DEP_PKGS[@]}; do
+  echo "Installing $DEP" | indent
+  dpkg -x $APT_CACHE_DIR/archives/$DEP\_*.deb $APT_DIR
+done
+
+# Install Datadog Agent
+topic "Updating apt caches for Datadog Agent"
+APT_OPTIONS="$APT_OPTIONS -o Dir::Etc::SourceList=$APT_REPO_FILE"
+apt-get $APT_OPTIONS update | indent
+
+topic "Installing Datadog Agent"
 apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommends datadog-agent | indent
 
-# Install the latest agent package.
-topic "Fetching deb packages"
-DEB=$(ls -t $APT_CACHE_DIR/archives/*.deb | head -n 1)
-topic "Installing $(basename $DEB)"
-dpkg -x $DEB $BUILD_DIR/.apt/
+# Use specific version if specified.
+if [ -n "$DD_AGENT_VERSION" ]; then
+  DEB=$(ls -t $APT_CACHE_DIR/archives/datadog-agent_1%3a$DD_AGENT_VERSION-*.deb | head -n 1)
+else
+  DEB=$(ls -t $APT_CACHE_DIR/archives/datadog-agent*.deb | head -n 1)
+fi
+dpkg -x $DEB $APT_DIR
 
-mv $DD_AGENT_ROOT/etc/dd-agent/datadog.conf.example $DD_AGENT_CONF
+# Rewrite package-config files
+find $APT_DIR -type f -ipath '*/pkgconfig/*.pc' | xargs --no-run-if-empty -n 1 sed -i -e 's!^prefix=\(.*\)$!prefix='"$APT_DIR"'\1!g'
 
-# Turn off syslog
-sed -i -e"s/^.*log_to_syslog:.*$/log_to_syslog: no/" $DD_AGENT_CONF
-
-# Fix log locations
-sed -i -e"s|^.*collector_log_file:.*$|collector_log_file: $DD_LOG_DIR/collector.log|" $DD_AGENT_CONF
-sed -i -e"s|^.*forwarder_log_file:.*$|forwarder_log_file: $DD_LOG_DIR/forwarder.log|" $DD_AGENT_CONF
-sed -i -e"s|^.*dogstatsd_log_file:.*$|dogstatsd_log_file: $DD_LOG_DIR/dogstatsd.log|" $DD_AGENT_CONF
-
-# Drop off the runner
+# Install the runner
+topic "Installing Datadog runner"
 mkdir -p $BUILD_DIR/.profile.d
-cp $BUILDPACK_DIR/extra/run-dogstatsd.sh $BUILD_DIR/.profile.d/
-chmod +x $BUILD_DIR/.profile.d/run-dogstatsd.sh
-topic "Datadog Agent and Trace Agent packages installed"
+cp $BUILDPACK_DIR/extra/datadog.sh $BUILD_DIR/.profile.d/
+chmod +x $BUILD_DIR/.profile.d/datadog.sh

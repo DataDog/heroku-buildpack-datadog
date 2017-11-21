@@ -1,1 +1,3 @@
-deb http://apt.datadoghq.com/ stable main
+# We're using insecure http here. Eventually we should fix
+# the apt-transport-https issue.
+deb http://apt.datadoghq.com/ beta main

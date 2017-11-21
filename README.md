@@ -1,13 +1,11 @@
-Heroku-Datadog APM Buildpack
+Datadog Heroku Buildpack
 ========================
 
-A [Heroku Buildpack] to add [Datadog] [DogStatsD] and [APM] to any Dyno.
+A [Heroku buildpack](https://devcenter.heroku.com/articles/buildpacks) to add [Datadog](https://www.datadoghq.com) to a Heroku Dyno.
 
 ## Usage
 
-This buildpack collects [DogStatsD] metrics emited by applications and sends them to your Datadog account. To instrument your application, use the language-appropriate [Datadog library] and add the corresponding [Heroku Language Buildpack].
-
-The Datadog [APM] currently supports Go, Python, and Ruby (additional languages are on the roadmap). For more information about adding the language specific trace library to your application, please see the [Datadog Tracing documentation]. Note that the Datadog APM is an additional product and may not be included in your account.
+This buildpack installs the Datadog Agent in your Heroku Dyno, allowing you to collect system metrics, custom application metrics and traces. To collect custom application metrics or traces, you will also need to include the language appropriate [DogStatsD or Datadog APM library](http://docs.datadoghq.com/libraries/).
 
 ### Installation
 
@@ -19,7 +17,7 @@ cd <root of my project>
 # If this is a new Heroku project
 heroku create
 
-# Add the appropriate language-specific buildpack
+# Add the appropriate language-specific buildpack. For example:
 heroku buildpacks:add heroku/ruby
 
 # Add this buildpack and set your environment variables
@@ -27,16 +25,13 @@ heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-data
 heroku config:set DD_HOSTNAME=$(heroku apps:info|grep ===|cut -d' ' -f2)
 heroku config:add DD_API_KEY=<your API key>
 
-# To enable APM tracing, run the following
-heroku config:set DD_APM_ENABLED=true
-
 # Deploy to Heroku
 git push heroku master
 ```
 
-Once complete, the Datadog agent (and optionally the Datadog APM tracing agent) will be started automatically with the Dyno startup.
+Once complete, the Datadog Agent will be started automatically when each Dyno starts.
 
-The Datadog agent provides a listening port on 8125 for statsd/dogstatsd metrics and events. Traces are collected on port 8126 (older Datadog tracing libraries may use port 7777).
+The Datadog agent provides a listening port on 8125 for statsd/dogstatsd metrics and events. Traces are collected on port 8126.
 
 ### Configuration
 
@@ -44,14 +39,14 @@ In addition to the environment variables shown above, there are a number of othe
 
 | Setting | Description|
 | --- | --- |
-| DD_API_KEY | *Required.* Your API key is available from the [Datadog API integrations] page. Note that this is the *API* key, not the application key. |
-| DD_HOSTNAME | *Optional.* By default, the Datadog agent will report your Dyno hostname. You may use this setting to override the Dyno hostname. |
-| DD_TAGS | *Optional.* Sets additional tags provided as a comma-delimited string. For example, `heroku config:set DD_TAGS=simple-tag-0,tag-key-1:tag-value-1`. See the ["Guide to tagging"] for more information. |
-| DD_HISTOGRAM_PERCENTILES | *Optional.* You can optionally set additional percentiles for your histogram metrics. See [Histogram Percentiles](#histogram-percentiles) below for more information.|
-| DISABLE_DATADOG_AGENT | *Optional.* When set, the Datadog agent and Datadog Trace agent will not be run. |
-| DD_APM_ENABLED | *Optional.* When set, this will start the Datadog Trace agent. |
-| DD_SERVICE_NAME | *Optional.* While not read directly by the Datadog Trace agent, we highly recommend that you set an environment variable for your service name. See the [Service Name](#service-name) section below for more information. |
-| DD_SERVICE_ENV | *Optional.* The Datadog Trace agent will automatically try to identify your environment by searching for a tag in the form `env:<your environment name>`. If you do not set a tag or wish to override an exsting tag, you can set the environment with this setting. For more information, see the [Datadog Tracing environments] page. |
+| DD_API_KEY | *Required.* Your API key is available from the [Datadog API integrations](https://app.datadoghq.com/account/settings#api) page. Note that this is the *API* key, not the application key. |
+| DD_HOSTNAME | *Required.* Because Heroku Dynos are ephemeral and your application my be served by any available Dyno resource, you should set the hostname to your application or service name. This will give you more consistent metrics. To view metrics by Dyno hosts, the tag `dynohost` is added by the buildpack. |
+| DD_TAGS | *Optional.* Sets additional tags provided as a comma-delimited string. For example, `heroku config:set DD_TAGS=simple-tag-0,tag-key-1:tag-value-1`. The buildpack automatically adds the tags `dyno` and `dynohost` which represent the Dyno name (e.g. web.1) and host ID (e.g. ) respectively. See the ["Guide to tagging"](http://docs.datadoghq.com/guides/tagging/) for more information. |
+| DD_HISTOGRAM_PERCENTILES | *Optional.* You can optionally set additional percentiles for your histogram metrics. See [Histogram percentiles](#histogram-percentiles) below for more information. |
+| DISABLE_DATADOG_AGENT | *Optional.* When set, the Datadog agent will not be run. |
+| DD_AGENT_VERSION | *Optional.* By default, the buildpack will install the latest version of the Datadog Agent available in the package repository. Use this variable to install older versions of the Datadog Agent (note that not all versions of the Agent may be available). |
+| DD_SERVICE_NAME | *Optional.* While not read directly by the Datadog Agent, we highly recommend that you set an environment variable for your service name. See the [Service Name](#service-name) section below for more information. |
+| DD_SERVICE_ENV | *Optional.* The Datadog Agent will automatically try to identify your environment by searching for a tag in the form `env:<your environment name>`. If you do not set a tag or wish to override an existing tag, you can set the environment with this setting. For more information, see the [Datadog Tracing environments page](https://docs.datadoghq.com/tracing/environments/). |
 
 ### Histogram percentiles
 
@@ -61,7 +56,7 @@ You can optionally set additional percentiles for your histogram metrics. By def
 heroku config:add DD_HISTOGRAM_PERCENTILES="0.95, 0.99"
 ```
 
-For more information about about additional percentiles, see the [percentiles documentation].
+For more information about about additional percentiles, see the [percentiles documentation](https://help.datadoghq.com/hc/en-us/articles/204588979-How-to-graph-percentiles-in-Datadog).
 
 ### Service name
 
@@ -95,58 +90,38 @@ Rails.configuration.datadog_trace = {
 }
 ```
 
-Setting the service name will vary according to your language or supported framework. Please reference the [Datadog Tracing integrations] page for more information.
+Setting the service name will vary according to your language or supported framework. Please reference the [Datadog libraries list](https://docs.datadoghq.com/libraries/) for specific language support.
 
-For more information about services, see the [Datadog Tracing terminology] page.
-
-### Example
-
-An example using Ruby is available at https://github.com/miketheman/buildpack-example-ruby.
-
-### Rails configuration
-
-For proper aggregation, you'll want to configure `config/initializers/datadog-tracer.rb` like so:
-
-- see if we can bypass apt updates on every run
-- determine how the compiled cache behaves with new releases of the datadog-agent package, as it stored the deb file
-- tag release when stable, update docs on how to use a given release in `.buildpacks`, like "https://github.com/DataDog/heroku-buildpack-datadog.git#v1.0.0"
 
 ## Contributing
 
-As mentioned, this project is a fork of the [heroku-buildpack-datadog](https://github.com/miketheman/heroku-buildpack-datadog) project and is intended to add Datadog APM support while the Datadog APM requires its own agent. Any contributions unrelated to the Datadog APM should be made upstream to that project.
+This project is open source (Apache 2 License), which means we're happy for you to fork it, but we'd be even more excited to have you contribute back to it.
 
-If you have contributions related to the Datadog APM, please follow this process:
+### Submitting issues
 
-- Fork this repo
-- Check out the code, create your own branch
-- Make modifications, test heavily. Add tests if you can.
-- Keep commits simple and clear. Show what, but also explain why.
-- Submit a Pull Request from your feature branch to `master`
+  * If you think you've found an issue, please search the [project issues](https://github.com/DataDog/heroku-buildpack-datadog/issues) and the [Troubleshooting](https://datadog.zendesk.com/hc/en-us/sections/200766955-Troubleshooting)
+    section of our [Knowledge base](https://datadog.zendesk.com/hc/en-us) to see if it's known.
+  * If you can't find anything useful, please contact our [support](http://docs.datadoghq.com/help/) and send a flare. To send a flare, you'll need get to your Dyno's command line:
+  ```shell
+  # From your project directory:
+  heroku run bash
 
-## Credits
+  # Once your Dyno has started and you are at the command line, send a flare:
+  agent -c /app/.apt/etc/datadog-agent/datadog.yaml flare
+  ```
+  * Finally, you can open a Github issue.
 
-This buildpack was heavily inspired by the heroku-buildpack-apt code, as well as many others from Heroku and [@ddollar].
-We leverage the same type of process runner that the Datadog Docker container uses, with a couple of modifications.
+### Pull requests
 
-Author: [@miketheman]
+Have you fixed a bug or written a new check and want to share it? Many thanks!
 
-## License
+In order to ease/speed up our review, here are some items you can check/improve when submitting your PR:
 
-MIT License, see `LICENSE` file for full text.
+  * Keep it small and focused. Avoid changing too many things at once.
+  * Summarize your PR with an explanatory title and a message describing your changes. Cross-reference any related bugs/PRs and provide steps for testing when appropriate.
+  * Write meaningful commit messages. The commit message should describe the reason for the change and give extra details that will allow someone later on to understand in 5 seconds the thing you've been working on for a day.
+  * Squash your commits. Please rebase your changes on master and squash your commits whenever possible, it keeps history cleaner and it's easier to revert things.
 
-[Heroku Buildpack]: https://devcenter.heroku.com/articles/buildpacks
-[Datadog]: http://www.datadog.com
-[DogStatsD]: http://docs.datadoghq.com/guides/dogstatsd/
-[APM]: https://www.datadoghq.com/apm/
-[Datadog library]: http://docs.datadoghq.com/libraries/
-[Heroku Language Buildpack]: https://devcenter.heroku.com/articles/buildpacks#default-buildpacks
-[Datadog Tracing documentation]: https://app.datadoghq.com/trace/docs
-[Datadog API integrations]: https://app.datadoghq.com/account/settings#api
-["Guide to tagging"]: http://docs.datadoghq.com/guides/tagging/
-[Datadog Tracing environments]: https://app.datadoghq.com/trace/docs/tutorials/environments
-[percentiles documentation]: https://help.datadoghq.com/hc/en-us/articles/204588979-How-to-graph-percentiles-in-Datadog
-[Datadog Tracing integrations]: https://app.datadoghq.com/trace/docs/languages
-[Datadog Tracing terminology]: https://app.datadoghq.com/trace/docs/tutorials/terminology
+## History
 
-[@ddollar]: https://github.com/ddollar
-[@miketheman]: https://github.com/miketheman
+Earlier versions of this project were forked from the [miketheman heroku-buildpack-datadog project](https://github.com/miketheman/heroku-buildpack-datadog). It was largely rewritten for Datadog's Agent version 6. Changes and more information can be found in the [changelog](https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md).
