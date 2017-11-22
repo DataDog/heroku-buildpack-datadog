@@ -19,8 +19,6 @@ export PKG_CONFIG_PATH="$APT_DIR/usr/lib/x86_64-linux-gnu/pkgconfig:$APT_DIR/usr
 # Set Datadog configs
 export DD_LOG_FILE="$DD_LOG_DIR/datadog.log"
 export DD_CONF_PATH="$DD_CONF_DIR"
-export DD_LOG_TO_CONSOLE="true"
-export PYTHONPATH="$PYTHONPATH:$DD_DIR/embedded/lib/python2.7"
 
 # Move Datadog config files into place
 cp $DATADOG_CONF.example $DATADOG_CONF
@@ -58,5 +56,5 @@ if [ -n "$DISABLE_DATADOG_AGENT" ]; then
 else
   # Run the Datadog Agent
   echo "Starting Datadog Agent on dyno $DYNO"
-  $DD_BIN_DIR/agent -c $DATADOG_CONF start 2>&1 &
+  bash -c "PYTHONPATH=$DD_DIR/embedded/lib/python2.7 $DD_BIN_DIR/agent -c $DATADOG_CONF start 2>&1 &"
 fi
