@@ -31,12 +31,13 @@ sed -i -e"s|^.*additional_checksd:.*$|additional_checksd: $DD_DIR/checks.d|" $DA
 # Add tags to the config file
 DYNOHOST="$( hostname )"
 TAGS="tags:\n  - dyno:$DYNO\n  - dynohost:$DYNOHOST"
+# Convert comma delimited tags from env vars to yaml
 if [ -n "$DD_TAGS" ]; then
   DD_TAGS=$(sed "s/,[ ]\?/\\\n  - /g" <<< $DD_TAGS)
   TAGS="$TAGS\n  - $DD_TAGS"
 fi
-# Note: This should change after 6.0.0-beta3 when tags are stubbed into the config yaml
-echo -e "$TAGS" >> $DATADOG_CONF
+# Inject tags after example tags.
+sed -i "s/^#   - role:database$/#   - role:database\n$TAGS/" $DATADOG_CONF
 
 # For a list of env vars to override datadog.yaml, see:
 # https://github.com/DataDog/datadog-agent/blob/master/pkg/config/config.go#L145
