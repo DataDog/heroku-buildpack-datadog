@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Non-https repo url and apt fetching
 - APM errors around log location
 
+## [1.0.0-alpha2] - 2018-02-05
+Mostly fixes and a small feature.
+
+### Added
+- If no Datadog Agent version has been pinned, the build process will tell you how to pin the current version.
+
+### Changed
+- Updated the runner script to insert tags in the correct location in the conf file.
+- Env vars are not automatically loaded when building slugs, so the previous version pinning didn't work.
+
 ## [1.0.0-alpha1] - 2017-11-21
 The buildpack was re-written to use the new Datadog Agent 6 and gather full system metrics.
 
