@@ -85,9 +85,11 @@ span.finish()
 For Ruby on Rails applications, you'll need to configure the `config/initializers/datadog-tracer.rb` file:
 
 ```ruby
-Rails.configuration.datadog_trace = {
-  default_service: ENV['DD_SERVICE_NAME'] || 'my-app',
-}
+require 'ddtrace'
+
+Datadog.configure do |c|
+  c.use :rails, service_name: ENV['DD_SERVICE_NAME'] || 'my-app'
+end
 ```
 
 Setting the service name will vary according to your language or supported framework. Please reference the [Datadog libraries list](https://docs.datadoghq.com/libraries/) for specific language support.
