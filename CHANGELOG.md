@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Non-https repo url and apt fetching
 - APM errors around log location
 
+## [1.0.0] - 2018-02-28
+Updated the buildpack to use stable releases and removed alpha flag (because nobody really knows what that means anyway ;))
+
+### Changed
+- Updated the apt repo to use `stable 6` (no longer beta)
+- Incorporates a parameter change that resolved problems in beta rc releases (Thanks Zunda!)
+
 ## [1.0.0-alpha2] - 2018-02-05
 Mostly fixes and a small feature.
 
