@@ -38,7 +38,7 @@ apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommen
 IFS=" " read -a DEP_PKGS <<< $DEPS
 for DEP in ${DEP_PKGS[@]}; do
   echo "Installing $DEP" | indent
-  dpkg -x $APT_CACHE_DIR/archives/$DEP\_*.deb $APT_DIR
+  ls -t $APT_CACHE_DIR/archives/$DEP\_*.deb | head -1 | xargs -i dpkg -x '{}' $APT_DIR
 done
 
 # Install Datadog Agent
