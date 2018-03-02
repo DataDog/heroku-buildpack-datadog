@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Non-https repo url and apt fetching
 - APM errors around log location
 
+## [1.0.1] - 2018-03-02
+Resolved issue with dpkg and multiple packages available
+
+### Changed
+- Includes a fix from Zunda that limits the dpkg install to the latest package.
+
 ## [1.0.0] - 2018-02-28
 Updated the buildpack to use stable releases and removed alpha flag (because nobody really knows what that means anyway ;))
 
