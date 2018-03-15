@@ -7,7 +7,6 @@ DD_BIN_DIR="$DD_DIR/bin/agent"
 DD_LOG_DIR="$APT_DIR/var/log/datadog"
 DD_CONF_DIR="$APT_DIR/etc/datadog-agent"
 DATADOG_CONF="$DD_CONF_DIR/datadog.yaml"
-TRACE_CONF="$DD_CONF_DIR/trace-agent.conf"
 
 # Update Env Vars with new paths for apt packages
 export PATH="$APT_DIR/usr/bin:$DD_BIN_DIR:$PATH"
@@ -22,7 +21,6 @@ export DD_CONF_PATH="$DD_CONF_DIR"
 
 # Move Datadog config files into place
 cp $DATADOG_CONF.example $DATADOG_CONF
-cp $TRACE_CONF.example $TRACE_CONF
 
 # Update the Datadog conf yaml with the correct conf.d and checks.d
 sed -i -e"s|^.*confd_path:.*$|confd_path: $DD_CONF_DIR/conf.d|" $DATADOG_CONF
@@ -58,4 +56,12 @@ else
   # Run the Datadog Agent
   echo "Starting Datadog Agent on dyno $DYNO"
   bash -c "PYTHONPATH=$DD_DIR/embedded/lib/python2.7 $DD_BIN_DIR/agent start -c $DATADOG_CONF 2>&1 &"
+
+  # The Trace Agent will run by default.
+  if [ "$DD_APM_ENABLED" == "false" ]; then
+    echo "The Datadog Trace Agent has been disabled. Set DD_APM_ENABLED to true or unset it."
+  else
+    echo "Starting Datadog Trace Agent on dyno $DYNO"
+    bash -c "$DD_DIR/embedded/bin/trace-agent -config $DATADOG_CONF 2>&1 &"
+  fi
 fi

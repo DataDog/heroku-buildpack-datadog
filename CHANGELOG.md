@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Non-https repo url and apt fetching
 - APM errors around log location
 
+## [1.1.0] - 2018-03-15
+Start the Trace Agent.
+
+### Changed
+- Removed Trace Agent config file code. The Trace Agent now uses the main datadog.yaml file.
+- Updated the README file to document DD_APM_ENABLED.
+
+### Added
+- Datadog Agent 6 no longer starts the Trace Agent (was moved to systemd service for Linux systems). Added code to start the Trace Agent.
+
 ## [1.0.1] - 2018-03-02
 Resolved issue with dpkg and multiple packages available
 
