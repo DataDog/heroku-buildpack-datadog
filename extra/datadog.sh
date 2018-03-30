@@ -17,6 +17,7 @@ export PKG_CONFIG_PATH="$APT_DIR/usr/lib/x86_64-linux-gnu/pkgconfig:$APT_DIR/usr
 
 # Set Datadog configs
 export DD_LOG_FILE="$DD_LOG_DIR/datadog.log"
+export DD_PROC_LOG="$DD_LOG_DIR/datadog-process.log"
 export DD_CONF_PATH="$DD_CONF_DIR"
 
 # Move Datadog config files into place
@@ -36,6 +37,9 @@ if [ -n "$DD_TAGS" ]; then
 fi
 # Inject tags after example tags.
 sed -i "s/^#   - role:database$/#   - role:database\n$TAGS/" $DATADOG_CONF
+
+# Enable process monitoring
+sed -i "s/^# process_config:/process_config:\n  enabled: \"true\"\n  log_file: \"$DD_PROC_LOG\"/" $DATADOG_CONF
 
 # For a list of env vars to override datadog.yaml, see:
 # https://github.com/DataDog/datadog-agent/blob/master/pkg/config/config.go#L145
