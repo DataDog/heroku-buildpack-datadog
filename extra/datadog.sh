@@ -39,7 +39,7 @@ fi
 sed -i "s/^#   - role:database$/#   - role:database\n$TAGS/" $DATADOG_CONF
 
 # Enable process monitoring
-sed -i "s/^# process_config:/process_config:\n  enabled: \"true\"\n  log_file: \"$DD_PROC_LOG\"/" $DATADOG_CONF
+sed -i -e"s|^# process_config:|process_config:\n  enabled: \"true\"\n  log_file: \"$DD_PROC_LOG\"|" $DATADOG_CONF
 
 # For a list of env vars to override datadog.yaml, see:
 # https://github.com/DataDog/datadog-agent/blob/master/pkg/config/config.go#L145
