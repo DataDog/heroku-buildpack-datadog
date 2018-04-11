@@ -29,11 +29,17 @@ sed -i -e"s|^.*additional_checksd:.*$|additional_checksd: $DD_DIR/checks.d|" $DA
 # Add tags to the config file
 DYNOHOST="$( hostname )"
 TAGS="tags:\n  - dyno:$DYNO\n  - dynohost:$DYNOHOST"
+
+if [ -n "$HEROKU_APP_NAME" ]; then
+  TAGS="$TAGS\n  - appname:$HEROKU_APP_NAME"
+fi
+
 # Convert comma delimited tags from env vars to yaml
 if [ -n "$DD_TAGS" ]; then
   DD_TAGS=$(sed "s/,[ ]\?/\\\n  - /g" <<< $DD_TAGS)
   TAGS="$TAGS\n  - $DD_TAGS"
 fi
+
 # Inject tags after example tags.
 sed -i "s/^#   - role:database$/#   - role:database\n$TAGS/" $DATADOG_CONF
 
@@ -46,8 +52,11 @@ if [ -z "$DD_API_KEY" ]; then
 fi
 
 if [ -z "$DD_HOSTNAME" ]; then
-  echo 'DD_HOSTNAME environment variable not set. Run: heroku config:set DD_HOSTNAME=$(heroku apps:info|grep ===|cut -d' ' -f2)'
-  DISABLE_DATADOG_AGENT=1
+  # Set the hostname to the dyno host
+  export DD_HOSTNAME=$DYNOHOST
+else
+  # Generate a warning about DD_HOSTNAME deprecation.
+  echo "WARNING: DD_HOSTNAME is deprecated. Setting this environment variable may result in metrics errors. To remove it, run: heroku config:unset DD_HOSTNAME"
 fi
 
 if [ -n "$DISABLE_DATADOG_AGENT" ]; then

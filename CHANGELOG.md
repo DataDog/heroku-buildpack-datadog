@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Non-https repo url and apt fetching
 - APM errors around log location
 
+## [1.2.0] - 2018-04-11
+Changed buildpack to use dyno hostnames rather than setting the application name as the hostname. Though the previous method helped simplify continuity, it led to metrics aggregation errors for applications running many dynos. The application name is now available under the "appname" tag when Heroku Labs Dyno Metadata is enabled or the "HEROKU_APP_NAME" environment variable is set.
+
+### Changed
+- Hostname will default to dyno host name, unless DD_HOSTNAME is set (not recommended)
+
+### Added
+- Application name added as "appname" tag.
+
+### Removed
+- Removed README documentation about histogram percentiles and APM that were not specific to the buildpack. See https://docs.datadoghq.com for information about those features.
+
 ## [1.1.0] - 2018-03-15
 Start the Trace Agent.
 
