@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Non-https repo url and apt fetching
 - APM errors around log location
 
+## [1.3.0] - 2018-04-24
+Fixed an issue where custom tags completely override the built-in tags for dyno information. Added a switch to change the hostname from host to dyno. This will provide some flexibility and control in how you are billed by Datadog.
+
+### Changed
+- DD_TAGS will now merge with other tags set by the buildpack, rather than overriding them.
+
+### Added
+- DD_DYNO_HOST will allow you to set the agent hostname to the dyno name, rather than host.
+
 ## [1.2.0] - 2018-04-11
 Changed buildpack to use dyno hostnames rather than setting the application name as the hostname. Though the previous method helped simplify continuity, it led to metrics aggregation errors for applications running many dynos. The application name is now available under the "appname" tag when Heroku Labs Dyno Metadata is enabled or the "HEROKU_APP_NAME" environment variable is set.
 
