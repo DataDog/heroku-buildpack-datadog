@@ -16,6 +16,7 @@ Fixed an issue where custom tags completely override the built-in tags for dyno 
 
 ### Added
 - DD_DYNO_HOST will allow you to set the agent hostname to the dyno name, rather than host.
+- Added a tag for dynotype.
 
 ## [1.2.0] - 2018-04-11
 Changed buildpack to use dyno hostnames rather than setting the application name as the hostname. Though the previous method helped simplify continuity, it led to metrics aggregation errors for applications running many dynos. The application name is now available under the "appname" tag when Heroku Labs Dyno Metadata is enabled or the "HEROKU_APP_NAME" environment variable is set.
