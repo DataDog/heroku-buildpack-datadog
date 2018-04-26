@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Non-https repo url and apt fetching
 - APM errors around log location
 
+## [1.3.1] - 2018-04-26
+Using dyno name as hostname was not properly namespaced, so multiple apps would have dyno hostname collisions. Appname has been added to prevent this.
+
+### Changed
+- DD_DYNO_HOST reports hosts as appname.dynoname.
+
 ## [1.3.0] - 2018-04-24
 Fixed an issue where custom tags completely override the built-in tags for dyno information. Added a switch to change the hostname from host to dyno. This will provide some flexibility and control in how you are billed by Datadog.
 

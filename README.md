@@ -33,7 +33,7 @@ git push heroku master
 
 Once complete, the Datadog Agent is started automatically when each Dyno starts.
 
-The Datadog agent provides a listening port on 8125 for statsd/dogstatsd metrics and events. Traces are collected on port 8126.
+The Datadog Agent provides a listening port on 8125 for statsd/dogstatsd metrics and events. Traces are collected on port 8126.
 
 ## Configuration
 
@@ -43,10 +43,10 @@ In addition to the environment variables shown above, there are a number of othe
 | --- | --- |
 | `DD_API_KEY` | *Required.* Your API key is available from the [Datadog API integrations](https://app.datadoghq.com/account/settings#api) page. Note that this is the *API* key, not the application key. |
 | `DD_HOSTNAME` | *Deprecated.* **WARNING**: Setting the hostname manually may result in metrics continuity errors. It is recommended that you do *not* set this variable. Because dyno hosts are ephemeral it is recommended that you monitor based on the tags `dynoname` or `appname`. |
-| `DD_DYNO_HOST` | *Optional.* Set to `true` to use the dyno name (e.g. `web.1` or `run.1234`) as the hostname. See the [hostname section](#hostname) below for more information. Defaults to `false`. |
+| `DD_DYNO_HOST` | *Optional.* Set to `true` to use the app and dyno name (e.g. `appname.web.1` or `appname.run.1234`) as the hostname. See the [hostname section](#hostname) below for more information. Defaults to `false`. |
 | `DD_TAGS` | *Optional.* Sets additional tags provided as a comma-delimited string. For example, `heroku config:set DD_TAGS=simple-tag-0,tag-key-1:tag-value-1`. The buildpack automatically adds the tags `dyno` (the dyno name, e.g. `web.1`), `dynohost` (the host machine ID, e.g. `33f232db-7fa7-461e-b623-18e60944f44f`), and `dynotype` (the type of dyno, e.g `run` or `web`). See the ["Guide to tagging"](http://docs.datadoghq.com/guides/tagging/) for more information. |
 | `DD_HISTOGRAM_PERCENTILES` | *Optional.* Optionally set additional percentiles for your histogram metrics. See the [Histogram percentiles article](https://help.datadoghq.com/hc/en-us/articles/204588979-How-to-graph-percentiles-in-Datadog) for more information. |
-| `DISABLE_DATADOG_AGENT` | *Optional.* When set, the Datadog agent will not be run. |
+| `DISABLE_DATADOG_AGENT` | *Optional.* When set, the Datadog Agent will not be run. |
 | `DD_APM_ENABLED` | *Optional.* The Datadog Trace Agent (APM) is run by default. Set this to `false` to disable the Trace Agent. |
 | `DD_AGENT_VERSION` | *Optional.* By default, the buildpack installs the latest version of the Datadog Agent available in the package repository. Use this variable to install older versions of the Datadog Agent (note that not all versions of the Agent may be available). |
 | `DD_SERVICE_ENV` | *Optional.* The Datadog Agent automatically tries to identify your environment by searching for a tag in the form `env:<environment name>`. For more information, see the [Datadog Tracing environments page](https://docs.datadoghq.com/tracing/environments/). |
@@ -55,9 +55,9 @@ For additional documentation, refer to the [Datadog Heroku buildpack documentati
 
 ## Hostname
 
-Heroku dynos are ephemeral—they can move to different host machines whenever new code is deployed, configuration changes are made or resouce needs/availability changes. This makes Heroku flexible and responsive, but can potentially lead to a high number of reported hosts in Datadog. Datadog bills on a per-host basis, and the buildpack default is to report actual hosts, which can lead to higher than expected costs.
+Heroku dynos are ephemeral—they can move to different host machines whenever new code is deployed, configuration changes are made, or resouce needs/availability changes. This makes Heroku flexible and responsive, but can potentially lead to a high number of reported hosts in Datadog. Datadog bills on a per-host basis, and the buildpack default is to report actual hosts, which can lead to higher than expected costs.
 
-Depending on your use case, you may want to set your hostname so that hosts are aggregated and report a lower number.  To do this, Set `DD_DYNO_HOST` to `true`. This will cause the Agent to report the hostname as the dyno name (e.g. `web.1` or `run.1234`) and your host count will closely match your dyno usage. One drawback is that you may see some metrics continuity errors whenever a dyno is cycled.
+Depending on your use case, you may want to set your hostname so that hosts are aggregated and report a lower number.  To do this, Set `DD_DYNO_HOST` to `true`. This will cause the Agent to report the hostname as the app and dyno name (e.g. `appname.web.1` or `appname.run.1234`) and your host count will closely match your dyno usage. One drawback is that you may see some metrics continuity errors whenever a dyno is cycled.
 
 ## Contributing
 
