@@ -54,17 +54,12 @@ if [ -z "$DD_API_KEY" ]; then
   DISABLE_DATADOG_AGENT=1
 fi
 
-if [ -z "$DD_HOSTNAME" ]; then
-  if [ "$DD_DYNO_HOST" == "true" ]; then
-    # Set the hostname to dyno name
-    export DD_HOSTNAME="$HEROKU_APP_NAME.$DYNO"
-  else
-    # Set the hostname to the dyno host
-    export DD_HOSTNAME=$DYNOHOST
-  fi
+if [ "$DD_DYNO_HOST" == "true" ]; then
+  # Set the hostname to dyno name
+  export DD_HOSTNAME="$HEROKU_APP_NAME.$DYNO"
 else
-  # Generate a warning about DD_HOSTNAME deprecation.
-  echo "WARNING: DD_HOSTNAME is deprecated. Setting this environment variable may result in metrics errors. To remove it, run: heroku config:unset DD_HOSTNAME"
+  # Set the hostname to the dyno host
+  export DD_HOSTNAME=$DYNOHOST
 fi
 
 if [ -n "$DISABLE_DATADOG_AGENT" ]; then
