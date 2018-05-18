@@ -57,10 +57,10 @@ fi
 if [ -z "$DD_HOSTNAME" ]; then
   if [ "$DD_DYNO_HOST" == "true" ]; then
     # Set the hostname to dyno name
-    export DD_HOSTNAME="$HEROKU_APP_NAME.$DYNO"
+    export DD_HOSTNAME="${HEROKU_APP_NAME//_/-}.${DYNO//_/-}"
   else
     # Set the hostname to the dyno host
-    export DD_HOSTNAME=$DYNOHOST
+    export DD_HOSTNAME="${DYNOHOST//_/-}"
   fi
 else
   # Generate a warning about DD_HOSTNAME deprecation.
