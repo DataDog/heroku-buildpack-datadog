@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Non-https repo url and apt fetching
 - APM errors around log location
 
+## [1.3.2] - 2018-05-21
+Hostnames are not always RFC1123 compliant. Invalid hostnames led to unexpected non-reporting.
+
+### Changed
+- Updated documentation to mention enabling Heroku Labs metadata (required for DD_DYNO_HOST)
+
+### Added
+- Added a check for non-compliant hostnames. Buildpack will rename and throw a warning
+
 ## [1.3.1] - 2018-04-26
 Using dyno name as hostname was not properly namespaced, so multiple apps would have dyno hostname collisions. Appname has been added to prevent this.
 
