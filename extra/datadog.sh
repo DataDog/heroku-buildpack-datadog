@@ -56,11 +56,17 @@ fi
 
 if [ -z "$DD_HOSTNAME" ]; then
   if [ "$DD_DYNO_HOST" == "true" ]; then
-    # Set the hostname to dyno name
-    export DD_HOSTNAME="${HEROKU_APP_NAME//_/-}.${DYNO//_/-}"
+    # Set the hostname to dyno name and ensure rfc1123 compliance.
+    HAN=$( echo $HEROKU_APP_NAME | sed -e 's/[^a-zA-Z0-9-]/-/g' -e 's/^-//g' )
+    if [ "$HAN" != "$D" ]; then
+      echo "WARNING: The appname \"$HEROKU_APP_NAME\" contains invalid characters. Using \"$HAN\" instead."
+    fi
+
+    D=$( echo $DYNO | sed -e 's/[^a-zA-Z0-9-]/-/g' -e 's/^-//g' )
+    export DD_HOSTNAME="$HAN.$D"
   else
     # Set the hostname to the dyno host
-    export DD_HOSTNAME="${DYNOHOST//_/-}"
+    export DD_HOSTNAME=$( echo $DYNOHOST | sed -e 's/[^a-zA-Z0-9-]/-/g' -e 's/^-//g' )
   fi
 else
   # Generate a warning about DD_HOSTNAME deprecation.
