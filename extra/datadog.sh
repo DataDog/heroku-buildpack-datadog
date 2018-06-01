@@ -29,7 +29,13 @@ sed -i -e"s|^.*additional_checksd:.*$|additional_checksd: $DD_DIR/checks.d|" $DA
 # Add tags to the config file
 DYNOHOST="$( hostname )"
 DYNOTYPE=${DYNO%%.*}
-TAGS="tags:\n  - dyno:$DYNO\n  - dynohost:$DYNOHOST\n  - dynotype:$DYNOTYPE"
+
+if [ "$DD_DYNO_HOST" == "true" ]; then
+  DYNOHOSTTAG="$HEROKU_APP_NAME.$DYNO"
+  TAGS="tags:\n  - dyno:$DYNO\n  - dynohost:$DYNOHOSTTAG\n  - dynotype:$DYNOTYPE"
+else
+  TAGS="tags:\n  - dyno:$DYNO\n  - dynohost:$DYNOHOST\n  - dynotype:$DYNOTYPE"
+fi
 
 if [ -n "$HEROKU_APP_NAME" ]; then
   TAGS="$TAGS\n  - appname:$HEROKU_APP_NAME"
