@@ -42,9 +42,14 @@ for DEP in ${DEP_PKGS[@]}; do
   ls -t $APT_CACHE_DIR/archives/$DEP\_*.deb | head -1 | xargs -i dpkg -x '{}' $APT_DIR
 done
 
+# Install GPG key
+topic "Install gpg key for Datadog APT Repository "
+APT_KEYRING="$CACHE_DIR/apt/trusted.gpg"
+apt-key --keyring $APT_KEYRING adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80/ A2923DFF56EDA6E76E55E492D3A80E30382E94DE
+
 # Install Datadog Agent
 topic "Updating apt caches for Datadog Agent"
-APT_OPTIONS="$APT_OPTIONS -o Dir::Etc::SourceList=$APT_REPO_FILE"
+APT_OPTIONS="$APT_OPTIONS -o Dir::Etc::Trusted=$APT_KEYRING -o Dir::Etc::SourceList=$APT_REPO_FILE"
 apt-get $APT_OPTIONS update | indent
 
 topic "Installing Datadog Agent"
