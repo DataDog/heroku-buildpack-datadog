@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Non-https repo url and apt fetching
 - APM errors around log location
 
+## [1.3.4] - 2018-06-11
+Thanks to dreid for help resolving the apt-key issue, fixing compatibility with the Heroku-18 stack.
+
+### Changed
+- Fixed apt-key issue, buildpack compatibility with Heroku-18 stack.
+- Fixed PYTHONPATH issue preventing python-based core integrations from running.
+- Set APM log location resulting in log location related errors. APM log is now at /app/.apt/etc/datadog/datadog-apm.log
+
+## [1.3.3] - 2018-06-01
+
+### Changed
+- Removed dynohost tag
+
 ## [1.3.2] - 2018-05-21
 Hostnames are not always RFC1123 compliant. Invalid hostnames led to unexpected non-reporting.
 
