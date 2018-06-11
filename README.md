@@ -5,7 +5,7 @@ A [Heroku buildpack](https://devcenter.heroku.com/articles/buildpacks) to add [D
 
 ## Usage
 
-This buildpack installs the Datadog Agent in your Heroku Dyno to collect system metrics, custom application metrics and traces. To collect custom application metrics or traces, include the language appropriate [DogStatsD or Datadog APM library](http://docs.datadoghq.com/libraries/) in your application.
+This buildpack installs the Datadog Agent in your Heroku Dyno to collect system metrics, custom application metrics and traces. To collect custom application metrics or traces, include the language appropriate [DogStatsD or Datadog APM library](http://docs.datadoghq.com/libraries/) in your application. *Note*: Heroku buildpacks cannot be used with Docker images. To build a Docker image with Datadog, reference the [Datadog Agent docker files](https://github.com/DataDog/datadog-agent/tree/master/Dockerfiles).
 
 ## Installation
 
