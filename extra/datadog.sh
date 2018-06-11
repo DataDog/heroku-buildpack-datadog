@@ -17,6 +17,7 @@ export PKG_CONFIG_PATH="$APT_DIR/usr/lib/x86_64-linux-gnu/pkgconfig:$APT_DIR/usr
 
 # Set Datadog configs
 export DD_LOG_FILE="$DD_LOG_DIR/datadog.log"
+DD_APM_LOG="$DD_LOG_DIR/datadog-apm.log"
 
 # Move Datadog config files into place
 cp $DATADOG_CONF.example $DATADOG_CONF
@@ -44,6 +45,9 @@ fi
 
 # Inject tags after example tags.
 sed -i "s/^#   - role:database$/#   - role:database\n$TAGS/" $DATADOG_CONF
+
+# Uncomment APM configs and add the log file location.
+sed -i -e"s|^# apm_config:$|apm_config:\n    log_file: $DD_APM_LOG|" $DATADOG_CONF
 
 # For a list of env vars to override datadog.yaml, see:
 # https://github.com/DataDog/datadog-agent/blob/master/pkg/config/config.go#L145
