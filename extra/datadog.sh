@@ -26,6 +26,16 @@ cp $DATADOG_CONF.example $DATADOG_CONF
 sed -i -e"s|^.*confd_path:.*$|confd_path: $DD_CONF_DIR/conf.d|" $DATADOG_CONF
 sed -i -e"s|^.*additional_checksd:.*$|additional_checksd: $DD_DIR/checks.d|" $DATADOG_CONF
 
+# Include application's datadog configs
+APP_DATADOG_CONF_DIR="/app/datadog/conf.d"
+
+for file in "$APP_DATADOG_CONF_DIR"/*.yaml; do
+  filename=$(basename -- "$file")
+  filename="${filename%.*}"
+  mkdir -p "$DD_CONF_DIR/conf.d/${filename}.d"
+  cp $file "$DD_CONF_DIR/conf.d/${filename}.d/conf.yaml"
+done
+
 # Add tags to the config file
 DYNOHOST="$( hostname )"
 DYNOTYPE=${DYNO%%.*}
@@ -75,6 +85,7 @@ else
   # Generate a warning about DD_HOSTNAME deprecation.
   echo "WARNING: DD_HOSTNAME is deprecated. Setting this environment variable may result in metrics errors. To remove it, run: heroku config:unset DD_HOSTNAME"
 fi
+
 
 if [ -n "$DISABLE_DATADOG_AGENT" ]; then
   echo "The Datadog Agent has been disabled. Unset the DISABLE_DATADOG_AGENT or set missing environment variables."

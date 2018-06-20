@@ -53,6 +53,8 @@ In addition to the environment variables shown above, there are a number of othe
 
 For additional documentation, refer to the [Datadog Heroku buildpack documentation](https://docs.datadoghq.com/agent/basic_agent_usage/heroku/) and the [Datadog Agent documentation](https://docs.datadoghq.com/agent/).
 
+You can also provide additional configurations by including `*.yaml` files inside `datadog/conf.d` directory in root of your application.
+
 ## Hostname
 
 Heroku dynos are ephemeral—they can move to different host machines whenever new code is deployed, configuration changes are made, or resouce needs/availability changes. This makes Heroku flexible and responsive, but can potentially lead to a high number of reported hosts in Datadog. Datadog bills on a per-host basis, and the buildpack default is to report actual hosts, which can lead to higher than expected costs.
