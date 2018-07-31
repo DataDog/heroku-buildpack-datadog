@@ -6,7 +6,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
-- APM errors around log location
+
+## [1.4.0] - 2018-07-31
+Thanks to lucasm-iRonin for adding functionality to support Datadog Agent integrations!
+
+### Changed
+- Now using sks-keyservers instead of ubuntu keyservers. This should increase reliability
+
+### Added
+- Basic Datadog Agent integration support.
+
+### Removed
+- Removed docs referencing Datadog documentation site. That site will soon pull from this repo.
 
 ## [1.3.4] - 2018-06-11
 Thanks to dreid for help resolving the apt-key issue, fixing compatibility with the Heroku-18 stack.
