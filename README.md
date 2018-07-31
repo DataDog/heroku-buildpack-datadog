@@ -91,7 +91,17 @@ This project is open source (Apache 2 License), which means we're happy for you 
   # Once your Dyno has started and you are at the command line, send a flare:
   agent -c /app/.apt/etc/datadog-agent/datadog.yaml flare
   ```
-* Finally, you can open a Github issue.
+
+  It can also be helpful to send logs from your running dyno:
+  ```shell
+  # Download Datadog Agent logs
+  heroku ps:copy /app/.apt/var/log/datadog/datadog.log --dyno=<YOUR DYNO NAME>
+
+  # Download Datadog Trace Agent logs
+  heroku ps:copy /app/.apt/var/log/datadog/datadog-apm.log --dyno=<YOUR DYNO NAME>
+  ```
+
+* Finally, you can open [a Github issue](https://github.com/DataDog/heroku-buildpack-datadog/issues).
 
 ### Pull requests
 
