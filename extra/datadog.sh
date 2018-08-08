@@ -56,6 +56,9 @@ fi
 # Inject tags after example tags.
 sed -i "s/^#   - role:database$/#   - role:database\n$TAGS/" $DATADOG_CONF
 
+# Add log file location for agent.
+sed -i -e"s|^# log_file: /var/log/datadog/agent.log|log_file: $DD_LOG_FILE|" $DATADOG_CONF
+
 # Uncomment APM configs and add the log file location.
 sed -i -e"s|^# apm_config:$|apm_config:\n    log_file: $DD_APM_LOG|" $DATADOG_CONF
 
