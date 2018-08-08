@@ -56,6 +56,9 @@ fi
 # Inject tags after example tags.
 sed -i "s/^#   - role:database$/#   - role:database\n$TAGS/" $DATADOG_CONF
 
+# Add log file location for agent.
+sed -i -e"s|^# log_file: /var/log/datadog/agent.log|log_file: $DD_LOG_FILE|" $DATADOG_CONF
+
 # Uncomment APM configs and add the log file location.
 sed -i -e"s|^# apm_config:$|apm_config:\n    log_file: $DD_APM_LOG|" $DATADOG_CONF
 
@@ -102,7 +105,7 @@ else
 
   # Run the Datadog Agent
   echo "Starting Datadog Agent on $DD_HOSTNAME"
-  bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" $DD_BIN_DIR/agent start -c $DATADOG_CONF 2>&1 &"
+  bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" $DD_BIN_DIR/agent run -c $DATADOG_CONF 2>&1 &"
 
   # The Trace Agent will run by default.
   if [ "$DD_APM_ENABLED" == "false" ]; then
