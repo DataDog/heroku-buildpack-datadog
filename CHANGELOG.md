@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
+## [1.4.1] - 2018-08-20
+Thanks to pawelchcki for spotting that the integration support lacked a check if no integration files existed. This update fixes an issue where the Datadog Trace Agent may fail to start or drop traces.
+
+### Added
+- A small check to ensure integration configuration files exist when running logic to import them.
+
 ## [1.4.0] - 2018-07-31
 Thanks to lucasm-iRonin for adding functionality to support Datadog Agent integrations!
 
