@@ -30,6 +30,7 @@ sed -i -e"s|^.*additional_checksd:.*$|additional_checksd: $DD_DIR/checks.d|" $DA
 APP_DATADOG_CONF_DIR="/app/datadog/conf.d"
 
 for file in "$APP_DATADOG_CONF_DIR"/*.yaml; do
+  test -e "$file" || continue # avoid errors when glob doesn't match anything
   filename=$(basename -- "$file")
   filename="${filename%.*}"
   mkdir -p "$DD_CONF_DIR/conf.d/${filename}.d"
