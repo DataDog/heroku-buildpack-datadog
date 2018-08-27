@@ -67,6 +67,8 @@ if [ -f $ENV_DIR/DD_AGENT_VERSION ]; then
   # Stop if we can't find the version.
   if [ -z "$DEB" ]; then
     topic "ERROR: Version \"$DD_AGENT_VERSION\" was not found."
+    echo "Available versions:" | indent
+    ls -t $DPKG_STUB*.deb | indent
     exit 1
   fi
 else
