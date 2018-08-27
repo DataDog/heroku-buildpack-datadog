@@ -101,9 +101,20 @@ else
   DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/lib-dynload:$DD_PYTHONPATH"
   DD_PYTHONPATH="$DD_DIR/bin/agent/dist:$DD_PYTHONPATH"
 
+  # Get the Agent version number
+  DD_VERSION=`expr "$($DD_BIN_DIR/agent version)" : 'Agent \([0-9]\+\.[0-9]\+.[0-9]\+\)'`
+
+  # Prior to Agent 2.4.1, the command is "start"
+  RUN_VERSION="6.4.1"
+  if [ "$DD_VERSION" == "`echo -e "$RUN_VERSION\n$DD_VERSION" | sort -V | head -n1`" ]; then
+    RUN_COMMAND="start"
+  else
+    RUN_COMMAND="run"
+  fi
+
   # Run the Datadog Agent
   echo "Starting Datadog Agent on $DD_HOSTNAME"
-  bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" $DD_BIN_DIR/agent start -c $DATADOG_CONF 2>&1 &"
+  bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" $DD_BIN_DIR/agent $RUN_COMMAND -c $DATADOG_CONF 2>&1 &"
 
   # The Trace Agent will run by default.
   if [ "$DD_APM_ENABLED" == "false" ]; then
