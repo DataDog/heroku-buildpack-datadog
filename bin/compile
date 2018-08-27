@@ -45,10 +45,9 @@ done
 # Install GPG key
 topic "Install gpg key for Datadog APT Repository "
 APT_KEYRING="$CACHE_DIR/apt/trusted.gpg"
-#apt-key --keyring $APT_KEYRING adv --recv-keys --keyserver hkp://pool.sks-keyservers.net A2923DFF56EDA6E76E55E492D3A80E30382E94DE
 GPG_KEY_FILE="$BUILDPACK_DIR/etc/datadog.gpg"
 GPG_HOME_DIR="$BUILD_DIR/.gnupg"
-mkdir -p "$GPG_HOME_DIR"
+mkdir -p $GPG_HOME_DIR
 gpg --ignore-time-conflict --no-options --no-default-keyring --homedir $GPG_HOME_DIR --keyring $APT_KEYRING --import $GPG_KEY_FILE | indent
 
 # Install Datadog Agent
