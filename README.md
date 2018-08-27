@@ -5,7 +5,7 @@ A [Heroku buildpack](https://devcenter.heroku.com/articles/buildpacks) to add [D
 
 ## Usage
 
-This buildpack installs the Datadog Agent in your Heroku Dyno to collect system metrics, custom application metrics and traces. To collect custom application metrics or traces, include the language appropriate [DogStatsD or Datadog APM library](http://docs.datadoghq.com/libraries/) in your application. *Note*: Heroku buildpacks cannot be used with Docker images. To build a Docker image with Datadog, reference the [Datadog Agent docker files](https://github.com/DataDog/datadog-agent/tree/master/Dockerfiles).
+This buildpack installs the Datadog Agent in your Heroku Dyno to collect system metrics, custom application metrics and traces. To collect custom application metrics or traces, include the language appropriate [DogStatsD or Datadog APM library](http://docs.datadoghq.com/libraries/) in your application.
 
 ## Installation
 
@@ -53,7 +53,6 @@ In addition to the environment variables shown above, there are a number of othe
 
 For additional documentation, refer to the [Datadog Agent documentation](https://docs.datadoghq.com/agent/).
 
-
 ## Hostname
 
 Heroku dynos are ephemeral—they can move to different host machines whenever new code is deployed, configuration changes are made, or resouce needs/availability changes. This makes Heroku flexible and responsive, but can potentially lead to a high number of reported hosts in Datadog. Datadog bills on a per-host basis, and the buildpack default is to report actual hosts, which can lead to higher than expected costs.
@@ -75,6 +74,12 @@ instances:
 ```
 
 During the Dyno start up, your YAML files will be copied to the appropriate Datadog Agent configuration directories.
+
+## Unsupported
+
+Heroku buildpacks cannot be used with Docker images. To build a Docker image with Datadog, reference the [Datadog Agent docker files](https://github.com/DataDog/datadog-agent/tree/master/Dockerfiles).
+
+It is not possible to send logs from Heroku to Datadog using this buildpack.
 
 ## Contributing
 

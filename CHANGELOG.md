@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
+## [1.5.0] - 2018-08-27
+External keyservers were becoming an issue for reliability so the Datadog public key has been added to the buildpack. A few updates were made regarding Agent versioning and the documentation was clarified.
+
+### Added
+- Added the Datadog public PGP key.
+- Invalid pinned versions of the Datadog Agent now returns a list of valid options.
+
+### Changed
+- Now uses the included PGP key to validate the Datadog package
+- Datadog Agent from version 6.4.1 now uses the `run` command. Previous versions will still use `start`
+
 ## [1.4.1] - 2018-08-20
 Thanks to pawelchcki for spotting that the integration support lacked a check if no integration files existed. This update fixes an issue where the Datadog Trace Agent may fail to start or drop traces.
 
