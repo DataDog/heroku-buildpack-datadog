@@ -103,7 +103,7 @@ else
 
   # Run the Datadog Agent
   echo "Starting Datadog Agent on $DD_HOSTNAME"
-  bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" $DD_BIN_DIR/agent start -c $DATADOG_CONF 2>&1 &"
+  bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" $DD_BIN_DIR/agent run -c $DATADOG_CONF 2>&1 &"
 
   # The Trace Agent will run by default.
   if [ "$DD_APM_ENABLED" == "false" ]; then
