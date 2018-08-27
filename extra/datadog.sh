@@ -105,7 +105,7 @@ else
   DD_VERSION=`expr "$($DD_BIN_DIR/agent version)" : 'Agent \([0-9]\+\.[0-9]\+.[0-9]\+\)'`
 
   # Prior to Agent 2.4.1, the command is "start"
-  RUN_VERSION="2.4.1"
+  RUN_VERSION="6.4.1"
   if [ "$DD_VERSION" == "`echo -e "$RUN_VERSION\n$DD_VERSION" | sort -V | head -n1`" ]; then
     RUN_COMMAND="start"
   else
