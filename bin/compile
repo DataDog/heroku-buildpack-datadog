@@ -62,10 +62,11 @@ apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommen
 DPKG_STUB="$APT_CACHE_DIR/archives/datadog-agent_1%3a"
 if [ -f $ENV_DIR/DD_AGENT_VERSION ]; then
   DD_AGENT_VERSION=$(cat $ENV_DIR/DD_AGENT_VERSION)
-  echo "Installing pinned version \"$DD_AGENT_VERSION\"" | indent
-  DEB=$(ls -t $DPKG_STUB$DD_AGENT_VERSION.deb | head -n 1)
+  DEB="$DPKG_STUB$DD_AGENT_VERSION.deb"
+  if [ -e $DEB ]; then
+    echo "Installing pinned version \"$DD_AGENT_VERSION\"" | indent
   # Stop if we can't find the version.
-  if [ -z "$DEB" ]; then
+  else
     topic "ERROR: Version \"$DD_AGENT_VERSION\" was not found."
     echo "Available versions:" | indent
     ls -t $DPKG_STUB*.deb | indent
