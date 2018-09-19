@@ -57,9 +57,6 @@ fi
 # Inject tags after example tags.
 sed -i "s/^#   - role:database$/#   - role:database\n$TAGS/" $DATADOG_CONF
 
-# Uncomment APM configs and add the log file location.
-sed -i -e"s|^# apm_config:$|apm_config:\n    log_file: $DD_APM_LOG|" $DATADOG_CONF
-
 # For a list of env vars to override datadog.yaml, see:
 # https://github.com/DataDog/datadog-agent/blob/master/pkg/config/config.go#L145
 
@@ -87,6 +84,12 @@ else
   echo "WARNING: DD_HOSTNAME is deprecated. Setting this environment variable may result in metrics errors. To remove it, run: heroku config:unset DD_HOSTNAME"
 fi
 
+# Uncomment APM configs and add the log file location.
+if [ -n "$DD_APM_TRACE_SEARCH" ]; then
+  sed -i -e"s|^# apm_config:$|apm_config:\n    analyzed_spans:\n        $DD_APM_SERVICE_NAME\|http.request: 1\n    log_file: $DD_APM_LOG|" $DATADOG_CONF
+else
+  sed -i -e"s|^# apm_config:$|apm_config:\n    log_file: $DD_APM_LOG|" $DATADOG_CONF
+fi
 
 if [ -n "$DISABLE_DATADOG_AGENT" ]; then
   echo "The Datadog Agent has been disabled. Unset the DISABLE_DATADOG_AGENT or set missing environment variables."

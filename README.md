@@ -48,6 +48,8 @@ In addition to the environment variables shown above, there are a number of othe
 | `DD_HISTOGRAM_PERCENTILES` | *Optional.* Optionally set additional percentiles for your histogram metrics. See the [Histogram percentiles article](https://help.datadoghq.com/hc/en-us/articles/204588979-How-to-graph-percentiles-in-Datadog) for more information. |
 | `DISABLE_DATADOG_AGENT` | *Optional.* When set, the Datadog Agent will not be run. |
 | `DD_APM_ENABLED` | *Optional.* The Datadog Trace Agent (APM) is run by default. Set this to `false` to disable the Trace Agent. |
+| `DD_APM_TRACE_SEARCH` | *Optional.* Enables configuration for [APM Trace Search & Analytics](https://www.datadoghq.com/blog/trace-search-high-cardinality-data/). Disabled by default. |
+| `DD_APM_SERVICE_NAME` | *Optional.* If `DD_APM_TRACE_SEARCH` is enabled, this value must be set to the name of your service in Datadog APM. |
 | `DD_AGENT_VERSION` | *Optional.* By default, the buildpack installs the latest version of the Datadog Agent available in the package repository. Use this variable to install older versions of the Datadog Agent (note that not all versions of the Agent may be available). |
 | `DD_SERVICE_ENV` | *Optional.* The Datadog Agent automatically tries to identify your environment by searching for a tag in the form `env:<environment name>`. For more information, see the [Datadog Tracing environments page](https://docs.datadoghq.com/tracing/environments/). |
 
