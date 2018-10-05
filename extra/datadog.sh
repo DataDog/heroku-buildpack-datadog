@@ -6,6 +6,7 @@ DD_DIR="$APT_DIR/opt/datadog-agent"
 DD_BIN_DIR="$DD_DIR/bin/agent"
 DD_LOG_DIR="$APT_DIR/var/log/datadog"
 DD_CONF_DIR="$APT_DIR/etc/datadog-agent"
+DD_RUN_DIR="$DD_DIR/run"
 DATADOG_CONF="$DD_CONF_DIR/datadog.yaml"
 
 # Update Env Vars with new paths for apt packages
@@ -62,6 +63,10 @@ sed -i -e"s|^# apm_config:$|apm_config:\n    log_file: $DD_APM_LOG|" $DATADOG_CO
 
 # For a list of env vars to override datadog.yaml, see:
 # https://github.com/DataDog/datadog-agent/blob/master/pkg/config/config.go#L145
+
+# Setup agent's run directory
+touch "$DD_RUN_DIR/registry.json"
+sed -i -e"s|^# logs_config:$|logs_config:\n    run_path: $DD_RUN_DIR|" $DATADOG_CONF
 
 if [ -z "$DD_API_KEY" ]; then
   echo "DD_API_KEY environment variable not set. Run: heroku config:add DD_API_KEY=<your API key>"
