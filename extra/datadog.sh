@@ -123,4 +123,9 @@ else
     echo "Starting Datadog Trace Agent on $DD_HOSTNAME"
     bash -c "$DD_DIR/embedded/bin/trace-agent -config $DATADOG_CONF 2>&1 &"
   fi
+
+  # Enable the Process Agent configs.
+  if [ "$DD_PROCESS_AGENT" == "true" ]; then
+    sed -i -e"s|^# process_config:$|process_config:\n    enabled: $DD_PROCESS_AGENT|" $DATADOG_CONF
+  fi
 fi
