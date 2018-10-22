@@ -60,6 +60,11 @@ sed -i "s/^#   - role:database$/#   - role:database\n$TAGS/" $DATADOG_CONF
 # Uncomment APM configs and add the log file location.
 sed -i -e"s|^# apm_config:$|apm_config:\n    log_file: $DD_APM_LOG|" $DATADOG_CONF
 
+# Uncomment the Process Agent configs and enable.
+if [ "$DD_PROCESS_AGENT" == "true" ]; then
+  sed -i -e"s|^# process_config:$|process_config:\n    enabled: $DD_PROCESS_AGENT|" $DATADOG_CONF
+fi
+
 # For a list of env vars to override datadog.yaml, see:
 # https://github.com/DataDog/datadog-agent/blob/master/pkg/config/config.go#L145
 
