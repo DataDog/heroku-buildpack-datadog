@@ -38,7 +38,7 @@ for file in "$APP_DATADOG_CONF_DIR"/*.yaml; do
 done
 
 # Auto-Configure Datadog for Postgres
-if [ "$HEROKU_POSTGRES" == "true" ]; then
+if [ "$DD_HEROKU_POSTGRES" == "true" ]; then
   POSTGREGEX='^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.*)$'
   if [[ $DATABASE_URL =~ $POSTGREGEX ]]; then
     cat << EOF > $DD_CONF_DIR/conf.d/postgres.d/conf.yaml
