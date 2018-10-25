@@ -51,6 +51,7 @@ In addition to the environment variables shown above, there are a number of othe
 | `DD_PROCESS_AGENT` | *Optional.* The Datadog Process Agent is disabled by default. Set this to `true` to enable the Process Agent. |
 | `DD_AGENT_VERSION` | *Optional.* By default, the buildpack installs the latest version of the Datadog Agent available in the package repository. Use this variable to install older versions of the Datadog Agent (note that not all versions of the Agent may be available). |
 | `DD_SERVICE_ENV` | *Optional.* The Datadog Agent automatically tries to identify your environment by searching for a tag in the form `env:<environment name>`. For more information, see the [Datadog Tracing environments page](https://docs.datadoghq.com/tracing/environments/). |
+| `HEROKU_POSTGRES` | *Optional.* When set to `true` the Datadog Postgres check will be auto-configured from the DATABASE_URL environment variable. |
 
 For additional documentation, refer to the [Datadog Agent documentation](https://docs.datadoghq.com/agent/).
 

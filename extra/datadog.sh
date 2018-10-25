@@ -37,6 +37,23 @@ for file in "$APP_DATADOG_CONF_DIR"/*.yaml; do
   cp $file "$DD_CONF_DIR/conf.d/${filename}.d/conf.yaml"
 done
 
+# Auto-Configure Datadog for Postgres
+if [ "$HEROKU_POSTGRES" == "true" ]; then
+  POSTGREGEX='^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.*)$'
+  if [[ $DATABASE_URL =~ $POSTGREGEX ]]; then
+    cat << EOF > $DD_CONF_DIR/conf.d/postgres.d/conf.yaml
+init_config:
+
+instances:
+  - host: ${BASH_REMATCH[3]}
+    port: ${BASH_REMATCH[4]}
+    username: ${BASH_REMATCH[1]}
+    password: ${BASH_REMATCH[2]}
+    dbname: ${BASH_REMATCH[5]}
+EOF
+  fi
+fi
+
 # Add tags to the config file
 DYNOHOST="$( hostname )"
 DYNOTYPE=${DYNO%%.*}
