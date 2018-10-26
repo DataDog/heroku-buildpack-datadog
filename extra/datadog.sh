@@ -50,6 +50,7 @@ instances:
     username: ${BASH_REMATCH[1]}
     password: ${BASH_REMATCH[2]}
     dbname: ${BASH_REMATCH[5]}
+    use_psycopg2: True
 EOF
   fi
 fi
