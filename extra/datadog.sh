@@ -93,7 +93,16 @@ else
   echo "WARNING: DD_HOSTNAME is deprecated. Setting this environment variable may result in metrics errors. To remove it, run: heroku config:unset DD_HOSTNAME"
 fi
 
+# Give applications a chance to modify env vars prior to running.
+# Note that this can modify existing env vars or perform other actions (e.g. modify the conf file).
+# For more information on variables and other things you may wish to modify, reference this script
+# and the Datadog Agent documentation: https://docs.datadoghq.com/agent
+PRERUN_SCRIPT="$APP_DATADOG/prerun.sh"
+if [ -e "$PRERUN_SCRIPT" ]; then
+  source "$PRERUN_SCRIPT"
+fi
 
+# Execute the final run logic.
 if [ -n "$DISABLE_DATADOG_AGENT" ]; then
   echo "The Datadog Agent has been disabled. Unset the DISABLE_DATADOG_AGENT or set missing environment variables."
 else
