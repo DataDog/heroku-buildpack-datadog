@@ -94,6 +94,16 @@ else
   echo "WARNING: DD_HOSTNAME is deprecated. Setting this environment variable may result in metrics errors. To remove it, run: heroku config:unset DD_HOSTNAME"
 fi
 
+# Ensure all check and librariy locations are findable in the Python path.
+DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7"
+# Recursively add packages to python path.
+find "$DD_PYTHONPATH"/embedded/lib/python*/site-packages -type d -exec DD_PYTHONPATH="{}":"$DD_PYTHONPATH" \;
+DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/site-packages:$DD_PYTHONPATH"
+DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/plat-linux2:$DD_PYTHONPATH"
+DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/lib-tk:$DD_PYTHONPATH"
+DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/lib-dynload:$DD_PYTHONPATH"
+DD_PYTHONPATH="$DD_DIR/bin/agent/dist:$DD_PYTHONPATH"
+
 # Give applications a chance to modify env vars prior to running.
 # Note that this can modify existing env vars or perform other actions (e.g. modify the conf file).
 # For more information on variables and other things you may wish to modify, reference this script
@@ -107,16 +117,6 @@ fi
 if [ -n "$DISABLE_DATADOG_AGENT" ]; then
   echo "The Datadog Agent has been disabled. Unset the DISABLE_DATADOG_AGENT or set missing environment variables."
 else
-  # Setup Python Path
-  DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7"
-  # Recursively add packages to python path.
-  find "$DD_PYTHONPATH"/embedded/lib/python*/site-packages -type d -exec DD_PYTHONPATH="{}":"$DD_PYTHONPATH" \;
-  DD_PYTHONPATH="$DD_PYTHONPATH/embedded/lib/python2.7/site-packages:$DD_PYTHONPATH"
-  DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/plat-linux2:$DD_PYTHONPATH"
-  DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/lib-tk:$DD_PYTHONPATH"
-  DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/lib-dynload:$DD_PYTHONPATH"
-  DD_PYTHONPATH="$DD_DIR/bin/agent/dist:$DD_PYTHONPATH"
-
   # Get the Agent version number
   DD_VERSION=`expr "$($DD_BIN_DIR/agent version)" : 'Agent \([0-9]\+\.[0-9]\+.[0-9]\+\)'`
 
