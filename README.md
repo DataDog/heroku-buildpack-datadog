@@ -72,6 +72,10 @@ init_config:
 instances:
   - host: <YOUR POSTGRESQL SERVER HOSTNAME>
     port: 5432
+    username: <YOUR USERNAME>
+    password: <YOUR PASSWORD>
+    dbname: <YOUR DATABASE NAME>
+    ssl: True
 ```
 
 During the Dyno start up, your YAML files will be copied to the appropriate Datadog Agent configuration directories.
