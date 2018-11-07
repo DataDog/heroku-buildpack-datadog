@@ -109,9 +109,9 @@ if [ -n "$DISABLE_DATADOG_AGENT" ]; then
 else
   # Setup Python Path
   DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7"
-  for python_mod_dir in $(ls -d "$DD_DIR/embedded/lib/python*/site-packages" 2>/dev/null); do
-    DD_PYTHONPATH="${python_mod_dir}:${DD_PYTHONPATH}"
-  done
+  # Recursively add packages to python path.
+  find "$DD_PYTHONPATH"/embedded/lib/python*/site-packages -type d -exec DD_PYTHONPATH="{}":"$DD_PYTHONPATH" \;
+  DD_PYTHONPATH="$DD_PYTHONPATH/embedded/lib/python2.7/site-packages:$DD_PYTHONPATH"
   DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/plat-linux2:$DD_PYTHONPATH"
   DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/lib-tk:$DD_PYTHONPATH"
   DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/lib-dynload:$DD_PYTHONPATH"
