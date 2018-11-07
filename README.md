@@ -66,7 +66,7 @@ You can enable Datadog Agent integrations by including an appropriately named YA
 
 For example, to enable the [PostgreSQL integration](https://docs.datadoghq.com/integrations/postgres/), create a file `/datadog/conf.d/postgres.yaml` in your application containing:
 
-```
+```yaml
 init_config:
 
 instances:
@@ -82,11 +82,11 @@ During the Dyno start up, your YAML files will be copied to the appropriate Data
 
 ## Prerun script
 
-In addition to all of the configurations above, you can include a prerun script, `/datadog/prerun.sh`, in your application to arbitrarily modify the Datadog agent configurations and behaviors.
+In addition to all of the configurations above, you can include a prerun script, `/datadog/prerun.sh`, in your application to arbitrarily modify the environment variables and configuration files prior to starting the Datadog Agent.
 
-The example below demonstrates a few of the things you can do in thei prerun script:
+The example below demonstrates a few of the things you can do in the `prerun.sh` script:
 
-```
+```shell
 #!/usr/bin/env bash
 
 # Disable the Datadog Agent based on Dyno type
