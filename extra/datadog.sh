@@ -27,7 +27,8 @@ sed -i -e"s|^.*confd_path:.*$|confd_path: $DD_CONF_DIR/conf.d|" "$DATADOG_CONF"
 sed -i -e"s|^.*additional_checksd:.*$|additional_checksd: $DD_DIR/checks.d|" "$DATADOG_CONF"
 
 # Include application's datadog configs
-APP_DATADOG_CONF_DIR="/app/datadog/conf.d"
+APP_DATADOG="/app/datadog"
+APP_DATADOG_CONF_DIR="$APP_DATADOG/conf.d"
 
 for file in "$APP_DATADOG_CONF_DIR"/*.yaml; do
   test -e "$file" || continue # avoid errors when glob doesn't match anything
