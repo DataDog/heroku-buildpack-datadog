@@ -70,15 +70,41 @@ For example, to enable the [PostgreSQL integration](https://docs.datadoghq.com/i
 init_config:
 
 instances:
-  - host: <YOUR POSTGRESQL SERVER HOSTNAME>
+  - host: <YOUR HOSTNAME>
     port: 5432
     username: <YOUR USERNAME>
     password: <YOUR PASSWORD>
-    dbname: <YOUR DATABASE NAME>
+    dbname: <YOUR DBNAME>
     ssl: True
 ```
 
 During the Dyno start up, your YAML files will be copied to the appropriate Datadog Agent configuration directories.
+
+## Prerun script
+
+In addition to all of the configurations above, you can include a prerun script, `/datadog/prerun.sh`, in your application to arbitrarily modify the Datadog agent configurations and behaviors.
+
+The example below demonstrates a few of the things you can do in thei prerun script:
+
+```
+#!/usr/bin/env bash
+
+# Disable the Datadog Agent based on Dyno type
+if [ "$DYNOTYPE" == "run" ]; then
+  DISABLE_DATADOG_AGENT="true"
+fi
+
+# Update the Postgres configuration from above using the Heroku application environment variable
+if [ -n "$DATABASE_URL" ]; then
+  POSTGREGEX='^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.*)$'
+  if [[ $DATABASE_URL =~ $POSTGREGEX ]]; then
+    sed -i "s/<YOUR HOSTNAME>/${BASH_REMATCH[3]}/" "$DD_CONF_DIR/conf.d/postgres.d/conf.yaml"
+    sed -i "s/<YOUR USERNAME>/${BASH_REMATCH[1]}/" "$DD_CONF_DIR/conf.d/postgres.d/conf.yaml"
+    sed -i "s/<YOUR PASSWORD>/${BASH_REMATCH[2]}/" "$DD_CONF_DIR/conf.d/postgres.d/conf.yaml"
+    sed -i "s/<YOUR DBNAME>/${BASH_REMATCH[5]}/" "$DD_CONF_DIR/conf.d/postgres.d/conf.yaml"
+  fi
+fi
+```
 
 ## Unsupported
 
