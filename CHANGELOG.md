@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
+## [1.6.0] - 2018-11-08
+Updated the run script to provide a better way for users to arbitrarily modify the environment and configurations.
+
+### Added
+- Added prerun.sh support so users can modify the environment and configurations
+- Added appropriate documentation. Thanks to abtreece for the postgres auto config idea!
+
+### Changed
+- Updated the way python_path is built to be more reliable (uses find instead of ls)
+- Updated the postgres integration documentation to include more details, including ssl enabling (required by hosted Heroku postgres)
+
 ## [1.5.0] - 2018-08-27
 External keyservers were becoming an issue for reliability so the Datadog public key has been added to the buildpack. A few updates were made regarding Agent versioning and the documentation was clarified.
 
