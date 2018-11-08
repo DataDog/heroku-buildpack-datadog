@@ -12,7 +12,7 @@ set -o pipefail
 BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
-BUILDPACK_DIR=$(cd $(dirname "$0"); cd ..; pwd)
+BUILDPACK_DIR=$(cd "$(dirname "$0")"; cd ..; pwd)
 
 # Load formating tools
 source "$BUILDPACK_DIR/bin/common.sh"
@@ -70,7 +70,7 @@ if [ -f "$ENV_DIR/DD_AGENT_VERSION" ]; then
     topic "ERROR: Version \"$DD_AGENT_VERSION\" was not found."
     echo "Available versions:" | indent
     for PKG in "$DPKG_STUB"*.deb; do
-      echo ${PKG:${#DPKG_STUB}:(${#PKG}-${#DPKG_STUB}-4)} | indent
+      echo "${PKG:${#DPKG_STUB}:(${#PKG}-${#DPKG_STUB}-4)}" | indent
     done
     exit 1
   fi
