@@ -12,10 +12,10 @@ set -o pipefail
 BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
-BUILDPACK_DIR=`cd $(dirname $0); cd ..; pwd`
+BUILDPACK_DIR=$(cd "$(dirname "$0")"; cd ..; pwd)
 
 # Load formating tools
-source $BUILDPACK_DIR/bin/common.sh
+source "$BUILDPACK_DIR/bin/common.sh"
 
 # Setup apt environment
 APT_DIR="$BUILD_DIR/.apt"
@@ -25,9 +25,9 @@ APT_REPO_FILE="$BUILDPACK_DIR/etc/datadog.list"
 APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
 
 # Create build and run environment
-mkdir -p $APT_CACHE_DIR/archives/partial
-mkdir -p $APT_STATE_DIR/lists/partial
-mkdir -p $APT_DIR
+mkdir -p "$APT_CACHE_DIR/archives/partial"
+mkdir -p "$APT_STATE_DIR/lists/partial"
+mkdir -p "$APT_DIR"
 
 # Install dependencies
 topic "Updating apt caches for dependencies"
@@ -36,19 +36,19 @@ apt-get $APT_OPTIONS update | indent
 topic "Installing dependencies"
 DEPS="libpci-dev libpci3 libsensors4 libsensors4-dev libsnmp-base libsnmp30"
 apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommends $DEPS | indent
-IFS=" " read -a DEP_PKGS <<< $DEPS
+IFS=" " read -a DEP_PKGS <<< "$DEPS"
 for DEP in ${DEP_PKGS[@]}; do
   echo "Installing $DEP" | indent
-  ls -t $APT_CACHE_DIR/archives/$DEP\_*.deb | head -1 | xargs -i dpkg -x '{}' $APT_DIR
+  ls -t "$APT_CACHE_DIR"/archives/"$DEP"\_*.deb | head -1 | xargs -i dpkg -x '{}' "$APT_DIR"
 done
 
 # Install GPG key
-topic "Install gpg key for Datadog APT Repository "
+topic "Install gpg key for Datadog APT Repository"
 APT_KEYRING="$CACHE_DIR/apt/trusted.gpg"
 GPG_KEY_FILE="$BUILDPACK_DIR/etc/datadog.gpg"
 GPG_HOME_DIR="$BUILD_DIR/.gnupg"
-mkdir -p $GPG_HOME_DIR
-gpg --ignore-time-conflict --no-options --no-default-keyring --homedir $GPG_HOME_DIR --keyring $APT_KEYRING --import $GPG_KEY_FILE | indent
+mkdir -p "$GPG_HOME_DIR"
+gpg --ignore-time-conflict --no-options --no-default-keyring --homedir "$GPG_HOME_DIR" --keyring "$APT_KEYRING" --import "$GPG_KEY_FILE" | indent
 
 # Install Datadog Agent
 topic "Updating apt caches for Datadog Agent"
@@ -60,33 +60,33 @@ apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommen
 
 # Use specific version if specified.
 DPKG_STUB="$APT_CACHE_DIR/archives/datadog-agent_1%3a"
-if [ -f $ENV_DIR/DD_AGENT_VERSION ]; then
-  DD_AGENT_VERSION=$(cat $ENV_DIR/DD_AGENT_VERSION)
+if [ -f "$ENV_DIR/DD_AGENT_VERSION" ]; then
+  DD_AGENT_VERSION=$(cat "$ENV_DIR/DD_AGENT_VERSION")
   DEB="$DPKG_STUB$DD_AGENT_VERSION.deb"
-  if [ -e $DEB ]; then
+  if [ -e "$DEB" ]; then
     echo "Installing pinned version \"$DD_AGENT_VERSION\"" | indent
   # Stop if we can't find the version.
   else
     topic "ERROR: Version \"$DD_AGENT_VERSION\" was not found."
     echo "Available versions:" | indent
-    for PKG in $DPKG_STUB*.deb; do
-      echo ${PKG:${#DPKG_STUB}:(${#PKG}-${#DPKG_STUB}-4)} | indent
+    for PKG in "$DPKG_STUB"*.deb; do
+      echo "${PKG:${#DPKG_STUB}:(${#PKG}-${#DPKG_STUB}-4)}" | indent
     done
     exit 1
   fi
 else
   echo "No pinned version specified. Installing latest version." | indent
-  DEB=$(ls -t $DPKG_STUB*.deb | head -n 1)
+  DEB=$(ls -t "$DPKG_STUB"*.deb | head -n 1)
   DD_AGENT_VERSION=${DEB:${#DPKG_STUB}:(${#DEB}-${#DPKG_STUB}-4)}
   echo "Latest version is \"$DD_AGENT_VERSION\". To pin this version, run: heroku config:set DD_AGENT_VERSION=$DD_AGENT_VERSION" | indent
 fi
-dpkg -x $DEB $APT_DIR
+dpkg -x "$DEB" "$APT_DIR"
 
 # Rewrite package-config files
-find $APT_DIR -type f -ipath '*/pkgconfig/*.pc' | xargs --no-run-if-empty -n 1 sed -i -e 's!^prefix=\(.*\)$!prefix='"$APT_DIR"'\1!g'
+find "$APT_DIR" -type f -ipath '*/pkgconfig/*.pc' | xargs --no-run-if-empty -n 1 sed -i -e 's!^prefix=\(.*\)$!prefix='"$APT_DIR"'\1!g'
 
 # Install the runner
 topic "Installing Datadog runner"
-mkdir -p $BUILD_DIR/.profile.d
-cp $BUILDPACK_DIR/extra/datadog.sh $BUILD_DIR/.profile.d/
-chmod +x $BUILD_DIR/.profile.d/datadog.sh
+mkdir -p "$BUILD_DIR/.profile.d"
+cp "$BUILDPACK_DIR/extra/datadog.sh" "$BUILD_DIR/.profile.d/"
+chmod +x "$BUILD_DIR/.profile.d/datadog.sh"
