@@ -66,11 +66,6 @@ if [ "$DD_PROCESS_AGENT" == "true" ]; then
   sed -i -e"s|^# process_config:$|process_config:\n    enabled: true|" "$DATADOG_CONF"
 fi
 
-# Uncomment the Site setting and set it.
-if [ -n "$DD_SITE" ]; then
-  sed -i "s/# site:.*/site: $DD_SITE/" "$DATADOG_CONF"
-fi
-
 # For a list of env vars to override datadog.yaml, see:
 # https://github.com/DataDog/datadog-agent/blob/master/pkg/config/config.go#L145
 
