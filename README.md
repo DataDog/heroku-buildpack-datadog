@@ -83,7 +83,7 @@ During the Dyno start up, your YAML files will be copied to the appropriate Data
 
 ## Prerun script
 
-In addition to all of the configurations above, you can include a prerun script, `/datadog/prerun.sh`, in your application to arbitrarily modify the environment variables and configuration files prior to starting the Datadog Agent.
+In addition to all of the configurations above, you can include a prerun script, `/datadog/prerun.sh`, in your application. The prerun script will run after all of the standard configuration actions and immediately before starting the Datadog Agent. This allows you to modify the environment variables, perform additional configurations, or even disable the Datadog Agent programmatically.
 
 The example below demonstrates a few of the things you can do in the `prerun.sh` script:
 
