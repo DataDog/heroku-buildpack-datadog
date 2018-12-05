@@ -50,6 +50,7 @@ In addition to the environment variables shown above, there are a number of othe
 | `DD_APM_ENABLED` | *Optional.* The Datadog Trace Agent (APM) is run by default. Set this to `false` to disable the Trace Agent. |
 | `DD_PROCESS_AGENT` | *Optional.* The Datadog Process Agent is disabled by default. Set this to `true` to enable the Process Agent. |
 | `DD_SITE` | *Optional.* If you use the app.datadoghq.eu service, set this to `datadoghq.eu`. Defaults to `datadoghq.com`. |
+| `DD_APM_ANALYZED_SPANS` | *Optional.* Enable trace search by setting this to a comma-delimited list of analyzed spans. For example, `my-service|http.request, my-service-2|flask.request`. For more information, see, [the trace search documentation](https://docs.datadoghq.com/tracing/setup/?tab=agent630#trace-search) |
 | `DD_AGENT_VERSION` | *Optional.* By default, the buildpack installs the latest version of the Datadog Agent available in the package repository. Use this variable to install older versions of the Datadog Agent (note that not all versions of the Agent may be available). |
 
 For additional documentation, refer to the [Datadog Agent documentation](https://docs.datadoghq.com/agent/).
