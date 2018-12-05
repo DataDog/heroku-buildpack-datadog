@@ -66,8 +66,8 @@ sed -i -e"s|^apm_config:$|apm_config:\n    log_file: $DD_APM_LOG|" "$DATADOG_CON
 # If trace search has been added, enable the service names here.
 if [ -n "$DD_APM_ANALYZED_SPANS" ]; then
   ANALYZED_SPANS="analyzed_spans:"
-  SPANS="$(sed "s/,[ ]\?/\\\n        /g" <<< "$DD_APM_ANALYZED_SPANS")"
-  ANALYZED_SPANS="$ANALYZED_SPANS\n        $SPANS"
+  SPANS="$(sed "s/,[ ]\?/: 1\\\n        /g" <<< "$DD_APM_ANALYZED_SPANS")"
+  ANALYZED_SPANS="$ANALYZED_SPANS\n        $SPANS: 1"
   sed -i "s/^apm_config:$/apm_config:\n    $ANALYZED_SPANS/" $DATADOG_CONF
 fi
 
