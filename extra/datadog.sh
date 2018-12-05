@@ -63,10 +63,13 @@ sed -i -e"s|^# apm_config:$|apm_config:|" "$DATADOG_CONF"
 # Add the log file location.
 sed -i -e"s|^apm_config:$|apm_config:\n    log_file: $DD_APM_LOG|" "$DATADOG_CONF"
 
-# If trace search has been added, enable the service name here.
-if [ -n "$DD_APM_TRACE_SEARCH" ]; then
-  sed -i -e"s|^apm_config:$|apm_config:\n    analyzed_spans:\n        $DD_APM_SERVICE_NAME\|http.request: 1|" $DATADOG_CONF
-else
+# If trace search has been added, enable the service names here.
+if [ -n "$DD_APM_ANALYZED_SPANS" ]; then
+  ANALYZED_SPANS="analyzed_spans:"
+  SPANS="$(sed "s/,[ ]\?/\\\n        /g" <<< "$DD_APM_ANALYZED_SPANS")"
+  ANALYZED_SPANS="$ANALYZED_SPANS\n        $SPANS"
+  sed -i "s/^apm_config:$/apm_config:\n    $ANALYZED_SPANS/" $DATADOG_CONF
+fi
 
 # Uncomment the Process Agent configs and enable.
 if [ "$DD_PROCESS_AGENT" == "true" ]; then
