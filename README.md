@@ -139,7 +139,7 @@ This project is open source (Apache 2 License), which means we're happy for you 
   heroku ps:copy /app/.apt/var/log/datadog/datadog-apm.log --dyno=<YOUR DYNO NAME>
   ```
 
-* Finally, you can open [a Github issue](https://github.com/DataDog/heroku-buildpack-datadog/issues).
+* Finally, you can open [a GitHub issue](https://github.com/DataDog/heroku-buildpack-datadog/issues).
 
 ### Pull requests
 
