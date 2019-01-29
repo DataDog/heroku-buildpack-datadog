@@ -77,7 +77,7 @@ You can enable Datadog Agent integrations by including an appropriately named YA
 
 For example, to enable the [PostgreSQL integration][10], create a file `/datadog/conf.d/postgres.yaml` in your application containing:
 
-```yaml
+```
 init_config:
 
 instances:
