@@ -45,13 +45,12 @@ In addition to the environment variables shown above, there are a number of othe
 | Setting                      | Description|
 | ---------------------------- | ------------------------------ |
 | `DD_API_KEY`                 | *Required.* Your API key is available from the [Datadog API Integrations][4] page. Note that this is the *API* key, not the application key.|
-| `DD_HOSTNAME`                | *Deprecated.* **WARNING**: Setting the hostname manually may result in metrics continuity errors. It is recommended that you do *not* set this variable. Because dyno hosts are ephemeral it is recommended that you monitor based on the tags `dynoname` or `appname`.|
+| `DD_HOSTNAME`                | *Optional.* **WARNING**: Setting the hostname manually may result in metrics continuity errors. It is recommended that you do *not* set this variable. Because dyno hosts are ephemeral it is recommended that you monitor based on the tags `dynoname` or `appname`.|
 | `DD_DYNO_HOST`               | *Optional.* Set to `true` to use the dyno name (e.g. `web.1` or `run.1234`) as the hostname. See the [hostname section](#hostname) below for more information. Defaults to `false`|
 | `DD_TAGS`                    | *Optional.* Sets additional tags provided as a space-delimited string. For example, `heroku config:set DD_TAGS="simple-tag-0 tag-key-1:tag-value-1"`. The buildpack automatically adds the tags `dyno` and `dynohost` which represent the Dyno name (e.g. web.1) and host ID (e.g. 33f232db-7fa7-461e-b623-18e60944f44f) respectively. See the ["Guide to tagging"][5] for more information.|
 | `DD_HISTOGRAM_PERCENTILES`   | *Optional.* Optionally set additional percentiles for your histogram metrics. See [How to graph percentiles][6].|
 | `DISABLE_DATADOG_AGENT`      | *Optional.* When set, the Datadog Agent does not run.|
 | `DD_APM_ENABLED`             | *Optional.* Trace collection is enabled by default. Set this to `false` to disable trace collection.|
-| `DD_SERVICE_ENV`             | *Optional.* The Datadog Agent automatically tries to identify your environment by searching for a tag in the form `env:<environment name>`. For more information, see the [Datadog Tracing environments page][7].|
 | `DD_PROCESS_AGENT`           | *Optional.* The Datadog Process Agent is disabled by default. Set this to `true` to enable the Process Agent.|
 | `DD_SITE`                    | *Optional.* If you use the app.datadoghq.eu service, set this to `datadoghq.eu`. Defaults to `datadoghq.com`.|
 | `DD_APM_ANALYZED_SPANS`      | *Optional.* Enable trace search by setting this to a comma-delimited list of analyzed spans. For example, `<SERVICE_NAME_1>|<OPERATION_NAME_1>: 1, <SERVICE_NAME_2>|<OPERATION_NAME_2>: 1`. For more information, see, [the trace search documentation][8] |
@@ -89,11 +88,11 @@ instances:
     ssl: True
 ```
 
-During the Dyno start up, your YAML files is copied to the appropriate Datadog Agent configuration directories.
+During the Dyno start up, your YAML files are copied to the appropriate Datadog Agent configuration directories.
 
 ## Heroku Log Collection
 
-[See the dedicated guide to send your Heroku logs into Datadog][16]
+[See the dedicated guide to send your Heroku logs to Datadog][16]
 
 ## Prerun script
 
@@ -137,12 +136,11 @@ It is not possible to send logs from Heroku to Datadog using this buildpack.
 Earlier versions of this project were forked from the [miketheman heroku-buildpack-datadog project][14]. It was largely rewritten for Datadog's Agent version 6. Changes and more information can be found in the [changelog][15].
 
 [1]: https://devcenter.heroku.com/articles/buildpacks
-[2]: /libraries
+[2]: https://docs.datadoghq.com/libraries
 [3]: https://app.datadoghq.com/account/settings#api
 [4]: https://app.datadoghq.com/account/settings#api
-[5]: /tagging
+[5]: https://docs.datadoghq.com/tagging
 [6]: /graphing/faq/how-to-graph-percentiles-in-datadog
-[7]: /tracing/environments
 [8]: https://docs.datadoghq.com/tracing/setup/?tab=agent630#trace-search
 [9]: https://docs.datadoghq.com/agent
 [10]: https://docs.datadoghq.com/integrations/postgres
