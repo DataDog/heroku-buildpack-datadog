@@ -61,19 +61,19 @@ sed -i "s/^#   - role:database$/#   - role:database\n$TAGS/" "$DATADOG_CONF"
 # Uncomment APM configs and add the log file location.
 sed -i -e"s|^# apm_config:$|apm_config:|" "$DATADOG_CONF"
 # Add the log file location.
-sed -i -e"s|^apm_config:$|apm_config:\n    log_file: $DD_APM_LOG|" "$DATADOG_CONF"
+sed -i -e"s|^apm_config:$|apm_config:\n  log_file: $DD_APM_LOG|" "$DATADOG_CONF"
 
 # If trace search has been added, enable the service names here.
 if [ -n "$DD_APM_ANALYZED_SPANS" ]; then
   ANALYZED_SPANS="analyzed_spans:"
-  SPANS="$(sed "s/,[ ]\?/: 1\\\n        /g" <<< "$DD_APM_ANALYZED_SPANS")"
-  ANALYZED_SPANS="$ANALYZED_SPANS\n        $SPANS: 1"
-  sed -i "s/^apm_config:$/apm_config:\n    $ANALYZED_SPANS/" $DATADOG_CONF
+  SPANS="$(sed "s/,[ ]\?/: 1\\\n    /g" <<< "$DD_APM_ANALYZED_SPANS")"
+  ANALYZED_SPANS="$ANALYZED_SPANS\n    $SPANS: 1"
+  sed -i "s/^apm_config:$/apm_config:\n  $ANALYZED_SPANS/" $DATADOG_CONF
 fi
 
 # Uncomment the Process Agent configs and enable.
 if [ "$DD_PROCESS_AGENT" == "true" ]; then
-  sed -i -e"s|^# process_config:$|process_config:\n    enabled: true|" "$DATADOG_CONF"
+  sed -i -e"s|^# process_config:$|process_config:\n  enabled: true|" "$DATADOG_CONF"
 fi
 
 # For a list of env vars to override datadog.yaml, see:
