@@ -99,8 +99,8 @@ fi
 # Ensure all check and librariy locations are findable in the Python path.
 DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7"
 # Recursively add packages to python path.
-find "$DD_DIR/embedded/lib/python2.7/site-packages" -type d -exec DD_PYTHONPATH="{}:$DD_PYTHONPATH" \;
-DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/site-packages:$DD_PYTHONPATH"
+DD_PYTHONPATH="$DD_PYTHONPATH:$(find "$DD_DIR/embedded/lib/python2.7/site-packages" -type d -printf ":%p")"
+# Add other packages.
 DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/plat-linux2:$DD_PYTHONPATH"
 DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/lib-tk:$DD_PYTHONPATH"
 DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/lib-dynload:$DD_PYTHONPATH"
