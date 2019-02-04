@@ -15,7 +15,7 @@ This project is open source (Apache 2 License), which means we're happy for you 
   agent -c /app/.apt/etc/datadog-agent/datadog.yaml flare
   ```
 
-  It can also be helpful to send logs from your running dyno:
+  It can also be helpful to send logs from your running Dyno:
   ```shell
   # Download Datadog Agent logs
   heroku ps:copy /app/.apt/var/log/datadog/datadog.log --dyno=<YOUR DYNO NAME>
@@ -30,9 +30,9 @@ This project is open source (Apache 2 License), which means we're happy for you 
 
 Have you fixed a bug or written a new check and want to share it? Many thanks!
 
-In order to ease/speed up our review, here are some items you can check/improve when submitting your PR:
+Here are some tips to keep in mind when submitting a PR:
 
 * Keep it small and focused. Avoid changing too many things at once.
 * Summarize your PR with an explanatory title and a message describing your changes. Cross-reference any related bugs/PRs and provide steps for testing when appropriate.
 * Write meaningful commit messages. The commit message should describe the reason for the change and give extra details that will allow someone later on to understand in 5 seconds the thing you've been working on for a day.
-* Squash your commits. Please rebase your changes on master and squash your commits whenever possible, it keeps history cleaner and it's easier to revert things.
+* Rebase your changes on `master` and **squash** your commits whenever possible—it keeps the history clean, and it's easier to revert later if necessary.
