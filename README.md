@@ -62,7 +62,7 @@ Heroku Dynos are ephemeral—they can move to different host machines whenever n
 
 Depending on your use case, you may want to set your hostname so that hosts are aggregated and report a lower number.  To do this, Set `DD_DYNO_HOST` to `true`. This will cause the Agent to report the hostname as the app and Dyno name (e.g. `appname.web.1` or `appname.run.1234`) and your host count will closely match your Dyno usage. One drawback is that you may see some metrics continuity errors whenever a Dyno is cycled.
 
-## Files Locations
+## File locations
 
 - The Datadog Agent is installed at `/app/.apt/opt/datadog-agent`
 - The Datadog Agent configuration files are at `/app/.apt/etc/datadog-agent`
@@ -88,7 +88,18 @@ instances:
 
 During the Dyno start up, your YAML files are copied to the appropriate Datadog Agent configuration directories.
 
-## Heroku Log Collection
+## Limiting Datadog's console output
+
+In some cases, you may want to limit the amount of logs the Datadog buildpack is writing to the console. 
+
+To limit the log output of the buildpack, set the `DD_LOG_LEVEL` environment variable to one of the following: `TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `CRITICAL`, `OFF`.
+
+```
+heroku config:add DD_LOG_LEVEL=ERROR
+```
+
+
+## Heroku log collection
 
 [See the dedicated guide to send your Heroku logs to Datadog][16]
 
