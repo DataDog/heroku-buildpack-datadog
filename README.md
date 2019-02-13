@@ -62,13 +62,13 @@ Heroku Dynos are ephemeral—they can move to different host machines whenever n
 
 Depending on your use case, you may want to set your hostname so that hosts are aggregated and report a lower number.  To do this, Set `DD_DYNO_HOST` to `true`. This will cause the Agent to report the hostname as the app and Dyno name (e.g. `appname.web.1` or `appname.run.1234`) and your host count will closely match your Dyno usage. One drawback is that you may see some metrics continuity errors whenever a Dyno is cycled.
 
-## File Locations
+## File locations
 
 - The Datadog Agent is installed at `/app/.apt/opt/datadog-agent`
 - The Datadog Agent configuration files are at `/app/.apt/etc/datadog-agent`
 - The Datadog Agent logs are at `/app/.apt/var/log/datadog`
 
-## Enabling Integrations
+## Enabling integrations
 
 You can enable Datadog Agent integrations by including an appropriately named YAML file inside a `datadog/conf.d` directory in the root of your application.
 
@@ -88,23 +88,22 @@ instances:
 
 During the Dyno start up, your YAML files are copied to the appropriate Datadog Agent configuration directories.
 
-## Limiting Datadog's Console Output
+## Limiting Datadog's console output
 
-When first set up, the Datadog agent may be logging more information to your application's console than you need. 
+In some cases, you may want to limit the amount of logs the Datadog buildpack is writing to the console. 
 
-To limit this output, set the `DD_LOG_LEVEL` environment variable to one of the following: `TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `CRITICAL`, `OFF`.
->Note: In most cases, `ERROR` or `CRITICAL` provide a sufficient amount of information here.  
+To limit the log output of the buildpack, set the `DD_LOG_LEVEL` environment variable to one of the following: `TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `CRITICAL`, `OFF`.
 
 ```
 heroku config:add DD_LOG_LEVEL=ERROR
 ```
 
 
-## Heroku Log Collection
+## Heroku log collection
 
 [See the dedicated guide to send your Heroku logs to Datadog][16]
 
-## Prerun Script
+## Prerun script
 
 In addition to all of the configurations above, you can include a prerun script, `/datadog/prerun.sh`, in your application. The prerun script will run after all of the standard configuration actions and immediately before starting the Datadog Agent. This allows you to modify the environment variables, perform additional configurations, or even disable the Datadog Agent programmatically.
 
