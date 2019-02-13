@@ -62,13 +62,13 @@ Heroku Dynos are ephemeral—they can move to different host machines whenever n
 
 Depending on your use case, you may want to set your hostname so that hosts are aggregated and report a lower number.  To do this, Set `DD_DYNO_HOST` to `true`. This will cause the Agent to report the hostname as the app and Dyno name (e.g. `appname.web.1` or `appname.run.1234`) and your host count will closely match your Dyno usage. One drawback is that you may see some metrics continuity errors whenever a Dyno is cycled.
 
-## Files Locations
+## File Locations
 
 - The Datadog Agent is installed at `/app/.apt/opt/datadog-agent`
 - The Datadog Agent configuration files are at `/app/.apt/etc/datadog-agent`
 - The Datadog Agent logs are at `/app/.apt/var/log/datadog`
 
-## Enabling integrations
+## Enabling Integrations
 
 You can enable Datadog Agent integrations by including an appropriately named YAML file inside a `datadog/conf.d` directory in the root of your application.
 
@@ -88,11 +88,23 @@ instances:
 
 During the Dyno start up, your YAML files are copied to the appropriate Datadog Agent configuration directories.
 
+## Limiting Datadog's Console Output
+
+When first set up, the Datadog agent may be logging more information to your application's console than you need. 
+
+To limit this output, set the `DD_LOG_LEVEL` environment variable to one of the following: `TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `CRITICAL`, `OFF`.
+>Note: In most cases, `ERROR` or `CRITICAL` provide a sufficient amount of information here.  
+
+```
+heroku config:add DD_LOG_LEVEL=ERROR
+```
+
+
 ## Heroku Log Collection
 
 [See the dedicated guide to send your Heroku logs to Datadog][16]
 
-## Prerun script
+## Prerun Script
 
 In addition to all of the configurations above, you can include a prerun script, `/datadog/prerun.sh`, in your application. The prerun script will run after all of the standard configuration actions and immediately before starting the Datadog Agent. This allows you to modify the environment variables, perform additional configurations, or even disable the Datadog Agent programmatically.
 
