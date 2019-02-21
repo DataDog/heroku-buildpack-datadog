@@ -24,7 +24,7 @@ cp "$DATADOG_CONF.example" "$DATADOG_CONF"
 
 # Update the Datadog conf yaml with the correct conf.d and checks.d
 sed -i -e"s|^.*confd_path:.*$|confd_path: $DD_CONF_DIR/conf.d|" "$DATADOG_CONF"
-sed -i -e"s|^.*additional_checksd:.*$|additional_checksd: $DD_DIR/checks.d|" "$DATADOG_CONF"
+sed -i -e"s|^.*additional_checksd:.*$|additional_checksd: $DD_CONF_DIR/checks.d|" "$DATADOG_CONF"
 
 # Include application's datadog configs
 APP_DATADOG="/app/datadog"
@@ -140,5 +140,11 @@ else
   else
     echo "Starting Datadog Trace Agent on $DD_HOSTNAME"
     bash -c "$DD_DIR/embedded/bin/trace-agent -config $DATADOG_CONF 2>&1 &"
+  fi
+
+  # The Process Agen must be run explicitly
+  if [ "$DD_PROCESS_AGENT" == "true" ]; then
+    echo "Starting Datadog Process Agent on $DD_HOSTNAME"
+    bash -c "$DD_DIR/embedded/bin/process-agent -config $DATADOG_CONF 2>&1 &"
   fi
 fi
