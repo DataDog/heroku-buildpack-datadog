@@ -93,7 +93,12 @@ if [ -z "$DD_HOSTNAME" ]; then
   fi
 else
   # Generate a warning about DD_HOSTNAME deprecation.
-  echo "WARNING: DD_HOSTNAME is deprecated. Setting this environment variable may result in metrics errors. To remove it, run: heroku config:unset DD_HOSTNAME"
+  echo "WARNING: DD_HOSTNAME has been set. Setting this environment variable may result in metrics errors. To remove it, run: heroku config:unset DD_HOSTNAME"
+fi
+
+# Disable core checks (these read the host, not the dyno).
+if [ "DD_DISABLE_HOST_METRICS" == "true" ]; then
+  find "$DD_CONF_DIR"/conf.d -name "conf.yaml.default" -exec mv {} {}_disabled \;
 fi
 
 # Ensure all check and librariy locations are findable in the Python path.
