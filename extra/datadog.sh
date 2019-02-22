@@ -97,7 +97,7 @@ else
 fi
 
 # Disable core checks (these read the host, not the dyno).
-if [ "DD_DISABLE_HOST_METRICS" == "true" ]; then
+if [ "$DD_DISABLE_HOST_METRICS" == "true" ]; then
   find "$DD_CONF_DIR"/conf.d -name "conf.yaml.default" -exec mv {} {}_disabled \;
 fi
 
