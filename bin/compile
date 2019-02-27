@@ -55,31 +55,40 @@ topic "Updating apt caches for Datadog Agent"
 APT_OPTIONS="$APT_OPTIONS -o Dir::Etc::Trusted=$APT_KEYRING -o Dir::Etc::SourceList=$APT_REPO_FILE"
 apt-get $APT_OPTIONS update | indent
 
-topic "Installing Datadog Agent"
-apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommends datadog-agent | indent
-
-# Use specific version if specified.
-DPKG_STUB="$APT_CACHE_DIR/archives/datadog-agent_1%3a"
+PACKAGE="datadog-agent"
+# If a version has been specified, validate it, then install it.
+# Compile script must read env vars from the env var files.
 if [ -f "$ENV_DIR/DD_AGENT_VERSION" ]; then
   DD_AGENT_VERSION=$(cat "$ENV_DIR/DD_AGENT_VERSION")
-  DEB="$DPKG_STUB$DD_AGENT_VERSION.deb"
-  if [ -e "$DEB" ]; then
-    echo "Installing pinned version \"$DD_AGENT_VERSION\"" | indent
-  # Stop if we can't find the version.
-  else
+  AGENT_VERSIONS=$(apt-cache $APT_OPTIONS show datadog-agent | grep "Version: ")
+  AGENT_VERSIONS=$(sed 's/Version: 1://g' <<<"$AGENT_VERSIONS")
+
+  # If specified version doesn't exist, list available versions.
+  if [ -z $(echo "$AGENT_VERSIONS" | grep "$DD_AGENT_VERSION") ]; then
     topic "ERROR: Version \"$DD_AGENT_VERSION\" was not found."
     echo "Available versions:" | indent
-    for PKG in "$DPKG_STUB"*.deb; do
-      echo "${PKG:${#DPKG_STUB}:(${#PKG}-${#DPKG_STUB}-4)}" | indent
-    done
+    echo "$AGENT_VERSIONS" | indent
     exit 1
+
+  # Set the  specified version.
+  else
+    PACKAGE="$PACKAGE=1:$DD_AGENT_VERSION"
   fi
-else
-  echo "No pinned version specified. Installing latest version." | indent
-  DEB=$(ls -t "$DPKG_STUB"*.deb | head -n 1)
-  DD_AGENT_VERSION=${DEB:${#DPKG_STUB}:(${#DEB}-${#DPKG_STUB}-4)}
-  echo "Latest version is \"$DD_AGENT_VERSION\". To pin this version, run: heroku config:set DD_AGENT_VERSION=$DD_AGENT_VERSION" | indent
 fi
+
+topic "Downloading Datadog Agent $DD_AGENT_VERSION"
+apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommends "$PACKAGE" | indent
+
+DPKG_STUB="$APT_CACHE_DIR/archives/datadog-agent_1%3a"
+if [ -z $DD_AGENT_VERSION ]; then
+  DEB=$(ls -t "$DPKG_STUB"*.deb | head -n 1)
+  DD_AGENT_VERSION=${DEB:${#DPKG_STUB}:(${#DEB}-${#DPKG_STUB}-10)}
+  echo "Latest version is \"$DD_AGENT_VERSION\". To pin this version, run: heroku config:set DD_AGENT_VERSION=$DD_AGENT_VERSION" | indent
+else
+  DEB="$DPKG_STUB""$DD_AGENT_VERSION"_amd64.deb
+fi
+
+topic "Installing Datadog Agent"
 dpkg -x "$DEB" "$APT_DIR"
 
 # Rewrite package-config files
