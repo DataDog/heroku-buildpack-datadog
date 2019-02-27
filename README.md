@@ -53,7 +53,7 @@ In addition to the environment variables shown above, there are a number of othe
 | `DD_PROCESS_AGENT`           | *Optional.* The Datadog Process Agent is disabled by default. Set this to `true` to enable the Process Agent.|
 | `DD_SITE`                    | *Optional.* If you use the app.datadoghq.eu service, set this to `datadoghq.eu`. Defaults to `datadoghq.com`.|
 | `DD_AGENT_VERSION`           | *Optional.* By default, the buildpack installs the latest version of the Datadog Agent available in the package repository. Use this variable to install older versions of the Datadog Agent (note that not all versions of the Agent may be available).|
-| `DD_DISABLE_HOST_METRICS`    | *Optional.* By default, the buildpack will report system metrics for the host machine running the Dyno. Set this to `true` to disable system metrics collection. See the [system metrics section](#system-metrics) below for more information.|
+| `DD_DISABLE_HOST_METRICS`    | *Optional.* By default, the buildpack reports system metrics for the host machine running the Dyno. Set this to `true` to disable system metrics collection. See the [system metrics section](#system-metrics) below for more information.|
 
 For additional documentation, refer to the [Datadog Agent documentation][9].
 
