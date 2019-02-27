@@ -53,6 +53,7 @@ In addition to the environment variables shown above, there are a number of othe
 | `DD_PROCESS_AGENT`           | *Optional.* The Datadog Process Agent is disabled by default. Set this to `true` to enable the Process Agent.|
 | `DD_SITE`                    | *Optional.* If you use the app.datadoghq.eu service, set this to `datadoghq.eu`. Defaults to `datadoghq.com`.|
 | `DD_AGENT_VERSION`           | *Optional.* By default, the buildpack installs the latest version of the Datadog Agent available in the package repository. Use this variable to install older versions of the Datadog Agent (note that not all versions of the Agent may be available).|
+| `DD_DISABLE_HOST_METRICS`    | *Optional.* By default, the buildpack reports system metrics for the host machine running the Dyno. Set this to `true` to disable system metrics collection. See the [system metrics section](#system-metrics) below for more information.|
 
 For additional documentation, refer to the [Datadog Agent documentation][9].
 
@@ -61,6 +62,12 @@ For additional documentation, refer to the [Datadog Agent documentation][9].
 Heroku Dynos are ephemeral—they can move to different host machines whenever new code is deployed, configuration changes are made, or resouce needs/availability changes. This makes Heroku flexible and responsive, but can potentially lead to a high number of reported hosts in Datadog. Datadog bills on a per-host basis, and the buildpack default is to report actual hosts, which can lead to higher than expected costs.
 
 Depending on your use case, you may want to set your hostname so that hosts are aggregated and report a lower number.  To do this, Set `DD_DYNO_HOST` to `true`. This will cause the Agent to report the hostname as the app and Dyno name (e.g. `appname.web.1` or `appname.run.1234`) and your host count will closely match your Dyno usage. One drawback is that you may see some metrics continuity errors whenever a Dyno is cycled.
+
+## System metrics
+
+By default, the buildpack collects system metrics for the host machine running your Dyno. System metrics are not available for individual Dynos. To disable host system metrics collection, set the `DD_DISABLE_HOST_METRICS` environment variable to `true`.
+
+In order to collect system metrics about for your Dynos, use a log drain to collect metric logs from the Heroku Logplex and forward them to Datadog. See the [community integrations documentation][17] for a list of community supported log drains.
 
 ## File locations
 
@@ -90,7 +97,7 @@ During the Dyno start up, your YAML files are copied to the appropriate Datadog 
 
 ## Limiting Datadog's console output
 
-In some cases, you may want to limit the amount of logs the Datadog buildpack is writing to the console. 
+In some cases, you may want to limit the amount of logs the Datadog buildpack is writing to the console.
 
 To limit the log output of the buildpack, set the `DD_LOG_LEVEL` environment variable to one of the following: `TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `CRITICAL`, `OFF`.
 
@@ -159,3 +166,4 @@ Earlier versions of this project were forked from the [miketheman heroku-buildpa
 [14]: https://github.com/miketheman/heroku-buildpack-datadog
 [15]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
 [16]: https://docs.datadoghq.com/logs/guide/collect-heroku-logs
+[17]: https://docs.datadoghq.com/developers/libraries/#heroku
