@@ -65,9 +65,9 @@ Depending on your use case, you may want to set your hostname so that hosts are 
 
 ## System metrics
 
-By default, the buildpack will collect system metrics for the host machine running your Dyno. System metrics are not available for individual Dynos. To disable host system metrics collection, set the `DD_DISABLE_HOST_METRICS` environment variable to `true`.
+By default, the buildpack collects system metrics for the host machine running your Dyno. System metrics are not available for individual Dynos. To disable host system metrics collection, set the `DD_DISABLE_HOST_METRICS` environment variable to `true`.
 
-In order to collect system metrics about for your Dynos, you will need to to use a log drain to collect metric logs from the Heroku Logplex and forward them to Datadog. See the [community integrations documentation][17] for a list of community supported log drains.
+In order to collect system metrics about for your Dynos, use a log drain to collect metric logs from the Heroku Logplex and forward them to Datadog. See the [community integrations documentation][17] for a list of community supported log drains.
 
 ## File locations
 
