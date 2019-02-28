@@ -5,7 +5,7 @@ aliases:
 - /developers/faq/how-do-i-collect-metrics-from-heroku-with-datadog
 ---
 
-This [Heroku buildpack][1] installs the Datadog Agent in your Heroku Dyno to collect system metrics, custom application metrics, and traces. To collect custom application metrics or traces, include the language appropriate [DogStatsD or Datadog APM library][2] in your application.
+This [Heroku buildpack][1] installs the Datadog Agent in your Heroku dyno to collect system metrics, custom application metrics, and traces. To collect custom application metrics or traces, include the language appropriate [DogStatsD or Datadog APM library][2] in your application.
 
 ## Installation
 
@@ -33,7 +33,7 @@ git push heroku master
 
 Replace `<DATADOG_API_KEY>` with your [Datadog API key][3].
 
-Once complete, the Datadog Agent is started automatically when each Dyno starts.
+Once complete, the Datadog Agent is started automatically when each dyno starts.
 
 The Datadog Agent provides a listening port on `8125` for statsd/dogstatsd metrics and events. Traces are collected on port `8126`.
 
@@ -44,30 +44,30 @@ In addition to the environment variables shown above, there are a number of othe
 | Setting                      | Description|
 | ---------------------------- | ------------------------------ |
 | `DD_API_KEY`                 | *Required.* Your API key is available from the [Datadog API Integrations][4] page. Note that this is the *API* key, not the application key.|
-| `DD_HOSTNAME`                | *Optional.* **WARNING**: Setting the hostname manually may result in metrics continuity errors. It is recommended that you do *not* set this variable. Because Dyno hosts are ephemeral it is recommended that you monitor based on the tags `dynoname` or `appname`.|
-| `DD_DYNO_HOST`               | *Optional.* Set to `true` to use the Dyno name (e.g. `web.1` or `run.1234`) as the hostname. See the [hostname section](#hostname) below for more information. Defaults to `false`|
-| `DD_TAGS`                    | *Optional.* Sets additional tags provided as a space-delimited string. For example, `heroku config:set DD_TAGS="simple-tag-0 tag-key-1:tag-value-1"`. The buildpack automatically adds the tags `dyno` and `dynohost` which represent the Dyno name (e.g. web.1) and host ID (e.g. 33f232db-7fa7-461e-b623-18e60944f44f) respectively. See the ["Guide to tagging"][5] for more information.|
+| `DD_HOSTNAME`                | *Optional.* **WARNING**: Setting the hostname manually may result in metrics continuity errors. It is recommended that you do *not* set this variable. Because dyno hosts are ephemeral it is recommended that you monitor based on the tags `dynoname` or `appname`.|
+| `DD_DYNO_HOST`               | *Optional.* Set to `true` to use the dyno name (e.g. `web.1` or `run.1234`) as the hostname. See the [hostname section](#hostname) below for more information. Defaults to `false`|
+| `DD_TAGS`                    | *Optional.* Sets additional tags provided as a space-delimited string. For example, `heroku config:set DD_TAGS="simple-tag-0 tag-key-1:tag-value-1"`. The buildpack automatically adds the tags `dyno` and `dynohost` which represent the dyno name (e.g. web.1) and host ID (e.g. 33f232db-7fa7-461e-b623-18e60944f44f) respectively. See the ["Guide to tagging"][5] for more information.|
 | `DD_HISTOGRAM_PERCENTILES`   | *Optional.* Optionally set additional percentiles for your histogram metrics. See [How to graph percentiles][6].|
 | `DISABLE_DATADOG_AGENT`      | *Optional.* When set, the Datadog Agent does not run.|
 | `DD_APM_ENABLED`             | *Optional.* Trace collection is enabled by default. Set this to `false` to disable trace collection.|
 | `DD_PROCESS_AGENT`           | *Optional.* The Datadog Process Agent is disabled by default. Set this to `true` to enable the Process Agent.|
 | `DD_SITE`                    | *Optional.* If you use the app.datadoghq.eu service, set this to `datadoghq.eu`. Defaults to `datadoghq.com`.|
 | `DD_AGENT_VERSION`           | *Optional.* By default, the buildpack installs the latest version of the Datadog Agent available in the package repository. Use this variable to install older versions of the Datadog Agent (note that not all versions of the Agent may be available).|
-| `DD_DISABLE_HOST_METRICS`    | *Optional.* By default, the buildpack reports system metrics for the host machine running the Dyno. Set this to `true` to disable system metrics collection. See the [system metrics section](#system-metrics) below for more information.|
+| `DD_DISABLE_HOST_METRICS`    | *Optional.* By default, the buildpack reports system metrics for the host machine running the dyno. Set this to `true` to disable system metrics collection. See the [system metrics section](#system-metrics) below for more information.|
 
 For additional documentation, refer to the [Datadog Agent documentation][9].
 
 ## Hostname
 
-Heroku Dynos are ephemeral—they can move to different host machines whenever new code is deployed, configuration changes are made, or resouce needs/availability changes. This makes Heroku flexible and responsive, but can potentially lead to a high number of reported hosts in Datadog. Datadog bills on a per-host basis, and the buildpack default is to report actual hosts, which can lead to higher than expected costs.
+Heroku dynos are ephemeral—they can move to different host machines whenever new code is deployed, configuration changes are made, or resouce needs/availability changes. This makes Heroku flexible and responsive, but can potentially lead to a high number of reported hosts in Datadog. Datadog bills on a per-host basis, and the buildpack default is to report actual hosts, which can lead to higher than expected costs.
 
-Depending on your use case, you may want to set your hostname so that hosts are aggregated and report a lower number.  To do this, Set `DD_DYNO_HOST` to `true`. This will cause the Agent to report the hostname as the app and Dyno name (e.g. `appname.web.1` or `appname.run.1234`) and your host count will closely match your Dyno usage. One drawback is that you may see some metrics continuity errors whenever a Dyno is cycled.
+Depending on your use case, you may want to set your hostname so that hosts are aggregated and report a lower number.  To do this, Set `DD_DYNO_HOST` to `true`. This will cause the Agent to report the hostname as the app and dyno name (e.g. `appname.web.1` or `appname.run.1234`) and your host count will closely match your dyno usage. One drawback is that you may see some metrics continuity errors whenever a dyno is cycled.
 
 ## System metrics
 
-By default, the buildpack collects system metrics for the host machine running your Dyno. System metrics are not available for individual Dynos. To disable host system metrics collection, set the `DD_DISABLE_HOST_METRICS` environment variable to `true`.
+By default, the buildpack collects system metrics for the host machine running your dyno. System metrics are not available for individual dynos using this buildpack. To disable host system metrics collection, set the `DD_DISABLE_HOST_METRICS` environment variable to `true`.
 
-In order to collect system metrics about for your Dynos, use a log drain to collect metric logs from the Heroku Logplex and forward them to Datadog. See the [community integrations documentation][17] for a list of community supported log drains.
+In order to collect system metrics for your dynos, use a log drain to collect metric logs from the Heroku Logplex and forward them to Datadog. See the [community integrations documentation][17] for a list of community supported log drains.
 
 ## File locations
 
@@ -93,7 +93,7 @@ instances:
     ssl: True
 ```
 
-During the Dyno start up, your YAML files are copied to the appropriate Datadog Agent configuration directories.
+During the dyno start up, your YAML files are copied to the appropriate Datadog Agent configuration directories.
 
 ## Limiting Datadog's console output
 
@@ -119,7 +119,7 @@ The example below demonstrates a few of the things you can do in the `prerun.sh`
 ```shell
 #!/usr/bin/env bash
 
-# Disable the Datadog Agent based on Dyno type
+# Disable the Datadog Agent based on dyno type
 if [ "$DYNOTYPE" == "run" ]; then
   DISABLE_DATADOG_AGENT="true"
 fi
