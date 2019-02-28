@@ -60,6 +60,15 @@ PACKAGE="datadog-agent"
 # Compile script must read env vars from the env var files.
 if [ -f "$ENV_DIR/DD_AGENT_VERSION" ]; then
   DD_AGENT_VERSION=$(cat "$ENV_DIR/DD_AGENT_VERSION")
+
+  # Accommodate for earlier pinned versions. Give deprecation warning.
+  if [[ "$DD_AGENT_VERSION" == *"_amd64" ]]; then
+    # Update the version to remove "_amd64"
+    DD_AGENT_VERSION=${DD_AGENT_VERSION/_amd64/}
+    topic "WARNING: Version pinning has been updated. Please update your pinned version to $DD_AGENT_VERSION"
+    echo "To update, run: heroku config:set DD_AGENT_VERSION=$DD_AGENT_VERSION" | indent
+  fi
+
   AGENT_VERSIONS=$(apt-cache $APT_OPTIONS show datadog-agent | grep "Version: ")
   AGENT_VERSIONS=$(sed 's/Version: 1://g' <<<"$AGENT_VERSIONS")
 
