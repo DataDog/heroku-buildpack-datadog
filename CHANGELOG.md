@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
+## [1.6.2] - 2019-02-28
+When pinning Datadog Agent versions, previous buildpacks pulled old versions from the buildpack cache causing availability to be unreliable. The buildpack now pulls old versions from apt.
+
+### Changed
+- The buildpack now pulls old versions from apt.
+- Updated documentation around system metrics.
+
 ## [1.6.1] - 2019-02-05
 Fixed the python path generation code. In between 1.6.0 and 1.6.1 the buildpack added trace search configs to the `datadog.yaml` file. This has been removed as support for the `DD_APM_ANALYZED_SPANS` environment variable is directly supported by the Agent.
 
