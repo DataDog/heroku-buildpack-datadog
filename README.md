@@ -95,21 +95,6 @@ instances:
 
 During the dyno start up, your YAML files are copied to the appropriate Datadog Agent configuration directories.
 
-## Limiting Datadog's console output
-
-In some cases, you may want to limit the amount of logs the Datadog buildpack is writing to the console.
-
-To limit the log output of the buildpack, set the `DD_LOG_LEVEL` environment variable to one of the following: `TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `CRITICAL`, `OFF`.
-
-```
-heroku config:add DD_LOG_LEVEL=ERROR
-```
-
-
-## Heroku log collection
-
-[See the dedicated guide to send your Heroku logs to Datadog][16]
-
 ## Prerun script
 
 In addition to all of the configurations above, you can include a prerun script, `/datadog/prerun.sh`, in your application. The prerun script will run after all of the standard configuration actions and immediately before starting the Datadog Agent. This allows you to modify the environment variables, perform additional configurations, or even disable the Datadog Agent programmatically.
@@ -137,15 +122,27 @@ if [ -n "$DATABASE_URL" ]; then
 fi
 ```
 
+## Limiting Datadog's console output
+
+In some cases, you may want to limit the amount of logs the Datadog buildpack is writing to the console.
+
+To limit the log output of the buildpack, set the `DD_LOG_LEVEL` environment variable to one of the following: `TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `CRITICAL`, `OFF`.
+
+```
+heroku config:add DD_LOG_LEVEL=ERROR
+```
+
+## Heroku log collection
+
+The Heroku Datadog buildpack does not collect logs. To set up log collection, see the [dedicated guide][16].
+
 ## Unsupported
 
-Heroku buildpacks cannot be used with Docker images. To build a Docker image with Datadog, reference the [Datadog Agent docker files][12].
-
-It is not possible to send logs from Heroku to Datadog using this buildpack.
+Heroku buildpacks cannot be used with Docker images. To build a Docker image with Datadog, reference the [Datadog Agent Docker files][12].
 
 ## Contributing
 
-[See the contributing documentation to learn how to open an issue or PR to the Heroku-buildpack-datadog repository][13]
+See the [contributing documentation][13] to learn how to open an issue or PR to the Heroku-buildpack-datadog repository[13].
 
 ## History
 
