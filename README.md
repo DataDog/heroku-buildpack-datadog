@@ -67,7 +67,7 @@ Depending on your use case, you may want to set your hostname so that hosts are 
 
 By default, the buildpack collects system metrics for the host machine running your dyno. System metrics are not available for individual dynos using this buildpack. To disable host system metrics collection, set the `DD_DISABLE_HOST_METRICS` environment variable to `true`.
 
-In order to collect system metrics for your dynos, use a log drain to collect metric logs from the Heroku Logplex and forward them to Datadog. See the [community integrations documentation][17] for a list of community supported log drains.
+In order to collect system metrics for your dynos, use a log drain to collect metric logs from the Heroku Logplex and forward them to Datadog. See the [community integrations documentation][18] for a list of community supported log drains.
 
 ## File locations
 
@@ -134,7 +134,7 @@ heroku config:add DD_LOG_LEVEL=ERROR
 
 ## Heroku log collection
 
-The Heroku Datadog buildpack does not collect logs. To set up log collection, see the [dedicated guide][16].
+The Heroku Datadog buildpack does not collect logs. To set up log collection, see the [dedicated guide][17].
 
 ## Unsupported
 
@@ -142,11 +142,11 @@ Heroku buildpacks cannot be used with Docker images. To build a Docker image wit
 
 ## Contributing
 
-See the [contributing documentation][13] to learn how to open an issue or PR to the Heroku-buildpack-datadog repository[13].
+See the [contributing documentation][13] to learn how to open an issue or PR to the [Heroku-buildpack-datadog repository[14].
 
 ## History
 
-Earlier versions of this project were forked from the [miketheman heroku-buildpack-datadog project][14]. It was largely rewritten for Datadog's Agent version 6. Changes and more information can be found in the [changelog][15].
+Earlier versions of this project were forked from the [miketheman heroku-buildpack-datadog project][15]. It was largely rewritten for Datadog's Agent version 6. Changes and more information can be found in the [changelog][16].
 
 [1]: https://devcenter.heroku.com/articles/buildpacks
 [2]: https://docs.datadoghq.com/libraries
@@ -160,7 +160,8 @@ Earlier versions of this project were forked from the [miketheman heroku-buildpa
 [11]: https://devcenter.heroku.com/articles/log-drains#https-drains
 [12]: https://github.com/DataDog/datadog-agent/tree/master/Dockerfiles
 [13]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CONTRIBUTING.md
-[14]: https://github.com/miketheman/heroku-buildpack-datadog
-[15]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
-[16]: https://docs.datadoghq.com/logs/guide/collect-heroku-logs
-[17]: https://docs.datadoghq.com/developers/libraries/#heroku
+[14]: https://github.com/DataDog/heroku-buildpack-datadog
+[15]: https://github.com/miketheman/heroku-buildpack-datadog
+[16]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
+[17]: https://docs.datadoghq.com/logs/guide/collect-heroku-logs
+[18]: https://docs.datadoghq.com/developers/libraries/#heroku
