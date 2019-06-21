@@ -75,6 +75,21 @@ In order to collect system metrics for your dynos, use a log drain to collect me
 - The Datadog Agent configuration files are at `/app/.apt/etc/datadog-agent`
 - The Datadog Agent logs are at `/app/.apt/var/log/datadog`
 
+## Agent Troubleshooting
+
+The [Agent Troubleshooting](19) documentation assumes you're running a "conventional" server. To troubleshoot the agent on a Heroku dyno:
+
+``` shell
+heroku ps:exec -a <NAME>
+/app/.apt/opt/datadog-agent/bin/agent/agent status -c /app/.apt/etc/datadog-agent
+```
+
+If you're trying to send a flare you will also need to set the DD_API_KEY environment variable. To set the environment variable:
+
+``` shell
+export DD_API_KEY=<SECRET>
+```
+
 ## Enabling integrations
 
 You can enable Datadog Agent integrations by including an appropriately named YAML file inside a `datadog/conf.d` directory in the root of your application.
@@ -165,3 +180,4 @@ Earlier versions of this project were forked from the [miketheman heroku-buildpa
 [16]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
 [17]: https://docs.datadoghq.com/logs/guide/collect-heroku-logs
 [18]: https://docs.datadoghq.com/developers/libraries/#heroku
+[19]: https://docs.datadoghq.com/agent/troubleshooting/
