@@ -103,6 +103,7 @@ fi
 
 # Ensure all check and librariy locations are findable in the Python path.
 DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7"
+DD_PYTHONPATH="$DD_DIR/embedded/lib:$DD_PYTHONPATH"
 # Recursively add packages to python path.
 DD_PYTHONPATH="$DD_PYTHONPATH$(find "$DD_DIR/embedded/lib/python2.7/site-packages" -maxdepth 1 -type d -printf ":%p")"
 # Add other packages.
