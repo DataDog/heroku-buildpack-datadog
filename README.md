@@ -142,7 +142,7 @@ Heroku buildpacks cannot be used with Docker images. To build a Docker image wit
 
 ## Contributing
 
-See the [contributing documentation][13] to learn how to open an issue or PR to the [Heroku-buildpack-datadog repository[14].
+See the [contributing documentation][13] to learn how to open an issue or PR to the [Heroku-buildpack-datadog repository][14].
 
 ## History
 
