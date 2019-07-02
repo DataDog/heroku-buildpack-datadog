@@ -10,7 +10,7 @@ DATADOG_CONF="$DD_CONF_DIR/datadog.yaml"
 
 # Update Env Vars with new paths for apt packages
 export PATH="$APT_DIR/usr/bin:$DD_BIN_DIR:$PATH"
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$APT_DIR/usr/lib/x86_64-linux-gnu:$APT_DIR/usr/lib:$APT_DIR/opt/datadog-agent/embedded/lib"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$APT_DIR/usr/lib/x86_64-linux-gnu:$APT_DIR/usr/lib"
 export LIBRARY_PATH="$LIBRARY_PATH:$APT_DIR/usr/lib/x86_64-linux-gnu:$APT_DIR/usr/lib"
 export INCLUDE_PATH="$APT_DIR/usr/include:$APT_DIR/usr/include/x86_64-linux-gnu:$INCLUDE_PATH"
 export PKG_CONFIG_PATH="$APT_DIR/usr/lib/x86_64-linux-gnu/pkgconfig:$APT_DIR/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
@@ -138,7 +138,7 @@ else
 
   # Run the Datadog Agent
   echo "Starting Datadog Agent on $DD_HOSTNAME"
-  bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" $DD_BIN_DIR/agent $RUN_COMMAND -c $DATADOG_CONF 2>&1 &"
+  bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$APT_DIR/opt/datadog-agent/embedded/lib:$LD_LIBRARY_PATH\" $DD_BIN_DIR/agent $RUN_COMMAND -c $DATADOG_CONF 2>&1 &"
 
   # The Trace Agent will run by default.
   if [ "$DD_APM_ENABLED" == "false" ]; then
