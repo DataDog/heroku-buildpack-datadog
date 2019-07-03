@@ -24,7 +24,7 @@ heroku buildpacks:add heroku/ruby
 heroku labs:enable runtime-dyno-metadata -a $(heroku apps:info|grep ===|cut -d' ' -f2)
 
 # Add this buildpack and set your Datadog API key
-heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git
+heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git#<DATADOG_BUILDPACK_RELEASE>
 heroku config:add DD_API_KEY=<DATADOG_API_KEY>
 
 # Deploy to Heroku
@@ -32,6 +32,7 @@ git push heroku master
 ```
 
 Replace `<DATADOG_API_KEY>` with your [Datadog API key][3].
+Replace `<DATADOG_BUILDPACK_RELEASE>` with the [Buildpack release][19] you want to use.
 
 Once complete, the Datadog Agent is started automatically when each dyno starts.
 
@@ -165,3 +166,4 @@ Earlier versions of this project were forked from the [miketheman heroku-buildpa
 [16]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
 [17]: https://docs.datadoghq.com/logs/guide/collect-heroku-logs
 [18]: https://docs.datadoghq.com/developers/libraries/#heroku
+[19]: https://github.com/DataDog/heroku-buildpack-datadog/releases
