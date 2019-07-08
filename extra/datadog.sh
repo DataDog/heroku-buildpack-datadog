@@ -148,7 +148,7 @@ else
     bash -c "$DD_DIR/embedded/bin/trace-agent -config $DATADOG_CONF 2>&1 &"
   fi
 
-  # The Process Agen must be run explicitly
+  # The Process Agent must be run explicitly
   if [ "$DD_PROCESS_AGENT" == "true" ]; then
     echo "Starting Datadog Process Agent on $DD_HOSTNAME"
     bash -c "$DD_DIR/embedded/bin/process-agent -config $DATADOG_CONF 2>&1 &"
