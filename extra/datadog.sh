@@ -56,7 +56,7 @@ if [ -n "$DD_TAGS" ]; then
 fi
 
 # Inject tags after example tags.
-sed -i "s/^#   - role:database$/#   - role:database\n$TAGS/" "$DATADOG_CONF"
+sed -i "s/^#   - <TAG_KEY>:<TAG_VALUE>$/#   - <TAG_KEY>:<TAG_VALUE>\n$TAGS/" "$DATADOG_CONF"
 
 # Uncomment APM configs and add the log file location.
 sed -i -e"s|^# apm_config:$|apm_config:|" "$DATADOG_CONF"
