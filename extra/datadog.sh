@@ -56,7 +56,10 @@ if [ -n "$DD_TAGS" ]; then
 fi
 
 # Inject tags after example tags.
+# Config files for agent versions 6.11 and earlier:
 sed -i "s/^#   - role:database$/#   - role:database\n$TAGS/" "$DATADOG_CONF"
+# Agent versions 6.12 and later:
+sed -i "s/^\(## @param tags\)/$TAGS\n\1/" "$DATADOG_CONF"
 
 # Uncomment APM configs and add the log file location.
 sed -i -e"s|^# apm_config:$|apm_config:|" "$DATADOG_CONF"
