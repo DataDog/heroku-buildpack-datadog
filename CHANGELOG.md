@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
+## [1.6.5] - 2019-07-31
+Merged PR from @dirk to fix tag injection for Agent 6.12+
+
+### Added
+- 6.12 changed the template config file format. This release adds a new regex to maintain tag injection.
+
+## [1.6.4] - 2019-07-08
+Fixed the python path generation code.
+
+### Changed
+- Python path generation for embedded python site packages has been updated for Agent 6.12 release.
+
+## [1.6.3] - 2019-06-28
+Fixed the python path generation code.
+
+### Changed
+- Python path generation for embedded python site packages has been updated for Agent 6.12 release.
+
 ## [1.6.2] - 2019-02-28
 When pinning Datadog Agent versions, previous buildpacks pulled old versions from the buildpack cache causing availability to be unreliable. The buildpack now pulls old versions from apt.
 
