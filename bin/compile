@@ -55,7 +55,6 @@ topic "Updating apt caches for Datadog Agent"
 APT_OPTIONS="$APT_OPTIONS -o Dir::Etc::Trusted=$APT_KEYRING -o Dir::Etc::SourceList=$APT_REPO_FILE"
 apt-get $APT_OPTIONS update | indent
 
-PACKAGE="datadog-agent"
 # If a version has been specified, validate it, then install it.
 # Compile script must read env vars from the env var files.
 if [ -f "$ENV_DIR/DD_AGENT_VERSION" ]; then
@@ -78,12 +77,15 @@ if [ -f "$ENV_DIR/DD_AGENT_VERSION" ]; then
     echo "Available versions:" | indent
     echo "$AGENT_VERSIONS" | indent
     exit 1
-
-  # Set the  specified version.
-  else
-    PACKAGE="$PACKAGE=1:$DD_AGENT_VERSION"
   fi
+else
+  # If no version is explicitly set, do so here.
+  # In order to prevent unforseen issues from new Agent releases,
+  # we now specify a default version in this buildpack.
+  DD_AGENT_VERSION="6.13.0-1"
 fi
+# Set the  specified version.
+PACKAGE="datadog-agent=1:$DD_AGENT_VERSION"
 
 topic "Downloading Datadog Agent $DD_AGENT_VERSION"
 apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommends "$PACKAGE" | indent
