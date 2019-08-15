@@ -72,7 +72,7 @@ if [ -f "$ENV_DIR/DD_AGENT_VERSION" ]; then
   AGENT_VERSIONS=$(sed 's/Version: 1://g' <<<"$AGENT_VERSIONS")
 
   # If specified version doesn't exist, list available versions.
-  if [ -z $(echo "$AGENT_VERSIONS" | grep "$DD_AGENT_VERSION") ]; then
+  if [ -z $(echo "$AGENT_VERSIONS" | grep -x "$DD_AGENT_VERSION") ]; then
     topic "ERROR: Version \"$DD_AGENT_VERSION\" was not found."
     echo "Available versions:" | indent
     echo "$AGENT_VERSIONS" | indent
