@@ -105,7 +105,11 @@ if [ "$DD_DISABLE_HOST_METRICS" == "true" ]; then
 fi
 
 # Find if the Python folder is 2 or 3
-PYTHON_DIR=$(find "$DD_DIR/embedded/lib/" -maxdepth 1 -type d -name "python[2-3]\.[0-9]"  -printf "%f")
+PYTHON_DIR=$(find "$DD_DIR/embedded/lib/" -maxdepth 1 -type d -name "python[2-3]\.[0-9]" -printf "%f")
+PYTHON_VERSION=$(echo $PYTHON_DIR | sed -n -e 's/^python\([2-3]\)\.[0-9]/\1/p')
+
+# If Python version is 3, it has to be specified in the configuration file
+if [ "$PYTHON_VERSION" = "3" ]; then echo 'python_version: 3' >> $DATADOG_CONF; fi
 
 # Ensure all check and library locations are findable in the Python path.
 DD_PYTHONPATH="$DD_DIR/embedded/lib/$PYTHON_DIR"
