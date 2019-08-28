@@ -113,8 +113,7 @@ if [ "$PYTHON_VERSION" = "3" ]; then echo 'python_version: 3' >> $DATADOG_CONF; 
 
 # Ensure all check and library locations are findable in the Python path.
 DD_PYTHONPATH="$DD_DIR/embedded/lib/$PYTHON_DIR"
-# Recursively add packages to python path.
-DD_PYTHONPATH="$DD_PYTHONPATH$(find "$DD_DIR/embedded/lib/$PYTHON_DIR/site-packages" -maxdepth 1 -type d -printf ":%p")"
+DD_PYTHONPATH="$DD_PYTHONPATH:$DD_DIR/embedded/lib/$PYTHON_DIR/site-packages"
 # Add other packages.
 DD_PYTHONPATH="$DD_DIR/embedded/lib/$PYTHON_DIR/plat-linux2:$DD_PYTHONPATH"
 DD_PYTHONPATH="$DD_DIR/embedded/lib/$PYTHON_DIR/lib-tk:$DD_PYTHONPATH"
