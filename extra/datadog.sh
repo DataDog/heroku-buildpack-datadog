@@ -104,14 +104,20 @@ if [ "$DD_DISABLE_HOST_METRICS" == "true" ]; then
   find "$DD_CONF_DIR"/conf.d -name "conf.yaml.default" -exec mv {} {}_disabled \;
 fi
 
-# Ensure all check and librariy locations are findable in the Python path.
-DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7"
-# Recursively add packages to python path.
-DD_PYTHONPATH="$DD_PYTHONPATH$(find "$DD_DIR/embedded/lib/python2.7/site-packages" -maxdepth 1 -type d -printf ":%p")"
+# Find if the Python folder is 2 or 3
+PYTHON_DIR=$(find "$DD_DIR/embedded/lib/" -maxdepth 1 -type d -name "python[2-3]\.[0-9]" -printf "%f")
+PYTHON_VERSION=$(echo $PYTHON_DIR | sed -n -e 's/^python\([2-3]\)\.[0-9]/\1/p')
+
+# If Python version is 3, it has to be specified in the configuration file
+if [ "$PYTHON_VERSION" = "3" ]; then echo 'python_version: 3' >> $DATADOG_CONF; fi
+
+# Ensure all check and library locations are findable in the Python path.
+DD_PYTHONPATH="$DD_DIR/embedded/lib/$PYTHON_DIR"
+DD_PYTHONPATH="$DD_PYTHONPATH:$DD_DIR/embedded/lib/$PYTHON_DIR/site-packages"
 # Add other packages.
-DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/plat-linux2:$DD_PYTHONPATH"
-DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/lib-tk:$DD_PYTHONPATH"
-DD_PYTHONPATH="$DD_DIR/embedded/lib/python2.7/lib-dynload:$DD_PYTHONPATH"
+DD_PYTHONPATH="$DD_DIR/embedded/lib/$PYTHON_DIR/plat-linux2:$DD_PYTHONPATH"
+DD_PYTHONPATH="$DD_DIR/embedded/lib/$PYTHON_DIR/lib-tk:$DD_PYTHONPATH"
+DD_PYTHONPATH="$DD_DIR/embedded/lib/$PYTHON_DIR/lib-dynload:$DD_PYTHONPATH"
 DD_PYTHONPATH="$DD_DIR/bin/agent/dist:$DD_PYTHONPATH"
 DD_PYTHONPATH="$DD_DIR/embedded/lib:$DD_PYTHONPATH"
 
