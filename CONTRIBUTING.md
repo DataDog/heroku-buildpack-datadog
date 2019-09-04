@@ -36,3 +36,33 @@ Here are some tips to keep in mind when submitting a PR:
 * Summarize your PR with an explanatory title and a message describing your changes. Cross-reference any related bugs/PRs and provide steps for testing when appropriate.
 * Write meaningful commit messages. The commit message should describe the reason for the change and give extra details that will allow someone later on to understand in 5 seconds the thing you've been working on for a day.
 * Rebase your changes on `master` and **squash** your commits whenever possible—it keeps the history clean, and it's easier to revert later if necessary.
+
+### Running the tests
+
+This project comes with a set of tests to ensure that changes don't break the buildpack for current users. The tests are written using the [Heroku Buildpack Testrunner](https://github.com/heroku/heroku-buildpack-testrunner).
+
+To run the tests create a Heroku application that uses the [Heroku Buildpack Testrunner](https://github.com/heroku/heroku-buildpack-testrunner) as Buildpack in the Datadog Heroku Buildpack Git repository folder:
+
+```shell
+git clone https://github.com/DataDog/heroku-buildpack-datadog.git
+cd heroku-buildpack-datadog
+heroku create --buildpack https://github.com/heroku/heroku-buildpack-testrunner
+````
+
+Once the testrunner is set as your buildpack's buildpack, push it to Heroku. This will automatically download and install shUnit2 and create a tests process for you:
+
+```shell
+git push heroku master
+```
+
+The tests execute the Datadog agent, so this new Heroku application will need to have your `DD_API_KEY` environment variable set for the tests to run correctly:
+
+```shell
+heroku config:set DD_API_KEY=<your_api_key>
+```
+
+Now, you can run your tests on Heroku:
+
+```shell
+heroku run tests
+```
