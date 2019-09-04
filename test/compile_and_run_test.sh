@@ -34,6 +34,7 @@ compileAndRunVersion()
   assertFileNotContains "Could not initialize Python" ${STD_ERR}
   assertCaptured "Starting Datadog Agent"
   assertCaptured "Starting Datadog Trace Agent"
+  assertNotCaptured "The Datadog Agent has been disabled"
 
 }
 
