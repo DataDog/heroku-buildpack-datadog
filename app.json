@@ -1,0 +1,19 @@
+{
+  "name": "Datadog Agent Heroku Buildpack",
+  "description": "This Heroku Buildpack installs the Datadog Agent in your Heroku dyno to collect system metrics, custom application metrics, and traces",
+  "scripts": {
+    "test": ".buildpack-testrunner/bin/run ."
+  },
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-testrunner"
+    }
+  ],
+  "environments": {
+    "test": {
+      "env": {
+        "SHUNIT_HOME": "/app/.shunit2"
+      }
+    }
+  }
+}
