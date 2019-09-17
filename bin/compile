@@ -117,20 +117,20 @@ fi
 
 # If we have 2 python versions, we remove the one that wasn't selected
 if [ "$NUM_PYTHON" = "2" ]; then
-  if [ -f "$ENV_DIR/PYTHON_VERSION" ]; then
-    PYTHON_VERSION=$(cat "$ENV_DIR/PYTHON_VERSION")
-    if [ "$PYTHON_VERSION" != "2" ] && [ "$PYTHON_VERSION" != "3" ]; then
-      topic "ERROR: Wrong Python version: \"$PYTHON_VERSION\"."
-      echo "Set PYTHON_VERSION to either 2 or 3." | indent
+  if [ -f "$ENV_DIR/DD_PYTHON_VERSION" ]; then
+    DD_PYTHON_VERSION=$(cat "$ENV_DIR/DD_PYTHON_VERSION")
+    if [ "$DD_PYTHON_VERSION" != "2" ] && [ "$DD_PYTHON_VERSION" != "3" ]; then
+      topic "ERROR: Wrong Python version: \"$DD_PYTHON_VERSION\"."
+      echo "Set DD_PYTHON_VERSION to either 2 or 3." | indent
       exit 1
     fi
   else
-    PYTHON_VERSION="2" # if not specified, we default to Python 2
+    DD_PYTHON_VERSION="2" # if not specified, we default to Python 2
   fi
 
   # We remove the unneeded version of Python
-  if [ "$PYTHON_VERSION" = "2" ]; then rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python3.*; fi
-  if [ "$PYTHON_VERSION" = "3" ]; then rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python2.*; fi
+  if [ "$DD_PYTHON_VERSION" = "2" ]; then rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python3.*; fi
+  if [ "$DD_PYTHON_VERSION" = "3" ]; then rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python2.*; fi
 fi
 
 # Rewrite package-config files

@@ -50,6 +50,7 @@ In addition to the environment variables shown above, there are a number of othe
 | `DD_SITE`                    | *Optional.* If you use the app.datadoghq.eu service, set this to `datadoghq.eu`. Defaults to `datadoghq.com`.|
 | `DD_AGENT_VERSION`           | *Optional.* By default, the buildpack installs the latest version of the Datadog Agent available in the package repository. Use this variable to install older versions of the Datadog Agent (note that not all versions of the Agent may be available).|
 | `DD_DISABLE_HOST_METRICS`    | *Optional.* By default, the buildpack reports system metrics for the host machine running the dyno. Set this to `true` to disable system metrics collection. See the [system metrics section](#system-metrics) below for more information.|
+| `DD_PYTHON_VERSION`          | *Optional.* Starting with version `6.14.0`, Datadog Agent ships with Python versions `2` and `3`. The buildpack will only keep one of the versions. Set this to `2` or `3` to select the Python version you want the agent to keep. If not set, the buildpack will keep `2` |
 
 For additional documentation, refer to the [Datadog Agent documentation][9].
 
