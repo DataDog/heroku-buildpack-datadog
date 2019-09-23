@@ -82,7 +82,7 @@ else
   # If no version is explicitly set, do so here.
   # In order to prevent unforseen issues from new Agent releases,
   # we now specify a default version in this buildpack.
-  DD_AGENT_VERSION="6.13.0-1"
+  DD_AGENT_VERSION="6.14.0-1"
 fi
 # Set the  specified version.
 PACKAGE="datadog-agent=1:$DD_AGENT_VERSION"
