@@ -60,6 +60,8 @@ Heroku dynos are ephemeral—they can move to different host machines whenever n
 
 Depending on your use case, you may want to set your hostname so that hosts are aggregated and report a lower number.  To do this, Set `DD_DYNO_HOST` to `true`. This will cause the Agent to report the hostname as the app and dyno name (e.g. `appname.web.1` or `appname.run.1234`) and your host count will closely match your dyno usage. One drawback is that you may see some metrics continuity errors whenever a dyno is cycled.
 
+For this to work correctly, `HEROKU_APP_NAME` needs to be set. The easiest way to do this is by [enabling dyno metadata][20] Take into account that dyno metadata is not yet available in Private Spaces, in which case you will need to set `HEROKU_APP_NAME` manually.
+
 ## System metrics
 
 By default, the buildpack collects system metrics for the host machine running your dyno. System metrics are not available for individual dynos using this buildpack. To disable host system metrics collection, set the `DD_DISABLE_HOST_METRICS` environment variable to `true`.
@@ -145,6 +147,12 @@ See the [contributing documentation][13] to learn how to open an issue or PR to 
 
 Earlier versions of this project were forked from the [miketheman heroku-buildpack-datadog project][15]. It was largely rewritten for Datadog's Agent version 6. Changes and more information can be found in the [changelog][16].
 
+## FAQs / Troubleshooting
+
+### Datadog is reporting a higher number of agents than dynos
+
+Make sure you have `DD_DYNO_HOST` set to `true` and that `HEROKU_APP_NAME` has a value set for every Heroku application. See the [Hostname section](#Hostname) for details.
+
 [1]: https://devcenter.heroku.com/articles/buildpacks
 [2]: https://docs.datadoghq.com/libraries
 [3]: https://app.datadoghq.com/account/settings#api
@@ -163,3 +171,4 @@ Earlier versions of this project were forked from the [miketheman heroku-buildpa
 [17]: https://docs.datadoghq.com/logs/guide/collect-heroku-logs
 [18]: https://docs.datadoghq.com/developers/libraries/#heroku
 [19]: https://github.com/DataDog/heroku-buildpack-datadog/releases
+[20]: https://devcenter.heroku.com/articles/dyno-metadata
