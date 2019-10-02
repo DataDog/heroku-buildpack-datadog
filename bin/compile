@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # bin/compile <build-dir> <cache-dir>
 
+DELETE_PACKAGES=(kubernetes lxml openstack pysnmp_mibs pyVim pyVmomi)
+
 # Fail fast
 set -e
 set -o pipefail

@@ -17,4 +17,3 @@ function indent() {
   esac
 }
 
-DELETE_PACKAGES=(kubernetes lxml openstack pylint pysnmp_mibs pyVim pyVmomi)
