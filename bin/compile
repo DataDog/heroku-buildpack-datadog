@@ -130,7 +130,7 @@ fi
 # If the process agent hasn't been explicitly enabled, delete the agent
 if [ -f "$ENV_DIR/DD_PROCESS_AGENT" ]; then
   DD_PROCESS_AGENT=$(cat "$ENV_DIR/DD_PROCESS_AGENT")
-  if [ "$ENV_DIR/DD_PROCESS_AGENT" == "false" ]; then
+  if [ "$DD_PROCESS_AGENT" == "false" ]; then
     rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/process-agent"
   fi
 else
