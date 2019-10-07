@@ -108,8 +108,15 @@ fi
 PYTHON_DIR=$(find "$DD_DIR/embedded/lib/" -maxdepth 1 -type d -name "python[2-3]\.[0-9]" -printf "%f")
 DD_PYTHON_VERSION=$(echo $PYTHON_DIR | sed -n -e 's/^python\([2-3]\)\.[0-9]/\1/p')
 
-# If Python version is 3, it has to be specified in the configuration file
-if [ "$DD_PYTHON_VERSION" = "3" ]; then echo 'python_version: 3' >> $DATADOG_CONF; fi
+if [ "$DD_PYTHON_VERSION" = "3" ]; then
+  # If Python version is 3, it has to be specified in the configuration file
+  echo 'python_version: 3' >> $DATADOG_CONF
+  # Update symlinks to Python binaries
+  ln -sfn "$DD_DIR"/embedded/bin/python3 "$DD_DIR"/embedded/bin/python
+  ln -sfn "$DD_DIR"/embedded/bin/python3-config "$DD_DIR"/embedded/bin/python-config
+  ln -sfn "$DD_DIR"/embedded/bin/pip3 "$DD_DIR"/embedded/bin/pip
+  ln -sfn "$DD_DIR"/embedded/bin/pydoc3 "$DD_DIR"/embedded/bin/pydoc
+fi
 
 # Ensure all check and library locations are findable in the Python path.
 DD_PYTHONPATH="$DD_DIR/embedded/lib/$PYTHON_DIR"
