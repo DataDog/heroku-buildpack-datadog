@@ -160,7 +160,6 @@ if [ "$NUM_PYTHON" = "2" ]; then
 
   # We remove the unneeded version of Python
   if [ "$DD_PYTHON_VERSION" = "2" ]; then
-    PYTHON_VERSION="2.7"
     rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python3.*
     rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/libpython3*
     rm "$APT_DIR"/opt/datadog-agent/embedded/bin/pip3*
@@ -168,7 +167,6 @@ if [ "$NUM_PYTHON" = "2" ]; then
     rm "$APT_DIR"/opt/datadog-agent/embedded/bin/pydoc3*
   fi
   if [ "$DD_PYTHON_VERSION" = "3" ]; then
-    PYTHON_VERSION="3.7"
     rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python2.*
     rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/libpython2*
     rm "$APT_DIR"/opt/datadog-agent/embedded/bin/pip2*
