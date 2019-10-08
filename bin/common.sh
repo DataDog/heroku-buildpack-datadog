@@ -16,3 +16,4 @@ function indent() {
     *)      sed -u "$c";;
   esac
 }
+
