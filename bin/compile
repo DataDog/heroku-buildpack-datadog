@@ -138,11 +138,17 @@ else
 fi
 
 # Prior to Agent 6.14 there was only 1 python version
-DD_AGENT_MULT_PYTHON_VERSION="6.14"
-if [ "$DD_AGENT_VERSION" == "$(echo -e "$DD_AGENT_MULT_PYTHON_VERSION\n$DD_AGENT_VERSION" | sort -V | head -n1)" ]; then
+DD_AGENT_BASE_VERSION="6.14"
+if [ "$DD_AGENT_VERSION" == "$(echo -e "$DD_AGENT_BASE_VERSION\n$DD_AGENT_VERSION" | sort -V | head -n1)" ]; then
   NUM_PYTHON="1"
 else
   NUM_PYTHON="2"
+fi
+
+# Agent 7 onwards is Python3 only
+DD_AGENT_BASE_VERSION="7"
+if [ "$DD_AGENT_VERSION" != "$(echo -e "$DD_AGENT_BASE_VERSION\n$DD_AGENT_VERSION" | sort -V | head -n1)" ]; then
+  NUM_PYTHON="1"
 fi
 
 # If we have 2 python versions, we remove the one that wasn't selected
