@@ -10,6 +10,9 @@ set -o pipefail
 # Debug
 # set -x
 
+# Set agent pinned version
+DD_AGENT_PINNED_VERSION="6.14.0-1"
+
 # Parse and derive params
 BUILD_DIR=$1
 CACHE_DIR=$2
@@ -24,6 +27,7 @@ APT_DIR="$BUILD_DIR/.apt"
 APT_CACHE_DIR="$CACHE_DIR/apt/cache"
 APT_STATE_DIR="$CACHE_DIR/apt/state"
 APT_REPO_FILE="$BUILDPACK_DIR/etc/datadog.list"
+APT_REPO_FILE_7="$BUILDPACK_DIR/etc/datadog7.list"
 APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
 
 # Create build and run environment
@@ -52,40 +56,53 @@ GPG_HOME_DIR="$BUILD_DIR/.gnupg"
 mkdir -p "$GPG_HOME_DIR"
 gpg --ignore-time-conflict --no-options --no-default-keyring --homedir "$GPG_HOME_DIR" --keyring "$APT_KEYRING" --import "$GPG_KEY_FILE" | indent
 
+# If a version hasn't been specified, use the pinned version
+if [ -f "$ENV_DIR/DD_AGENT_VERSION" ]; then
+  DD_AGENT_VERSION=$(cat "$ENV_DIR/DD_AGENT_VERSION")
+else
+  DD_AGENT_VERSION="$DD_AGENT_PINNED_VERSION"
+fi
+
+# Prior to Agent 6.14 there was only 1 python version
+DD_AGENT_BASE_VERSION="6.14"
+if [ "$DD_AGENT_VERSION" == "$(echo -e "$DD_AGENT_BASE_VERSION\n$DD_AGENT_VERSION" | sort -V | head -n1)" ]; then
+  NUM_PYTHON="1"
+else
+  NUM_PYTHON="2"
+fi
+
+# Agent 7 onwards is Python3 only and repo file is different
+DD_AGENT_BASE_VERSION="7"
+if [ "$DD_AGENT_VERSION" != "$(echo -e "$DD_AGENT_BASE_VERSION\n$DD_AGENT_VERSION" | sort -V | head -n1)" ]; then
+  NUM_PYTHON="1"
+  # Modify repo file to point to agent 7
+  cp "$APT_REPO_FILE_7" "$APT_REPO_FILE"
+fi
+
 # Install Datadog Agent
 topic "Updating apt caches for Datadog Agent"
 APT_OPTIONS="$APT_OPTIONS -o Dir::Etc::Trusted=$APT_KEYRING -o Dir::Etc::SourceList=$APT_REPO_FILE"
 apt-get $APT_OPTIONS update | indent
 
-# If a version has been specified, validate it, then install it.
-# Compile script must read env vars from the env var files.
-if [ -f "$ENV_DIR/DD_AGENT_VERSION" ]; then
-  DD_AGENT_VERSION=$(cat "$ENV_DIR/DD_AGENT_VERSION")
-
-  # Accommodate for earlier pinned versions. Give deprecation warning.
-  if [[ "$DD_AGENT_VERSION" == *"_amd64" ]]; then
-    # Update the version to remove "_amd64"
-    DD_AGENT_VERSION=${DD_AGENT_VERSION/_amd64/}
-    topic "WARNING: Version pinning has been updated. Please update your pinned version to $DD_AGENT_VERSION"
-    echo "To update, run: heroku config:set DD_AGENT_VERSION=$DD_AGENT_VERSION" | indent
-  fi
-
-  AGENT_VERSIONS=$(apt-cache $APT_OPTIONS show datadog-agent | grep "Version: ")
-  AGENT_VERSIONS=$(sed 's/Version: 1://g' <<<"$AGENT_VERSIONS")
-
-  # If specified version doesn't exist, list available versions.
-  if [ -z $(echo "$AGENT_VERSIONS" | grep -x "$DD_AGENT_VERSION") ]; then
-    topic "ERROR: Version \"$DD_AGENT_VERSION\" was not found."
-    echo "Available versions:" | indent
-    echo "$AGENT_VERSIONS" | indent
-    exit 1
-  fi
-else
-  # If no version is explicitly set, do so here.
-  # In order to prevent unforseen issues from new Agent releases,
-  # we now specify a default version in this buildpack.
-  DD_AGENT_VERSION="6.15.1-1"
+# Accommodate for earlier pinned versions. Give deprecation warning.
+if [[ "$DD_AGENT_VERSION" == *"_amd64" ]]; then
+  # Update the version to remove "_amd64"
+  DD_AGENT_VERSION=${DD_AGENT_VERSION/_amd64/}
+  topic "WARNING: Version pinning has been updated. Please update your pinned version to $DD_AGENT_VERSION"
+  echo "To update, run: heroku config:set DD_AGENT_VERSION=$DD_AGENT_VERSION" | indent
 fi
+
+AGENT_VERSIONS=$(apt-cache $APT_OPTIONS show datadog-agent | grep "Version: ")
+AGENT_VERSIONS=$(sed 's/Version: 1://g' <<<"$AGENT_VERSIONS")
+
+# If specified version doesn't exist, list available versions.
+if [ -z $(echo "$AGENT_VERSIONS" | grep -x "$DD_AGENT_VERSION") ]; then
+  topic "ERROR: Version \"$DD_AGENT_VERSION\" was not found."
+  echo "Available versions:" | indent
+  echo "$AGENT_VERSIONS" | indent
+  exit 1
+fi
+
 # Set the  specified version.
 PACKAGE="datadog-agent=1:$DD_AGENT_VERSION"
 
@@ -135,20 +152,6 @@ if [ -f "$ENV_DIR/DD_PROCESS_AGENT" ]; then
   fi
 else
   rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/process-agent"
-fi
-
-# Prior to Agent 6.14 there was only 1 python version
-DD_AGENT_BASE_VERSION="6.14"
-if [ "$DD_AGENT_VERSION" == "$(echo -e "$DD_AGENT_BASE_VERSION\n$DD_AGENT_VERSION" | sort -V | head -n1)" ]; then
-  NUM_PYTHON="1"
-else
-  NUM_PYTHON="2"
-fi
-
-# Agent 7 onwards is Python3 only
-DD_AGENT_BASE_VERSION="7"
-if [ "$DD_AGENT_VERSION" != "$(echo -e "$DD_AGENT_BASE_VERSION\n$DD_AGENT_VERSION" | sort -V | head -n1)" ]; then
-  NUM_PYTHON="1"
 fi
 
 # If we have 2 python versions, we remove the one that wasn't selected

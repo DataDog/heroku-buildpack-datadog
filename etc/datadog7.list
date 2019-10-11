@@ -1,0 +1,4 @@
+# We're using insecure http here. Eventually we should fix
+# the apt-transport-https issue.
+#deb [trusted=yes] http://apt.datadoghq.com/ stable 7
+deb [trusted=yes] http://apt.datad0g.com nightly 7
