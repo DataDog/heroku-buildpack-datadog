@@ -11,9 +11,6 @@ DATADOG_CONF="$DD_CONF_DIR/datadog.yaml"
 # Update Env Vars with new paths for apt packages
 export PATH="$APT_DIR/usr/bin:$DD_BIN_DIR:$PATH"
 DD_LD_LIBRARY_PATH="$APT_DIR/opt/datadog-agent/embedded/lib:$APT_DIR/usr/lib/x86_64-linux-gnu:$APT_DIR/usr/lib"
-export LIBRARY_PATH="$LIBRARY_PATH:$APT_DIR/usr/lib/x86_64-linux-gnu:$APT_DIR/usr/lib"
-export INCLUDE_PATH="$APT_DIR/usr/include:$APT_DIR/usr/include/x86_64-linux-gnu:$INCLUDE_PATH"
-export PKG_CONFIG_PATH="$APT_DIR/usr/lib/x86_64-linux-gnu/pkgconfig:$APT_DIR/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
 
 # Set Datadog configs
 export DD_LOG_FILE="$DD_LOG_DIR/datadog.log"
