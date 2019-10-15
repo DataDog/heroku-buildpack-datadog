@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
+## [1.9] - 2019-10-08
+
+### Added
+- Slug size reduction:
+
+  The buildpack now removes the `process-agent` and `trace-agent` agent binaries, if the user has process monitoring and/or APM disabled on their configuration, to reduce slug size. Added documentation.
+- Improved `hostname` related documentation
+
+### Removed
+- To reduce the slug size, the buildpack removes some libraries not used in a Heroku environment:
+  * `kubernetes`
+  * `openstack`
+  * `pysnmp_mibs`
+  * `pyVim` and `pyVmomi`
+
+## [1.8] - 2019-09-23
+
+### Added
+- Datadog agent pinned version is now `6.14.0`
+- Added unit tests for the buildpack
+
+### Changed
+- The environment variable to select the python version is now `DD_PYTHON_VERSION`. Added documentation about this
+
+### Fixed
+- Fixed `start` command deprecation (#126)
+
+## [1.7] - 2019-08-30
+
+### Added
+- Datadog agent versions are now pinned to a specific version if `DD_AGENT_VERSION` is not set (currently 6.13.0)
+- For versions 6.14 onwards, agent ships with both Python2 and Python3. Set `PYTHON_VERSION` to "2" or "3" to select the version of the Python runtime.
+
+### Fixed
+- Fixed `DD_TAGS` documentation
+
 ## [1.6.5] - 2019-07-31
 Merged PR from @dirk to fix tag injection for Agent 6.12+
 
