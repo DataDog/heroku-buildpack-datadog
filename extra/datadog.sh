@@ -3,14 +3,16 @@
 # Setup Locations
 APT_DIR="$HOME/.apt"
 DD_DIR="$APT_DIR/opt/datadog-agent"
-DD_BIN_DIR="$DD_DIR/bin/agent"
+# Export DD_BIN_DIR to be used by the wrapper
+export DD_BIN_DIR="$DD_DIR/bin/agent"
 DD_LOG_DIR="$APT_DIR/var/log/datadog"
 DD_CONF_DIR="$APT_DIR/etc/datadog-agent"
-DATADOG_CONF="$DD_CONF_DIR/datadog.yaml"
+export DATADOG_CONF="$DD_CONF_DIR/datadog.yaml"
 
 # Update Env Vars with new paths for apt packages
 export PATH="$APT_DIR/usr/bin:$DD_BIN_DIR:$PATH"
-DD_LD_LIBRARY_PATH="$APT_DIR/opt/datadog-agent/embedded/lib:$APT_DIR/usr/lib/x86_64-linux-gnu:$APT_DIR/usr/lib"
+# Export agent's LD_LIBRARY_PATH to be used by the agent-wrapper
+export DD_LD_LIBRARY_PATH="$APT_DIR/opt/datadog-agent/embedded/lib:$APT_DIR/usr/lib/x86_64-linux-gnu:$APT_DIR/usr/lib"
 
 # Set Datadog configs
 export DD_LOG_FILE="$DD_LOG_DIR/datadog.log"
@@ -123,7 +125,8 @@ DD_PYTHONPATH="$DD_DIR/embedded/lib/$PYTHON_DIR/plat-linux2:$DD_PYTHONPATH"
 DD_PYTHONPATH="$DD_DIR/embedded/lib/$PYTHON_DIR/lib-tk:$DD_PYTHONPATH"
 DD_PYTHONPATH="$DD_DIR/embedded/lib/$PYTHON_DIR/lib-dynload:$DD_PYTHONPATH"
 DD_PYTHONPATH="$DD_DIR/bin/agent/dist:$DD_PYTHONPATH"
-DD_PYTHONPATH="$DD_DIR/embedded/lib:$DD_PYTHONPATH"
+# Export agent's PYTHONPATH be used by the agent-wrapper
+export DD_PYTHONPATH="$DD_DIR/embedded/lib:$DD_PYTHONPATH"
 
 # Give applications a chance to modify env vars prior to running.
 # Note that this can modify existing env vars or perform other actions (e.g. modify the conf file).

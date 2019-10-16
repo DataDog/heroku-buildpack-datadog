@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+# Run the Datadog Agent with the selected command 
+bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/agent -c $DATADOG_CONF "$@" "
