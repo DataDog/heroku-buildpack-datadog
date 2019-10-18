@@ -139,7 +139,7 @@ To reduce your slug size, make sure that `DD_APM_ENABLED` is set to `false`, if 
 
 ## Debugging
 
-To run any of the information/debugging commands listed in the [Agent's documentation](https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6#agent-status-and-information) use the `agent-wrapper` command.
+To run any of the information/debugging commands listed in the [Agent's documentation][21] use the `agent-wrapper` command.
 
 For example, to display the status of your Datadog Agent and enabled integrations, run:
 
@@ -188,3 +188,4 @@ Make sure you have `DD_DYNO_HOST` set to `true` and that `HEROKU_APP_NAME` has a
 [18]: https://docs.datadoghq.com/developers/libraries/#heroku
 [19]: https://github.com/DataDog/heroku-buildpack-datadog/releases
 [20]: https://devcenter.heroku.com/articles/dyno-metadata
+[21]: https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6#agent-status-and-information
