@@ -189,9 +189,9 @@ agent-wrapper status
 
 ## Python and Agent versions
 
-Prior to version `6.14` the Datadog v6 agent shipped with Python2 embedded. Starting with `6.14`, and in preparation for Python2 End Of Life, announced for January 2020, the Datadog v6 agent ships with both Python2 and Python3, to give customers enough time to migrate their custom checks to Python3. The Heroku buildpack will only keep one of the versions. Set `DD_PYTHON_VERSION` to `2` or `3` to select the Python version you want the agent to keep. If not set, the buildpack will keep Python2. If you are using custom checks that only work with Python2, we recommend to migrate them to Python3 before its EOL.
+Prior to version `6.14` the Datadog v6 agent shipped with Python version `2` embedded. Starting with `6.14`, and in preparation for Python version `2` End Of Life, announced for January 2020, the Datadog v6 agent ships with both Python versions `2` and `3`, to give customers enough time to migrate their custom checks to Python version `3`. The Heroku buildpack will only keep one of the versions. Set `DD_PYTHON_VERSION` to `2` or `3` to select the Python version you want the agent to keep. If not set, the buildpack will keep Python version `2`. If you are using custom checks that only work with Python version `2`, we recommend to migrate them to version `3` before its EOL.
 
-Agent v7 only ships with Python3. If you are not using custom checks or your custom checks are already migrated to Python3, we recommend moving to Agent 7 as soon as possible. Starting with `6.15`, v7 releases with the same minor version share the same feature set, making it safe to move between those two. For example, if you are running `6.16` and you don't need Python2, it is safe to jump to `7.16`.
+Agent v7 only ships with Python version `3`. If you are not using custom checks or your custom checks are already migrated to version `3`, we recommend moving to Agent 7 as soon as possible. Starting with `6.15`, v7 releases with the same minor version share the same feature set, making it safe to move between those two. For example, if you are running `6.16` and you don't need Python version `2`, it is safe to jump to `7.16`.
 
 ## Heroku log collection
 
