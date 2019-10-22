@@ -69,5 +69,5 @@ heroku run tests
 
 ### Modifying `datadog.sh`
 
-The wrapper that runs the agent when a dyno gets started, `datadog.sh`, gets sourced by Heroku, before running the dyno's command.
-Exporting environment variables that can conflict with Heroku's runtime in that file is discouraged (e.g `LD_LIBRARY_PATH`, `PYTHONPATH`).
+`datadog.sh` is a wrapper that runs the Agent when a dyno is started. It is sourced before running the command in the dyno's procfile.
+Exporting environment variables in `datadog.sh` that can conflict with Heroku's runtime is discouraged (e.g `LD_LIBRARY_PATH`, `PYTHONPATH`).
