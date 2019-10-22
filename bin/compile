@@ -183,3 +183,7 @@ topic "Installing Datadog runner"
 mkdir -p "$BUILD_DIR/.profile.d"
 cp "$BUILDPACK_DIR/extra/datadog.sh" "$BUILD_DIR/.profile.d/"
 chmod +x "$BUILD_DIR/.profile.d/datadog.sh"
+# Install the debug wrapper
+topic "Installing Datadog agent wrapper"
+cp "$BUILDPACK_DIR/extra/agent-wrapper" "$APT_DIR/opt/datadog-agent/bin/agent/"
+chmod +x "$APT_DIR/opt/datadog-agent/bin/agent/agent-wrapper"

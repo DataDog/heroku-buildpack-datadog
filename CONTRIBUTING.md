@@ -66,3 +66,8 @@ Now, you can run your tests on Heroku:
 ```shell
 heroku run tests
 ```
+
+### Modifying `datadog.sh`
+
+`datadog.sh` is a wrapper that runs the Agent when a dyno is started. It is sourced before running the command in the dyno's procfile.
+Exporting environment variables in `datadog.sh` that can conflict with Heroku's runtime is discouraged (e.g `LD_LIBRARY_PATH`, `PYTHONPATH`).

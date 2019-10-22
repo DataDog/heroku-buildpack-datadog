@@ -137,6 +137,16 @@ To save slug space, the `trace-agent` and `process-agent` optional binaries are 
 
 To reduce your slug size, make sure that `DD_APM_ENABLED` is set to `false`, if you are not using APM features; and `DD_PROCESS_AGENT` is not set to `true`, if you are not using process monitoring.
 
+## Debugging
+
+To run any of the information/debugging commands listed in the [Agent's documentation][21] use the `agent-wrapper` command.
+
+For example, to display the status of your Datadog Agent and enabled integrations, run:
+
+```
+agent-wrapper status
+```
+
 ## Heroku log collection
 
 The Heroku Datadog buildpack does not collect logs. To set up log collection, see the [dedicated guide][17].
@@ -178,3 +188,4 @@ Make sure you have `DD_DYNO_HOST` set to `true` and that `HEROKU_APP_NAME` has a
 [18]: https://docs.datadoghq.com/developers/libraries/#heroku
 [19]: https://github.com/DataDog/heroku-buildpack-datadog/releases
 [20]: https://devcenter.heroku.com/articles/dyno-metadata
+[21]: https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6#agent-status-and-information

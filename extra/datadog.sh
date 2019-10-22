@@ -3,17 +3,16 @@
 # Setup Locations
 APT_DIR="$HOME/.apt"
 DD_DIR="$APT_DIR/opt/datadog-agent"
-DD_BIN_DIR="$DD_DIR/bin/agent"
+# Export DD_BIN_DIR to be used by the wrapper
+export DD_BIN_DIR="$DD_DIR/bin/agent"
 DD_LOG_DIR="$APT_DIR/var/log/datadog"
 DD_CONF_DIR="$APT_DIR/etc/datadog-agent"
-DATADOG_CONF="$DD_CONF_DIR/datadog.yaml"
+export DATADOG_CONF="$DD_CONF_DIR/datadog.yaml"
 
 # Update Env Vars with new paths for apt packages
 export PATH="$APT_DIR/usr/bin:$DD_BIN_DIR:$PATH"
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$APT_DIR/usr/lib/x86_64-linux-gnu:$APT_DIR/usr/lib"
-export LIBRARY_PATH="$LIBRARY_PATH:$APT_DIR/usr/lib/x86_64-linux-gnu:$APT_DIR/usr/lib"
-export INCLUDE_PATH="$APT_DIR/usr/include:$APT_DIR/usr/include/x86_64-linux-gnu:$INCLUDE_PATH"
-export PKG_CONFIG_PATH="$APT_DIR/usr/lib/x86_64-linux-gnu/pkgconfig:$APT_DIR/usr/lib/pkgconfig:$PKG_CONFIG_PATH"
+# Export agent's LD_LIBRARY_PATH to be used by the agent-wrapper
+export DD_LD_LIBRARY_PATH="$APT_DIR/opt/datadog-agent/embedded/lib:$APT_DIR/usr/lib/x86_64-linux-gnu:$APT_DIR/usr/lib"
 
 # Set Datadog configs
 export DD_LOG_FILE="$DD_LOG_DIR/datadog.log"
@@ -126,7 +125,8 @@ DD_PYTHONPATH="$DD_DIR/embedded/lib/$PYTHON_DIR/plat-linux2:$DD_PYTHONPATH"
 DD_PYTHONPATH="$DD_DIR/embedded/lib/$PYTHON_DIR/lib-tk:$DD_PYTHONPATH"
 DD_PYTHONPATH="$DD_DIR/embedded/lib/$PYTHON_DIR/lib-dynload:$DD_PYTHONPATH"
 DD_PYTHONPATH="$DD_DIR/bin/agent/dist:$DD_PYTHONPATH"
-DD_PYTHONPATH="$DD_DIR/embedded/lib:$DD_PYTHONPATH"
+# Export agent's PYTHONPATH be used by the agent-wrapper
+export DD_PYTHONPATH="$DD_DIR/embedded/lib:$DD_PYTHONPATH"
 
 # Give applications a chance to modify env vars prior to running.
 # Note that this can modify existing env vars or perform other actions (e.g. modify the conf file).
@@ -142,7 +142,7 @@ if [ -n "$DISABLE_DATADOG_AGENT" ]; then
   echo "The Datadog Agent has been disabled. Unset the DISABLE_DATADOG_AGENT or set missing environment variables."
 else
   # Get the Agent version number
-  DD_VERSION="$(expr "$(bash -c "LD_LIBRARY_PATH=\"$APT_DIR/opt/datadog-agent/embedded/lib:$LD_LIBRARY_PATH\" $DD_BIN_DIR/agent version")" : 'Agent \([0-9]\+\.[0-9]\+.[0-9]\+\)')"
+  DD_VERSION="$(expr "$(bash -c "LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/agent version")" : 'Agent \([0-9]\+\.[0-9]\+.[0-9]\+\)')"
 
   # Prior to Agent 6.4.1, the command is "start"
   RUN_VERSION="6.4.1"
@@ -154,19 +154,19 @@ else
 
   # Run the Datadog Agent
   echo "Starting Datadog Agent on $DD_HOSTNAME"
-  bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$APT_DIR/opt/datadog-agent/embedded/lib:$LD_LIBRARY_PATH\" $DD_BIN_DIR/agent $RUN_COMMAND -c $DATADOG_CONF 2>&1 &"
+  bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/agent $RUN_COMMAND -c $DATADOG_CONF 2>&1 &"
 
   # The Trace Agent will run by default.
   if [ "$DD_APM_ENABLED" == "false" ]; then
     echo "The Datadog Trace Agent has been disabled. Set DD_APM_ENABLED to true or unset it."
   else
     echo "Starting Datadog Trace Agent on $DD_HOSTNAME"
-    bash -c "$DD_DIR/embedded/bin/trace-agent -config $DATADOG_CONF 2>&1 &"
+    bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/trace-agent -config $DATADOG_CONF 2>&1 &"
   fi
 
   # The Process Agent must be run explicitly
   if [ "$DD_PROCESS_AGENT" == "true" ]; then
     echo "Starting Datadog Process Agent on $DD_HOSTNAME"
-    bash -c "$DD_DIR/embedded/bin/process-agent -config $DATADOG_CONF 2>&1 &"
+    bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/process-agent -config $DATADOG_CONF 2>&1 &"
   fi
 fi
