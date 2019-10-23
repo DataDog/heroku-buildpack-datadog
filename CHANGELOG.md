@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
+## [1.10] - 2019-10-22
+
+### Added
+
+- `agent-wrapper` binary. This executable bash script will be added to the `PATH` when starting a dyno using Datadog's buildpack to help running agent's debugging/status commands.
+
+### Changed
+- `LD_LIBRARY_PATH` in `datadog.sh` is not exported anymore, to avoid conflicts with Heroku's runtime
+- Compilation linking paths are not exported anymore
+
 ## [1.9] - 2019-10-08
 
 ### Added
