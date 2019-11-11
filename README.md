@@ -33,6 +33,29 @@ Once complete, the Datadog Agent is started automatically when each dyno starts.
 
 The Datadog Agent provides a listening port on `8125` for statsd/dogstatsd metrics and events. Traces are collected on port `8126`.
 
+## Upgrading and slug recompilation
+
+Upgrading this buildpack or modifying some of the buildpack options require a full recompilation of the slug, **cleaning your application's build cache first**.
+
+| List of options that require a slug recompilation |
+| --- |
+| `DD_AGENT_VERSION` |
+| `DD_PYTHON_VERSION` |
+| `DD_APM_ENABLED` |
+| `DD_PROCESS_AGENT` |
+
+To upgrade this buildpack and/or to change any of these options, for example, `DD_AGENT_VERSION`, the following steps are required:
+
+```
+heroku plugins:install heroku-repo
+heroku config:set DD_AGENT_VERSION=<agents_new_version> -a appname # Set new version of the agent 
+heroku repo:purge_cache -a appname # Clears Heroku's build cache for "appname" application
+
+# Rebuild your slug with the new version from scratch:
+git commit --allow-empty -m "Purge cache"
+git push heroku master
+```
+
 ## Configuration
 
 In addition to the environment variables shown above, there are a number of others you can set:
@@ -45,12 +68,12 @@ In addition to the environment variables shown above, there are a number of othe
 | `DD_TAGS`                  | *Optional.* Sets additional tags provided as a comma-delimited string. For example, `heroku config:set DD_TAGS="simple-tag-0, tag-key-1:tag-value-1"`. The buildpack automatically adds the tags `dyno` which represent the dyno name (e.g. web.1) and `dynotype` (the type of dyno, e.g `run` or `web`). See the ["Guide to tagging"][5] for more information. |
 | `DD_HISTOGRAM_PERCENTILES` | *Optional.* Optionally set additional percentiles for your histogram metrics. See [How to graph percentiles][6].                                                                                                                                                                                                                                                |
 | `DISABLE_DATADOG_AGENT`    | *Optional.* When set, the Datadog Agent does not run.                                                                                                                                                                                                                                                                                                           |
-| `DD_APM_ENABLED`           | *Optional.* Trace collection is enabled by default. Set this to `false` to disable trace collection. Changing this option requires recompilation of the slug.                                                                                                                                                                                                   |
-| `DD_PROCESS_AGENT`         | *Optional.* The Datadog Process Agent is disabled by default. Set this to `true` to enable the Process Agent. Changing this option requires recompilation of the slug.                                                                                                                                                                                          |
+| `DD_APM_ENABLED`           | *Optional.* Trace collection is enabled by default. Set this to `false` to disable trace collection. Changing this option requires recompilation of the slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details.                                                                                                                                                                                                  |
+| `DD_PROCESS_AGENT`         | *Optional.* The Datadog Process Agent is disabled by default. Set this to `true` to enable the Process Agent. Changing this option requires recompilation of the slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details.                                                                                                                                                                                          |
 | `DD_SITE`                  | *Optional.* If you use the app.datadoghq.eu service, set this to `datadoghq.eu`. Defaults to `datadoghq.com`.                                                                                                                                                                                                                                                   |
-| `DD_AGENT_VERSION`         | *Optional.* By default, the buildpack installs the latest version of the Datadog Agent available in the package repository. Use this variable to install older versions of the Datadog Agent (note that not all versions of the Agent may be available).                                                                                                        |
+| `DD_AGENT_VERSION`         | *Optional.* By default, the buildpack installs the latest version of the Datadog Agent available in the package repository. Use this variable to install older versions of the Datadog Agent (note that not all versions of the Agent may be available). Changing this option requires recompiling the slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details.                                                     |
 | `DD_DISABLE_HOST_METRICS`  | *Optional.* By default, the buildpack reports system metrics for the host machine running the dyno. Set this to `true` to disable system metrics collection. See the [system metrics section](#system-metrics) below for more information.                                                                                                                      |
-| `DD_PYTHON_VERSION`        | *Optional.* Starting with version `6.14.0`, Datadog Agent ships with Python versions `2` and `3`. The buildpack will only keep one of the versions. Set this to `2` or `3` to select the Python version you want the agent to keep. If not set, the buildpack will keep `2`                                                                                     |
+| `DD_PYTHON_VERSION`        | *Optional.* Starting with version `6.14.0`, Datadog Agent ships with Python versions `2` and `3`. The buildpack will only keep one of the versions. Set this to `2` or `3` to select the Python version you want the agent to keep. If not set, the buildpack will keep `2`. Changing this option requires recompiling the slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details. |
 
 For additional documentation, refer to the [Datadog Agent documentation][9].
 
@@ -168,6 +191,10 @@ Earlier versions of this project were forked from the [miketheman heroku-buildpa
 ### Datadog is reporting a higher number of agents than dynos
 
 Make sure you have `DD_DYNO_HOST` set to `true` and that `HEROKU_APP_NAME` has a value set for every Heroku application. See the [Hostname section](#hostname) for details.
+
+### After upgrading the buildpack or the agent, the agent is reporting errors when starting up
+
+After an upgrade of the buildpack or the agent, a full recompilation of your application's slug, with a clean build cache, is required. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details.
 
 [1]: https://devcenter.heroku.com/articles/buildpacks
 [2]: https://docs.datadoghq.com/libraries
