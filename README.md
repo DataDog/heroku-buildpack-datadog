@@ -35,23 +35,28 @@ The Datadog Agent provides a listening port on `8125` for statsd/dogstatsd metri
 
 ## Upgrading and slug recompilation
 
-Upgrading this buildpack or modifying some of the buildpack options require a full recompilation of the slug, **cleaning your application's build cache first**.
+Upgrading this buildpack or modifying certain buildpack options requires you to clear your application's build cache and recompile your slug.
 
-| List of options that require a slug recompilation |
-| --- |
-| `DD_AGENT_VERSION` |
-| `DD_PYTHON_VERSION` |
-| `DD_APM_ENABLED` |
-| `DD_PROCESS_AGENT` |
+The following options require a slug recompilation:
 
-To upgrade this buildpack and/or to change any of these options, for example, `DD_AGENT_VERSION`, the following steps are required:
+* `DD_AGENT_VERSION`
+* `DD_PYTHON_VERSION`
+* `DD_APM_ENABLED`
+* `DD_PROCESS_AGENT`
+
+To upgrade this buildpack and/or to change any of these options, for example `DD_AGENT_VERSION`, the following steps are required:
 
 ```
+# Install the Heroku Repo plugin
 heroku plugins:install heroku-repo
-heroku config:set DD_AGENT_VERSION=<agents_new_version> -a appname # Set new version of the agent 
-heroku repo:purge_cache -a appname # Clears Heroku's build cache for "appname" application
 
-# Rebuild your slug with the new version from scratch:
+# Set new version of the Agent
+heroku config:set DD_AGENT_VERSION=<NEW_AGENT_VERSION> -a appname
+
+# Clears Heroku's build cache for "appname" application
+heroku repo:purge_cache -a appname
+
+# Rebuild your slug with the new Agent version:
 git commit --allow-empty -m "Purge cache"
 git push heroku master
 ```
@@ -194,7 +199,7 @@ Make sure you have `DD_DYNO_HOST` set to `true` and that `HEROKU_APP_NAME` has a
 
 ### After upgrading the buildpack or the agent, the agent is reporting errors when starting up
 
-After an upgrade of the buildpack or the agent, a full recompilation of your application's slug, with a clean build cache, is required. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details.
+After an upgrade of the buildpack or agent, you must clear your build cache and recompile your application's slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details.
 
 [1]: https://devcenter.heroku.com/articles/buildpacks
 [2]: https://docs.datadoghq.com/libraries
