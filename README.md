@@ -19,12 +19,19 @@ heroku buildpacks:add heroku/ruby
 heroku labs:enable runtime-dyno-metadata -a $(heroku apps:info|grep ===|cut -d' ' -f2)
 
 # Add this buildpack and set your Datadog API key
-heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git#<DATADOG_BUILDPACK_RELEASE>
+heroku buildpacks:add https://github.com/DataDog/heroku-buildpack-datadog.git#<DATADOG_BUILDPACK_RELEASE>
 heroku config:add DD_API_KEY=<DATADOG_API_KEY>
 
 # Deploy to Heroku
 git push heroku master
 ```
+
+>  **Warning**: Buildpacks that install apt packages (e.g. [apt][22], [puppeteer dependencies][23]) or buildpacks that modify the `/app` folder (e.g. [monorepo][24]) need to be added *before* the Datadog buildpack. For example, if your application uses the `ruby`, `datadog` and `apt` buildpacks, this would be a correct `heroku buildpacks` output:
+> ```
+> 1. heroku/ruby
+> 2. https://github.com/heroku/heroku-buildpack-apt.git
+> 3. https://github.com/DataDog/heroku-buildpack-datadog.git
+>```
 
 Replace `<DATADOG_API_KEY>` with your [Datadog API key][3].
 Replace `<DATADOG_BUILDPACK_RELEASE>` with the [Buildpack release][19] you want to use.
@@ -221,3 +228,6 @@ After an upgrade of the buildpack or agent, you must clear your build cache and 
 [19]: https://github.com/DataDog/heroku-buildpack-datadog/releases
 [20]: https://devcenter.heroku.com/articles/dyno-metadata
 [21]: https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6#agent-status-and-information
+[22]: https://github.com/heroku/heroku-buildpack-apt
+[23]: https://github.com/jontewks/puppeteer-heroku-buildpack
+[24]: https://github.com/lstoll/heroku-buildpack-monorepo
