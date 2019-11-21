@@ -98,9 +98,9 @@ else
   echo "WARNING: DD_HOSTNAME has been set. Setting this environment variable may result in metrics errors. To remove it, run: heroku config:unset DD_HOSTNAME"
 fi
 
-# Disable core checks (these read the host, not the dyno).
+# Disable core checks (these read the host, not the dyno)
 if [ "$DD_DISABLE_HOST_METRICS" == "true" ]; then
-  find "$DD_CONF_DIR"/conf.d -name "conf.yaml.default" -exec mv {} {}_disabled \;
+  find "$DD_CONF_DIR"/conf.d -name "conf.yaml.default" -type f -print | grep -v cpu | xargs -I {} mv {} {}_disabled
 fi
 
 # Find if the Python folder is 2 or 3
