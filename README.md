@@ -31,7 +31,7 @@ git push heroku master
 > 1. heroku/ruby
 > 2. https://github.com/heroku/heroku-buildpack-apt.git
 > 3. https://github.com/DataDog/heroku-buildpack-datadog.git
->```
+> ```
 
 Replace `<DATADOG_API_KEY>` with your [Datadog API key][3].
 Replace `<DATADOG_BUILDPACK_RELEASE>` with the [Buildpack release][19] you want to use.
