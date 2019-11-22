@@ -27,11 +27,11 @@ git push heroku master
 ```
 
 >  **Warning**: Buildpacks that install apt packages (e.g. [apt][22], [puppeteer dependencies][23]) or buildpacks that modify the `/app` folder (e.g. [monorepo][24]) need to be added *before* the Datadog buildpack. For example, if your application uses the `ruby`, `datadog` and `apt` buildpacks, this would be a correct `heroku buildpacks` output:
-> ```
-> 1. heroku/ruby
-> 2. https://github.com/heroku/heroku-buildpack-apt.git
-> 3. https://github.com/DataDog/heroku-buildpack-datadog.git
-> ```
+```
+1. heroku/ruby
+2. https://github.com/heroku/heroku-buildpack-apt.git
+3. https://github.com/DataDog/heroku-buildpack-datadog.git
+```
 
 Replace `<DATADOG_API_KEY>` with your [Datadog API key][3].
 Replace `<DATADOG_BUILDPACK_RELEASE>` with the [Buildpack release][19] you want to use.
