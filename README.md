@@ -102,7 +102,11 @@ For this to work correctly, `HEROKU_APP_NAME` needs to be set. The easiest way t
 
 By default, the buildpack collects system metrics for the host machine running your dyno. System metrics are not available for individual dynos using this buildpack. To disable host system metrics collection, set the `DD_DISABLE_HOST_METRICS` environment variable to `true`.
 
-In order to collect system metrics for your dynos, Enable the [Heroku Labs: log-runtime-metrics][12] then use [Datadog log drain to collect metric logs from the Heroku Logplex and forward them to Datadog][13].
+In order to collect system metrics for your dynos, you must:
+
+1. Enable the [Heroku Labs: log-runtime-metrics][12]
+2. Use the [Datadog log drain][13] to collect metric logs from the Heroku Logplex and forward them to Datadog
+3. Generate a [log-based metric][14] over the collected logs.
 
 ## File locations
 
@@ -114,7 +118,7 @@ In order to collect system metrics for your dynos, Enable the [Heroku Labs: log-
 
 You can enable Datadog Agent integrations by including an appropriately named YAML file inside a `datadog/conf.d` directory in the root of your application.
 
-For example, to enable the [PostgreSQL integration][14], create a file `/datadog/conf.d/postgres.yaml` in your application containing:
+For example, to enable the [PostgreSQL integration][15], create a file `/datadog/conf.d/postgres.yaml` in your application containing:
 
 ```
 init_config:
@@ -175,7 +179,7 @@ To reduce your slug size, make sure that `DD_APM_ENABLED` is set to `false`, if 
 
 ## Debugging
 
-To run any of the information/debugging commands listed in the [Agent's documentation][15] use the `agent-wrapper` command.
+To run any of the information/debugging commands listed in the [Agent's documentation][16] use the `agent-wrapper` command.
 
 For example, to display the status of your Datadog Agent and enabled integrations, run:
 
@@ -189,15 +193,15 @@ The Heroku Datadog buildpack does not collect logs. To set up log collection, se
 
 ## Unsupported
 
-Heroku buildpacks cannot be used with Docker images. To build a Docker image with Datadog, reference the [Datadog Agent Docker files][16].
+Heroku buildpacks cannot be used with Docker images. To build a Docker image with Datadog, reference the [Datadog Agent Docker files][17].
 
 ## Contributing
 
-See the [contributing documentation][17] to learn how to open an issue or PR to the [Heroku-buildpack-datadog repository][18].
+See the [contributing documentation][18] to learn how to open an issue or PR to the [Heroku-buildpack-datadog repository][19].
 
 ## History
 
-Earlier versions of this project were forked from the [miketheman heroku-buildpack-datadog project][19]. It was largely rewritten for Datadog's Agent version 6. Changes and more information can be found in the [changelog][20].
+Earlier versions of this project were forked from the [miketheman heroku-buildpack-datadog project][20]. It was largely rewritten for Datadog's Agent version 6. Changes and more information can be found in the [changelog][21].
 
 ## FAQs / Troubleshooting
 
@@ -222,10 +226,11 @@ After an upgrade of the buildpack or agent, you must clear your build cache and 
 [11]: https://devcenter.heroku.com/articles/dyno-metadata
 [12]: https://devcenter.heroku.com/articles/log-runtime-metrics
 [13]: https://docs.datadoghq.com/logs/guide/collect-heroku-logs
-[14]: https://docs.datadoghq.com/integrations/postgres
-[15]: https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6#agent-status-and-information
-[16]: https://github.com/DataDog/datadog-agent/tree/master/Dockerfiles
-[17]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CONTRIBUTING.md
-[18]: https://github.com/DataDog/heroku-buildpack-datadog
-[19]: https://github.com/miketheman/heroku-buildpack-datadog
-[20]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
+[14]: https://docs.datadoghq.com/logs/logs_to_metrics/
+[15]: https://docs.datadoghq.com/integrations/postgres
+[16]: https://docs.datadoghq.com/agent/guide/agent-commands/?tab=agentv6#agent-status-and-information
+[17]: https://github.com/DataDog/datadog-agent/tree/master/Dockerfiles
+[18]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CONTRIBUTING.md
+[19]: https://github.com/DataDog/heroku-buildpack-datadog
+[20]: https://github.com/miketheman/heroku-buildpack-datadog
+[21]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
