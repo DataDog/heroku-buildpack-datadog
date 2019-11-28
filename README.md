@@ -104,9 +104,9 @@ By default, the buildpack collects system metrics for the host machine running y
 
 In order to collect system metrics for your dynos, you must:
 
-1. Enable the [Heroku Labs: log-runtime-metrics][12]
-2. Use the [Datadog log drain][13] to collect metric logs from the Heroku Logplex and forward them to Datadog
-3. Generate a [log-based metric][14] over the collected logs.
+1. Enable the [Heroku Labs: log-runtime-metrics][12].
+2. Use the [Datadog log drain][13] to collect metric logs from the Heroku Logplex and forward them to Datadog.
+3. Generate [log-based metric][14] over the collected logs.
 
 ## File locations
 
