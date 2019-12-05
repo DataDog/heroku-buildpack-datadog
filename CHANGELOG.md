@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
+## [1.11] - 2019-12-05
+
+### Added
+
+- Added `buildpackversion` tag with the version of the buildpack.
+- Documentation section about rebuilding slugs when modifying certain options.
+- Documenation about the order for slug layers.
+
+### Fixed
+- Fixed `mcache` integration for python 2.
+
+### Changed
+- Documentation on how to collect system metrics from the dynos.
+
 ## [1.10] - 2019-10-22
 
 ### Added
