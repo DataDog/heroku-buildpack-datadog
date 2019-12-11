@@ -129,8 +129,8 @@ DD_PYTHONPATH="$DD_DIR/bin/agent/dist:$DD_PYTHONPATH"
 
 # For Python2 we need to add explicitely pip and setuptools dependencies
 if [ "$DD_PYTHON_VERSION" = "2" ]; then
-  PIP_PATH=$(find "$DD_DIR/embedded/lib/$PYTHON_DIR/site-packages" -maxdepth 1 -name pip*egg)
-  SETUPTOOLS_PATH=$(find "$DD_DIR/embedded/lib/$PYTHON_DIR/site-packages" -maxdepth 1 -name setuptools*egg)
+  PIP_PATH=$(find "$DD_DIR/embedded/lib/$PYTHON_DIR/site-packages" -maxdepth 1 -name "pip*egg")
+  SETUPTOOLS_PATH=$(find "$DD_DIR/embedded/lib/$PYTHON_DIR/site-packages" -maxdepth 1 -name "setuptools*egg")
   DD_PYTHONPATH="$DD_PYTHONPATH:$SETUPTOOLS_PATH:$PIP_PATH"
 fi
 
