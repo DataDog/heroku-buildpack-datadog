@@ -160,6 +160,11 @@ if [ "$NUM_PYTHON" = "2" ]; then
 
   # We remove the unneeded version of Python
   if [ "$DD_PYTHON_VERSION" = "2" ]; then
+    topic "*********************************** WARNING ************************************"
+    echo "Python 2 will be deprecated soon. Agent 7.x ships with Python 3 only." | indent
+    echo "If you don't run custom checks or those are Python 3 ready, you can" | indent
+    echo "move to Python 3 now by setting DD_PYTHON_VERSION to 3 and compiling your slug." | indent
+    echo "********************************************************************************" | indent
     rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python3.*
     rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/libpython3*
     rm "$APT_DIR"/opt/datadog-agent/embedded/bin/pip3*
