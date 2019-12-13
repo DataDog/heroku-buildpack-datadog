@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
+## [1.12] - 2019-12-13
+
+### Added
+- Datadog agent pinned version is now `6.15.1`
+- Added a deprecation warning if users are using Python 2 in 6.x.
+
+### Fixed
+- Fixed `datadog.sh` to run correctly in flynn.io.
+
 ## [1.11] - 2019-12-05
 
 ### Added
