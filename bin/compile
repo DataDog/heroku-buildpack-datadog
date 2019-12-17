@@ -11,7 +11,8 @@ set -o pipefail
 # set -x
 
 # Set agent pinned version
-DD_AGENT_PINNED_VERSION="6.15.1-1"
+DD_AGENT_PINNED_VERSION_6="6.16.0-1"
+DD_AGENT_PINNED_VERSION_7="7.16.0-1"
 
 # Parse and derive params
 BUILD_DIR=$1
@@ -60,7 +61,16 @@ gpg --ignore-time-conflict --no-options --no-default-keyring --homedir "$GPG_HOM
 if [ -f "$ENV_DIR/DD_AGENT_VERSION" ]; then
   DD_AGENT_VERSION=$(cat "$ENV_DIR/DD_AGENT_VERSION")
 else
-  DD_AGENT_VERSION="$DD_AGENT_PINNED_VERSION"
+  if [ -f "$ENV_DIR/DD_AGENT_MAJOR_VERSION" ]; then
+    DD_AGENT_MAJOR_VERSION=$(cat "$ENV_DIR/DD_AGENT_MAJOR_VERSION")
+    if [ "$DD_AGENT_MAJOR_VERSION" == "7" ]; then
+      DD_AGENT_VERSION="$DD_AGENT_PINNED_VERSION_7"
+    else
+      DD_AGENT_VERSION="$DD_AGENT_PINNED_VERSION_6"
+    fi
+  else
+    DD_AGENT_VERSION="$DD_AGENT_PINNED_VERSION_6"
+  fi
 fi
 
 # Prior to Agent 6.14 there was only 1 python version
