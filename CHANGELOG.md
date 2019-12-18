@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
+## [1.13] - 2019-12-18
+
+### Added
+- Datadog's buildpack now supports Agent versions 7.16 forward
+- Datadog agent pinned versions are now `6.16.0` and `7.16.0`
+
 ## [1.12] - 2019-12-13
 
 ### Added
