@@ -40,7 +40,7 @@ done
 # Add tags to the config file
 DYNOHOST="$(hostname )"
 DYNOTYPE=${DYNO%%.*}
-BUILDPACKVERSION="dev"
+BUILDPACKVERSION="1.13"
 TAGS="tags:\n  - dyno:$DYNO\n  - dynotype:$DYNOTYPE\n  - buildpackversion:$BUILDPACKVERSION"
 
 if [ -n "$HEROKU_APP_NAME" ]; then
