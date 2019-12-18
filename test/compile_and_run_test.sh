@@ -10,7 +10,7 @@ getAvailableVersions()
   mkdir -p "$APT_CACHE_DIR/archives/partial"
   mkdir -p "$APT_STATE_DIR/lists/partial"
   mkdir -p "$APT_DIR"
-  APT_REPO_FILE="${BUILDPACK_HOME}/etc/datadog.list"
+  APT_REPO_FILE="${BUILDPACK_HOME}/etc/${1}"
   APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR -o Dir::Etc::SourceList=$APT_REPO_FILE"
   apt-get $APT_OPTIONS update
   AGENT_VERSIONS=$(apt-cache $APT_OPTIONS show datadog-agent | grep "Version: " | sed 's/Version: 1://g')
@@ -38,21 +38,38 @@ compileAndRunVersion()
 
 }
 
-testReleasedVersions()
+testReleased6Versions()
 {
-  getAvailableVersions
+  getAvailableVersions "datadog.list"
 
   for VERSION in ${AGENT_VERSIONS}; do
     compileAndRunVersion $VERSION
   done 
 }
 
-testLatestNightlyVersion()
+testReleased7Versions()
 {
-  echo "deb [trusted=yes] http://apt.datad0g.com/ nightly main 6" > "${BUILDPACK_HOME}/etc/datadog.list"
-  getAvailableVersions
+  getAvailableVersions "datadog7.list"
+
+  for VERSION in ${AGENT_VERSIONS}; do
+    compileAndRunVersion $VERSION
+  done
+}
+
+testLatest6NightlyVersion()
+{
+  echo "deb [trusted=yes] http://apt.datad0g.com/ nightly 6" > "${BUILDPACK_HOME}/etc/datadog.list"
+  getAvailableVersions "datadog.list"
   VERSION="$(echo ${AGENT_VERSIONS} | head -n1 | awk '{print $1;}')"
 
   compileAndRunVersion $VERSION
- 
+}
+
+testLatest7NightlyVersion()
+{
+  echo "deb [trusted=yes] http://apt.datad0g.com/ nightly 7" > "${BUILDPACK_HOME}/etc/datadog7.list"
+  getAvailableVersions "datadog7.list"
+  VERSION="$(echo ${AGENT_VERSIONS} | head -n1 | awk '{print $1;}')"
+
+  compileAndRunVersion $VERSION
 }

@@ -109,13 +109,17 @@ PYTHON_DIR=$(find "$DD_DIR/embedded/lib/" -maxdepth 1 -type d -name "python[2-3]
 DD_PYTHON_VERSION=$(echo $PYTHON_DIR | sed -n -e 's/^python\([2-3]\)\.[0-9]/\1/p')
 
 if [ "$DD_PYTHON_VERSION" = "3" ]; then
-  # If Python version is 3, it has to be specified in the configuration file
-  echo 'python_version: 3' >> $DATADOG_CONF
-  # Update symlinks to Python binaries
-  ln -sfn "$DD_DIR"/embedded/bin/python3 "$DD_DIR"/embedded/bin/python
-  ln -sfn "$DD_DIR"/embedded/bin/python3-config "$DD_DIR"/embedded/bin/python-config
-  ln -sfn "$DD_DIR"/embedded/bin/pip3 "$DD_DIR"/embedded/bin/pip
-  ln -sfn "$DD_DIR"/embedded/bin/pydoc3 "$DD_DIR"/embedded/bin/pydoc
+  # This is not needed for Agent7 onwards, as it only has one Python version
+  DD_AGENT_BASE_VERSION="7"
+  if [ "$DD_AGENT_VERSION" != "$(echo -e "$DD_AGENT_BASE_VERSION\n$DD_AGENT_VERSION" | sort -V | head -n1)" ]; then
+    # If Python version is 3, it has to be specified in the configuration file
+    echo 'python_version: 3' >> $DATADOG_CONF
+    # Update symlinks to Python binaries
+    ln -sfn "$DD_DIR"/embedded/bin/python3 "$DD_DIR"/embedded/bin/python
+    ln -sfn "$DD_DIR"/embedded/bin/python3-config "$DD_DIR"/embedded/bin/python-config
+    ln -sfn "$DD_DIR"/embedded/bin/pip3 "$DD_DIR"/embedded/bin/pip
+    ln -sfn "$DD_DIR"/embedded/bin/pydoc3 "$DD_DIR"/embedded/bin/pydoc
+  fi
 fi
 
 # Ensure all check and library locations are findable in the Python path.
