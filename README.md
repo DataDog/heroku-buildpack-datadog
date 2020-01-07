@@ -233,7 +233,7 @@ After an upgrade of the buildpack or agent, you must clear your build cache and 
 [6]: https://app.datadoghq.com/account/settings#api
 [7]: https://github.com/DataDog/heroku-buildpack-datadog/releases
 [8]: https://docs.datadoghq.com/tagging/
-[9]: https://docs.datadoghq.com/metrics/distributions/#aggregations
+[9]: https://docs.datadoghq.com/dashboards/guide/how-to-graph-percentiles-in-datadog/
 [10]: https://docs.datadoghq.com/agent
 [11]: https://devcenter.heroku.com/articles/dyno-metadata
 [12]: https://devcenter.heroku.com/articles/log-runtime-metrics
