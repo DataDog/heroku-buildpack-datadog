@@ -173,7 +173,7 @@ In some cases, you may want to limit the amount of logs the Datadog buildpack is
 
 To limit the log output of the buildpack, set the `DD_LOG_LEVEL` environment variable to one of the following: `TRACE`, `DEBUG`, `INFO`, `WARN`, `ERROR`, `CRITICAL`, `OFF`.
 
-```text
+```shell
 heroku config:add DD_LOG_LEVEL=ERROR
 ```
 
@@ -189,7 +189,7 @@ To run any of the information/debugging commands listed in the [Agent's document
 
 For example, to display the status of your Datadog Agent and enabled integrations, run:
 
-```text
+```shell
 agent-wrapper status
 ```
 
