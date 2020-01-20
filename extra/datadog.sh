@@ -3,6 +3,7 @@
 # Setup Locations
 APT_DIR="$HOME/.apt"
 DD_DIR="$APT_DIR/opt/datadog-agent"
+DD_RUN_DIR="$DD_DIR/run"
 # Export DD_BIN_DIR to be used by the wrapper
 export DD_BIN_DIR="$DD_DIR/bin/agent"
 DD_LOG_DIR="$APT_DIR/var/log/datadog"
@@ -69,6 +70,12 @@ sed -i -e"s|^apm_config:$|apm_config:\n  log_file: $DD_APM_LOG|" "$DATADOG_CONF"
 # Uncomment the Process Agent configs and enable.
 if [ "$DD_PROCESS_AGENT" == "true" ]; then
   sed -i -e"s|^# process_config:$|process_config:\n  enabled: true|" "$DATADOG_CONF"
+fi
+
+# Set the right path for the log collector
+if [ "$DD_LOGS_ENABLED" == "true" ]; then
+  sed -i -e"s|^# logs_config:$|logs_config:|" "$DATADOG_CONF"
+  sed -i -e"s|^logs_config:$|logs_config:\n  run_path: $DD_RUN_DIR|" "$DATADOG_CONF"
 fi
 
 # For a list of env vars to override datadog.yaml, see:
