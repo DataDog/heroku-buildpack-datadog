@@ -201,7 +201,7 @@ Agent v7 only ships with Python version `3`. If you are not using custom checks 
 
 ## Heroku log collection
 
-The Heroku Datadog buildpack does not collect logs. To set up log collection, see the [dedicated guide][13].
+The Datadog buildpack does not collect logs from the Heroku platform. To set up Heroku log collection, see the [dedicated guide][13].
 
 ## Unsupported
 
