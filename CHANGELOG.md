@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
+## [1.14] - 2020-01-22
+
+### Added
+- Datadog agent pinned versions are now `6.16.1` and `7.16.1`
+
+### Fixed
+- Fixed `run_path` for the logs collector
+
 ## [1.13] - 2019-12-18
 
 ### Added
