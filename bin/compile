@@ -11,8 +11,8 @@ set -o pipefail
 # set -x
 
 # Set agent pinned version
-DD_AGENT_PINNED_VERSION_6="6.16.1-1"
-DD_AGENT_PINNED_VERSION_7="7.16.1-1"
+DD_AGENT_PINNED_VERSION_6="6.17.0-1"
+DD_AGENT_PINNED_VERSION_7="7.17.0-1"
 
 # Parse and derive params
 BUILD_DIR=$1
