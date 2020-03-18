@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
+## [1.16] - 2020-03-18
+
+### Added
+- Datadog agent pinned versions are now `6.18.0` and `7.18.0`
+
+### Fixed
+- DD_LOG_LEVEL is now honored for all agents
+
 ## [1.15] - 2020-02-07
 
 ### Added
