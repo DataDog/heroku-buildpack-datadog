@@ -15,9 +15,13 @@ export PATH="$APT_DIR/usr/bin:$DD_BIN_DIR:$PATH"
 # Export agent's LD_LIBRARY_PATH to be used by the agent-wrapper
 export DD_LD_LIBRARY_PATH="$APT_DIR/opt/datadog-agent/embedded/lib:$APT_DIR/usr/lib/x86_64-linux-gnu:$APT_DIR/usr/lib"
 
+# Get the lower case for the log level
+DD_LOG_LEVEL_LOWER=$(echo "$DD_LOG_LEVEL" | tr '[:upper:]' '[:lower:]')
+
 # Set Datadog configs
 export DD_LOG_FILE="$DD_LOG_DIR/datadog.log"
 DD_APM_LOG="$DD_LOG_DIR/datadog-apm.log"
+DD_PROC_LOG="$DD_LOG_DIR/datadog-proc.log"
 
 # Move Datadog config files into place
 cp "$DATADOG_CONF.example" "$DATADOG_CONF"
@@ -70,6 +74,7 @@ sed -i -e"s|^apm_config:$|apm_config:\n  log_file: $DD_APM_LOG|" "$DATADOG_CONF"
 # Uncomment the Process Agent configs and enable.
 if [ "$DD_PROCESS_AGENT" == "true" ]; then
   sed -i -e"s|^# process_config:$|process_config:\n  enabled: true|" "$DATADOG_CONF"
+  sed -i -e"s|^process_config:$|process_config:\n  log_file: $DD_PROC_LOG|" "$DATADOG_CONF"
 fi
 
 # Set the right path for the log collector
@@ -91,7 +96,9 @@ if [ -z "$DD_HOSTNAME" ]; then
     # Set the hostname to dyno name and ensure rfc1123 compliance.
     HAN="$(echo "$HEROKU_APP_NAME" | sed -e 's/[^a-zA-Z0-9-]/-/g' -e 's/^-//g')"
     if [ "$HAN" != "$HEROKU_APP_NAME" ]; then
-      echo "WARNING: The appname \"$HEROKU_APP_NAME\" contains invalid characters. Using \"$HAN\" instead."
+      if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
+        echo "WARNING: The appname \"$HEROKU_APP_NAME\" contains invalid characters. Using \"$HAN\" instead."
+      fi
     fi
 
     D="$(echo "$DYNO" | sed -e 's/[^a-zA-Z0-9.-]/-/g' -e 's/^-//g')"
@@ -103,7 +110,9 @@ if [ -z "$DD_HOSTNAME" ]; then
   fi
 else
   # Generate a warning about DD_HOSTNAME deprecation.
-  echo "WARNING: DD_HOSTNAME has been set. Setting this environment variable may result in metrics errors. To remove it, run: heroku config:unset DD_HOSTNAME"
+  if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
+    echo "WARNING: DD_HOSTNAME has been set. Setting this environment variable may result in metrics errors. To remove it, run: heroku config:unset DD_HOSTNAME"
+  fi
 fi
 
 # Disable core checks (these read the host, not the dyno).
@@ -173,20 +182,28 @@ else
   fi
 
   # Run the Datadog Agent
-  echo "Starting Datadog Agent on $DD_HOSTNAME"
+  if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
+    echo "Starting Datadog Agent on $DD_HOSTNAME"
+  fi
   bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/agent $RUN_COMMAND -c $DATADOG_CONF 2>&1 &"
 
   # The Trace Agent will run by default.
   if [ "$DD_APM_ENABLED" == "false" ]; then
-    echo "The Datadog Trace Agent has been disabled. Set DD_APM_ENABLED to true or unset it."
+    if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
+      echo "The Datadog Trace Agent has been disabled. Set DD_APM_ENABLED to true or unset it."
+    fi
   else
-    echo "Starting Datadog Trace Agent on $DD_HOSTNAME"
+    if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
+      echo "Starting Datadog Trace Agent on $DD_HOSTNAME"
+    fi
     bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/trace-agent -config $DATADOG_CONF 2>&1 &"
   fi
 
   # The Process Agent must be run explicitly
   if [ "$DD_PROCESS_AGENT" == "true" ]; then
-    echo "Starting Datadog Process Agent on $DD_HOSTNAME"
+    if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
+      echo "Starting Datadog Process Agent on $DD_HOSTNAME"
+    fi
     bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/process-agent -config $DATADOG_CONF 2>&1 &"
   fi
 fi
