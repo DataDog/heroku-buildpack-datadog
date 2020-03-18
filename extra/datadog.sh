@@ -18,6 +18,7 @@ export DD_LD_LIBRARY_PATH="$APT_DIR/opt/datadog-agent/embedded/lib:$APT_DIR/usr/
 # Set Datadog configs
 export DD_LOG_FILE="$DD_LOG_DIR/datadog.log"
 DD_APM_LOG="$DD_LOG_DIR/datadog-apm.log"
+DD_PROC_LOG="$DD_LOG_DIR/datadog-proc.log"
 
 # Move Datadog config files into place
 cp "$DATADOG_CONF.example" "$DATADOG_CONF"
@@ -70,6 +71,7 @@ sed -i -e"s|^apm_config:$|apm_config:\n  log_file: $DD_APM_LOG|" "$DATADOG_CONF"
 # Uncomment the Process Agent configs and enable.
 if [ "$DD_PROCESS_AGENT" == "true" ]; then
   sed -i -e"s|^# process_config:$|process_config:\n  enabled: true|" "$DATADOG_CONF"
+  sed -i -e"s|^process_config:$|process_config:\n  log_file: $DD_PROC_LOG|" "$DATADOG_CONF"
 fi
 
 # Set the right path for the log collector
