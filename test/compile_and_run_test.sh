@@ -2,6 +2,7 @@
 
 . ${BUILDPACK_TEST_RUNNER_HOME}/lib/test_utils.sh
 
+export DD_LOG_LEVEL="debug"
 
 getAvailableVersions()
 {
