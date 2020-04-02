@@ -203,9 +203,47 @@ Agent v7 only ships with Python version `3`. If you are not using custom checks 
 
 The Datadog buildpack does not collect logs from the Heroku platform. To set up Heroku log collection, see the [dedicated guide][13].
 
-## Unsupported
+## Using Heroku with Docker images
 
-Heroku buildpacks cannot be used with Docker images. To build a Docker image with Datadog, reference the [Datadog Agent Docker files][19].
+This buildpack only works for Heroku deployments that use [Heroku's Slug Compiler][19]. If you are deploying your application in Heroku using Docker containers you will need to add the Datadog agent as part of your Docker image and start the agent as a different process in your container.
+
+As an example, if you are building your Docker image using a Debian based OS, you will need to add the following lines to your `Dockerfile`:
+
+```
+# Install GPG dependencies
+RUN apt-get update \
+ && apt-get install -y gpg apt-transport-https gpg-agent curl ca-certificates
+
+# Add Datadog repository and signing key
+RUN sh -c "echo 'deb https://apt.datadoghq.com/ stable 7' > /etc/apt/sources.list.d/datadog.list"
+RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 A2923DFF56EDA6E76E55E492D3A80E30382E94DE
+
+# Install the Datadog agent
+RUN apt-get update && apt-get -y --force-yes install --reinstall datadog-agent
+
+# Copy entrypoint
+COPY entrypoint.sh /
+
+# Expose DogStatsD and trace-agent ports
+EXPOSE 8125/udp 8126/tcp
+
+# Copy your Datadog configuration
+COPY datadog-config/ /etc/datadog-agent/
+
+CMD ["/entrypoint.sh"]
+```
+
+In your Docker container entry point you will to start the Datadog Agent, the Datadog APM agent and the Datadog process agent:
+
+```
+#!/bin/bash
+
+datadog-agent run &
+/opt/datadog-agent/embedded/bin/trace-agent --config=/etc/datadog-agent/datadog.yaml &
+/opt/datadog-agent/embedded/bin/process-agent --config=/etc/datadog-agent/datadog.yaml
+```
+
+For more advanced options in the Docker image, reference the [Datadog Agent Docker files][19].
 
 ## Contributing
 
@@ -243,6 +281,7 @@ After an upgrade of the buildpack or agent, you must clear your build cache and 
 [16]: https://docs.datadoghq.com/integrations/redisdb/
 [17]: https://github.com/DataDog/integrations-core/blob/master/redisdb/datadog_checks/redisdb/data/conf.yaml.example
 [18]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
+[19]: https://devcenter.heroku.com/articles/slug-compiler
 [19]: https://github.com/DataDog/datadog-agent/tree/master/Dockerfiles
 [20]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CONTRIBUTING.md
 [21]: https://github.com/DataDog/heroku-buildpack-datadog
