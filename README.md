@@ -243,15 +243,15 @@ datadog-agent run &
 /opt/datadog-agent/embedded/bin/process-agent --config=/etc/datadog-agent/datadog.yaml
 ```
 
-For more advanced options in the Docker image, reference the [Datadog Agent Docker files][19].
+For more advanced options in the Docker image, reference the [Datadog Agent Docker files][20].
 
 ## Contributing
 
-See the [contributing documentation][20] to learn how to open an issue or PR to the [Heroku-buildpack-datadog repository][21].
+See the [contributing documentation][21] to learn how to open an issue or PR to the [Heroku-buildpack-datadog repository][22].
 
 ## History
 
-Earlier versions of this project were forked from the [miketheman heroku-buildpack-datadog project][22]. It was largely rewritten for Datadog's Agent version 6. Changes and more information can be found in the [changelog][23].
+Earlier versions of this project were forked from the [miketheman heroku-buildpack-datadog project][23]. It was largely rewritten for Datadog's Agent version 6. Changes and more information can be found in the [changelog][24].
 
 ## FAQs / Troubleshooting
 
@@ -282,8 +282,8 @@ After an upgrade of the buildpack or agent, you must clear your build cache and 
 [17]: https://github.com/DataDog/integrations-core/blob/master/redisdb/datadog_checks/redisdb/data/conf.yaml.example
 [18]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
 [19]: https://devcenter.heroku.com/articles/slug-compiler
-[19]: https://github.com/DataDog/datadog-agent/tree/master/Dockerfiles
-[20]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CONTRIBUTING.md
-[21]: https://github.com/DataDog/heroku-buildpack-datadog
-[22]: https://github.com/miketheman/heroku-buildpack-datadog
-[23]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
+[20]: https://github.com/DataDog/datadog-agent/tree/master/Dockerfiles
+[21]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CONTRIBUTING.md
+[22]: https://github.com/DataDog/heroku-buildpack-datadog
+[23]: https://github.com/miketheman/heroku-buildpack-datadog
+[24]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
