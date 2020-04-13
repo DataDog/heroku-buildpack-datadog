@@ -52,24 +52,6 @@ if [ -n "$HEROKU_APP_NAME" ]; then
   DYNO_TAGS="$DYNO_TAGS appname:$HEROKU_APP_NAME"
 fi
 
-# Convert comma delimited tags from env vars to yaml
-if [ -n "$DD_TAGS" ]; then
-  DD_TAGS_NORMALIZED="$(sed "s/,[ ]\?/\ /g"  <<< "$DD_TAGS")"
-  DD_TAGS="$DYNO_TAGS $DD_TAGS_NORMALIZED"
-else
-  DD_TAGS="$DYNO_TAGS"
-fi
-
-export DD_TAGS="$DD_TAGS"
-
-DD_TAGS_YAML="tags:\n   - $(sed "s/\ /\\\n  - /g"  <<< "$DD_TAGS")"
-
-# Inject tags after example tags.
-# Config files for agent versions 6.11 and earlier:
-sed -i "s/^#   - role:database$/#   - role:database\n$DD_TAGS_YAML/" "$DATADOG_CONF"
-# Agent versions 6.12 and later:
-sed -i "s/^\(## @param tags\)/$DD_TAGS_YAML\n\1/" "$DATADOG_CONF"
-
 # Uncomment APM configs and add the log file location.
 sed -i -e"s|^# apm_config:$|apm_config:|" "$DATADOG_CONF"
 # Add the log file location.
@@ -169,6 +151,24 @@ PRERUN_SCRIPT="$APP_DATADOG/prerun.sh"
 if [ -e "$PRERUN_SCRIPT" ]; then
   source "$PRERUN_SCRIPT"
 fi
+
+# Convert comma delimited tags from env vars to yaml
+if [ -n "$DD_TAGS" ]; then
+  DD_TAGS_NORMALIZED="$(sed "s/,[ ]\?/\ /g"  <<< "$DD_TAGS")"
+  DD_TAGS="$DYNO_TAGS $DD_TAGS_NORMALIZED"
+else
+  DD_TAGS="$DYNO_TAGS"
+fi
+
+export DD_TAGS="$DD_TAGS"
+
+DD_TAGS_YAML="tags:\n   - $(sed "s/\ /\\\n  - /g"  <<< "$DD_TAGS")"
+
+# Inject tags after example tags.
+# Config files for agent versions 6.11 and earlier:
+sed -i "s/^#   - role:database$/#   - role:database\n$DD_TAGS_YAML/" "$DATADOG_CONF"
+# Agent versions 6.12 and later:
+sed -i "s/^\(## @param tags\)/$DD_TAGS_YAML\n\1/" "$DATADOG_CONF"
 
 # Execute the final run logic.
 if [ -n "$DISABLE_DATADOG_AGENT" ]; then
