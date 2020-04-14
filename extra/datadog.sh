@@ -162,7 +162,7 @@ fi
 
 export DD_TAGS="$DD_TAGS"
 
-DD_TAGS_YAML="tags:\n   - $(sed "s/\ /\\\n  - /g"  <<< "$DD_TAGS")"
+DD_TAGS_YAML="tags:\n  - $(sed "s/\ /\\\n  - /g"  <<< "$DD_TAGS")"
 
 # Inject tags after example tags.
 # Config files for agent versions 6.11 and earlier:
