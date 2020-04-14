@@ -161,6 +161,9 @@ else
 fi
 
 export DD_TAGS="$DD_TAGS"
+if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
+  echo "[DEBUG] Buildpack normalized tags: $DD_TAGS_NORMALIZED"
+fi
 
 DD_TAGS_YAML="tags:\n  - $(sed "s/\ /\\\n  - /g"  <<< "$DD_TAGS")"
 

@@ -29,6 +29,7 @@ compileAndRunVersion()
   assertCaptured "Installing Datadog runner"
 
   export HOME=${BUILD_DIR}
+  export DD_TAGS="sampletag1:sample,sametag2:sample, sampletag3 sampletag4"
   chmod +x ${BUILDPACK_HOME}/extra/datadog.sh 
   capture ${BUILDPACK_HOME}/extra/datadog.sh
   assertFileNotContains "error while loading shared libraries" ${STD_ERR}
@@ -36,6 +37,7 @@ compileAndRunVersion()
   assertCaptured "Starting Datadog Agent"
   assertCaptured "Starting Datadog Trace Agent"
   assertNotCaptured "The Datadog Agent has been disabled"
+  assertCaptured "[DEBUG] Buildpack normalized tags: sampletag1:sample sametag2:sample sampletag3 sampletag4"
 
 }
 
