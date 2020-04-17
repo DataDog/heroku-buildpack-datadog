@@ -46,25 +46,11 @@ done
 DYNOHOST="$(hostname )"
 DYNOTYPE=${DYNO%%.*}
 BUILDPACKVERSION="dev"
-TAGS="tags:\n  - dyno:$DYNO\n  - dynotype:$DYNOTYPE\n  - buildpackversion:$BUILDPACKVERSION"
+DYNO_TAGS="dyno:$DYNO dynotype:$DYNOTYPE buildpackversion:$BUILDPACKVERSION"
 
 if [ -n "$HEROKU_APP_NAME" ]; then
-  TAGS="$TAGS\n  - appname:$HEROKU_APP_NAME"
+  DYNO_TAGS="$DYNO_TAGS appname:$HEROKU_APP_NAME"
 fi
-
-# Convert comma delimited tags from env vars to yaml
-if [ -n "$DD_TAGS" ]; then
-  DD_TAGS="$(sed "s/,[ ]\?/\\\n  - /g" <<< "$DD_TAGS")"
-  TAGS="$TAGS\n  - $DD_TAGS"
-  # User set tags are now in YAML, clear the env var.
-  export DD_TAGS=""
-fi
-
-# Inject tags after example tags.
-# Config files for agent versions 6.11 and earlier:
-sed -i "s/^#   - role:database$/#   - role:database\n$TAGS/" "$DATADOG_CONF"
-# Agent versions 6.12 and later:
-sed -i "s/^\(## @param tags\)/$TAGS\n\1/" "$DATADOG_CONF"
 
 # Uncomment APM configs and add the log file location.
 sed -i -e"s|^# apm_config:$|apm_config:|" "$DATADOG_CONF"
@@ -165,6 +151,27 @@ PRERUN_SCRIPT="$APP_DATADOG/prerun.sh"
 if [ -e "$PRERUN_SCRIPT" ]; then
   source "$PRERUN_SCRIPT"
 fi
+
+# Convert comma delimited tags from env vars to yaml
+if [ -n "$DD_TAGS" ]; then
+  DD_TAGS_NORMALIZED="$(sed "s/,[ ]\?/\ /g"  <<< "$DD_TAGS")"
+  DD_TAGS="$DYNO_TAGS $DD_TAGS_NORMALIZED"
+else
+  DD_TAGS="$DYNO_TAGS"
+fi
+
+export DD_TAGS="$DD_TAGS"
+if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
+  echo "[DEBUG] Buildpack normalized tags: $DD_TAGS_NORMALIZED"
+fi
+
+DD_TAGS_YAML="tags:\n  - $(sed "s/\ /\\\n  - /g"  <<< "$DD_TAGS")"
+
+# Inject tags after example tags.
+# Config files for agent versions 6.11 and earlier:
+sed -i "s/^#   - role:database$/#   - role:database\n$DD_TAGS_YAML/" "$DATADOG_CONF"
+# Agent versions 6.12 and later:
+sed -i "s/^\(## @param tags\)/$DD_TAGS_YAML\n\1/" "$DATADOG_CONF"
 
 # Execute the final run logic.
 if [ -n "$DISABLE_DATADOG_AGENT" ]; then
