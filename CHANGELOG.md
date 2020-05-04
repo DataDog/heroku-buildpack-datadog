@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
+## [1.17] - 2020-05-04
+
+### Added
+- Datadog agent pinned versions are now `6.19.0` and `7.19.0`
+- Added documentation around running Docker in Heroku
+- DD_TAGS now support space separated tags
+- DD_TAGS can now be modified in the pre-run script
+
 ## [1.16] - 2020-03-18
 
 ### Added
