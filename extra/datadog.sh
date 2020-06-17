@@ -46,10 +46,10 @@ done
 DYNOHOST="$(hostname )"
 DYNOTYPE=${DYNO%%.*}
 BUILDPACKVERSION="dev"
-DYNO_TAGS="dyno:$DYNO dynotype:$DYNOTYPE buildpackversion:$BUILDPACKVERSION"
+DYNO_TAGS="dyno:$DYNO,dynotype:$DYNOTYPE,buildpackversion:$BUILDPACKVERSION"
 
 if [ -n "$HEROKU_APP_NAME" ]; then
-  DYNO_TAGS="$DYNO_TAGS appname:$HEROKU_APP_NAME"
+  DYNO_TAGS="$DYNO_TAGS,appname:$HEROKU_APP_NAME"
 fi
 
 # Uncomment APM configs and add the log file location.
@@ -154,8 +154,8 @@ fi
 
 # Convert comma delimited tags from env vars to yaml
 if [ -n "$DD_TAGS" ]; then
-  DD_TAGS_NORMALIZED="$(sed "s/,[ ]\?/\ /g"  <<< "$DD_TAGS")"
-  DD_TAGS="$DYNO_TAGS $DD_TAGS_NORMALIZED"
+  DD_TAGS_NORMALIZED="$(sed "s/,\?[ ]\+/,/g"  <<< "$DD_TAGS")"
+  DD_TAGS="$DYNO_TAGS,$DD_TAGS_NORMALIZED"
 else
   DD_TAGS="$DYNO_TAGS"
 fi
@@ -165,7 +165,7 @@ if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
   echo "[DEBUG] Buildpack normalized tags: $DD_TAGS_NORMALIZED"
 fi
 
-DD_TAGS_YAML="tags:\n  - $(sed "s/\ /\\\n  - /g"  <<< "$DD_TAGS")"
+DD_TAGS_YAML="tags:\n  - $(sed "s/,/\\\n  - /g"  <<< "$DD_TAGS")"
 
 # Inject tags after example tags.
 # Config files for agent versions 6.11 and earlier:
