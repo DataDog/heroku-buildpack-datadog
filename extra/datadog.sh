@@ -173,6 +173,9 @@ sed -i "s/^#   - role:database$/#   - role:database\n$DD_TAGS_YAML/" "$DATADOG_C
 # Agent versions 6.12 and later:
 sed -i "s/^\(## @param tags\)/$DD_TAGS_YAML\n\1/" "$DATADOG_CONF"
 
+# Export host type as dyno
+export DD_HEROKU_DYNO="true"
+
 # Execute the final run logic.
 if [ -n "$DISABLE_DATADOG_AGENT" ]; then
   echo "The Datadog Agent has been disabled. Unset the DISABLE_DATADOG_AGENT or set missing environment variables."
