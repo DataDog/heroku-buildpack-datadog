@@ -38,6 +38,8 @@ compileAndRunVersion()
   assertCaptured "Starting Datadog Trace Agent"
   assertNotCaptured "The Datadog Agent has been disabled"
   assertCaptured "[DEBUG] Buildpack normalized tags: sampletag1:sample sametag2:sample sampletag3 sampletag4"
+  assertNotCaptured "ModuleNotFoundError"
+  assertNotCaptured "Fatal Python error"
 
 }
 
