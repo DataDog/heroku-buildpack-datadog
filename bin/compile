@@ -76,15 +76,24 @@ fi
 # Prior to Agent 6.14 there was only 1 python version
 DD_AGENT_BASE_VERSION="6.14"
 if [ "$DD_AGENT_VERSION" == "$(echo -e "$DD_AGENT_BASE_VERSION\n$DD_AGENT_VERSION" | sort -V | head -n1)" ]; then
-  NUM_PYTHON="1"
+  DD_PYTHON_VERSION="2"
 else
-  NUM_PYTHON="2"
+  if [ -f "$ENV_DIR/DD_PYTHON_VERSION" ]; then
+    DD_PYTHON_VERSION=$(cat "$ENV_DIR/DD_PYTHON_VERSION")
+    if [ "$DD_PYTHON_VERSION" != "2" ] && [ "$DD_PYTHON_VERSION" != "3" ]; then
+      topic "ERROR: Wrong Python version: \"$DD_PYTHON_VERSION\"."
+      echo "Set DD_PYTHON_VERSION to either 2 or 3." | indent
+      exit 1
+    fi
+  else
+    DD_PYTHON_VERSION="2" # if not specified, we default to Python 2
+  fi
 fi
 
 # Agent 7 onwards is Python3 only and repo file is different
 DD_AGENT_BASE_VERSION="7"
 if [ "$DD_AGENT_VERSION" != "$(echo -e "$DD_AGENT_BASE_VERSION\n$DD_AGENT_VERSION" | sort -V | head -n1)" ]; then
-  NUM_PYTHON="1"
+  DD_PYTHON_VERSION="3"
   # Modify repo file to point to agent 7
   cp "$APT_REPO_FILE_7" "$APT_REPO_FILE"
 fi
@@ -164,40 +173,27 @@ else
   rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/process-agent"
 fi
 
-# If we have 2 python versions, we remove the one that wasn't selected
-if [ "$NUM_PYTHON" = "2" ]; then
-  if [ -f "$ENV_DIR/DD_PYTHON_VERSION" ]; then
-    DD_PYTHON_VERSION=$(cat "$ENV_DIR/DD_PYTHON_VERSION")
-    if [ "$DD_PYTHON_VERSION" != "2" ] && [ "$DD_PYTHON_VERSION" != "3" ]; then
-      topic "ERROR: Wrong Python version: \"$DD_PYTHON_VERSION\"."
-      echo "Set DD_PYTHON_VERSION to either 2 or 3." | indent
-      exit 1
-    fi
-  else
-    DD_PYTHON_VERSION="2" # if not specified, we default to Python 2
-  fi
-
-  # We remove the unneeded version of Python
-  if [ "$DD_PYTHON_VERSION" = "2" ]; then
-    topic "*********************************** WARNING ************************************"
-    echo "Python 2 will be deprecated soon. Agent 7.x ships with Python 3 only." | indent
-    echo "If you don't run custom checks or those are Python 3 ready, you can" | indent
-    echo "move to Python 3 now by setting DD_PYTHON_VERSION to 3 and compiling your slug." | indent
-    echo "********************************************************************************" | indent
-    rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python3.*
-    rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/libpython3*
-    rm "$APT_DIR"/opt/datadog-agent/embedded/bin/pip3*
-    rm "$APT_DIR"/opt/datadog-agent/embedded/bin/python3*
-    rm "$APT_DIR"/opt/datadog-agent/embedded/bin/pydoc3*
-  fi
-  if [ "$DD_PYTHON_VERSION" = "3" ]; then
-    rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python2.*
-    rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/libpython2*
-    rm "$APT_DIR"/opt/datadog-agent/embedded/bin/pip2*
-    rm "$APT_DIR"/opt/datadog-agent/embedded/bin/python2*
-    rm "$APT_DIR"/opt/datadog-agent/embedded/bin/pydoc*
-  fi
+# We remove the unneeded version of Python
+if [ "$DD_PYTHON_VERSION" = "2" ]; then
+  topic "*********************************** WARNING ************************************"
+  echo "Python 2 will be deprecated soon. Agent 7.x ships with Python 3 only." | indent
+  echo "If you don't run custom checks or those are Python 3 ready, you can" | indent
+  echo "move to Python 3 now by setting DD_PYTHON_VERSION to 3 and compiling your slug." | indent
+  echo "********************************************************************************" | indent
+  rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python3.* || true
+  rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/libpython3* || true
+  rm -f "$APT_DIR"/opt/datadog-agent/embedded/bin/pip3* || true
+  rm -f "$APT_DIR"/opt/datadog-agent/embedded/bin/python3* || true
+  rm -f "$APT_DIR"/opt/datadog-agent/embedded/bin/pydoc3* || true
 fi
+if [ "$DD_PYTHON_VERSION" = "3" ]; then
+  rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python2.* || true
+  rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/libpython2* || true
+  rm -f "$APT_DIR"/opt/datadog-agent/embedded/bin/pip2* || true
+  rm -f "$APT_DIR"/opt/datadog-agent/embedded/bin/python2* || true
+  rm -f "$APT_DIR"/opt/datadog-agent/embedded/bin/pydoc* || true
+fi
+
 
 # Rewrite package-config files
 find "$APT_DIR" -type f -ipath '*/pkgconfig/*.pc' | xargs --no-run-if-empty -n 1 sed -i -e 's!^prefix=\(.*\)$!prefix='"$APT_DIR"'\1!g'
