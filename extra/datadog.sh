@@ -160,6 +160,7 @@ else
   DD_TAGS="$DYNO_TAGS"
 fi
 
+export DD_VERSION="$DD_VERSION"
 export DD_TAGS="$DD_TAGS"
 if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
   echo "[DEBUG] Buildpack normalized tags: $DD_TAGS_NORMALIZED"
@@ -181,11 +182,11 @@ if [ -n "$DISABLE_DATADOG_AGENT" ]; then
   echo "The Datadog Agent has been disabled. Unset the DISABLE_DATADOG_AGENT or set missing environment variables."
 else
   # Get the Agent version number
-  DD_VERSION="$(expr "$(bash -c "LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/agent version")" : 'Agent \([0-9]\+\.[0-9]\+.[0-9]\+\)')"
+  DATADOG_VERSION="$(expr "$(bash -c "LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/agent version")" : 'Agent \([0-9]\+\.[0-9]\+.[0-9]\+\)')"
 
   # Prior to Agent 6.4.1, the command is "start"
   RUN_VERSION="6.4.1"
-  if [ "$DD_VERSION" == "$(echo -e "$RUN_VERSION\n$DD_VERSION" | sort -V | head -n1)" ]; then
+  if [ "$DATADOG_VERSION" == "$(echo -e "$RUN_VERSION\n$DATADOG_VERSION" | sort -V | head -n1)" ]; then
     RUN_COMMAND="start"
   else
     RUN_COMMAND="run"
