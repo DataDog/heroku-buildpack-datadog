@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
-## [1.19] - 2020-08-XX
+## [1.19] - 2020-08-27
 
 ### Changed
 - Agent now reports `datadog.heroku_agent.running` metric instead of `datadog.agent.running` for agent versions `6/7.22` and newer, to help customers identify which agents are reporting from a Heroku dyno.
