@@ -21,6 +21,7 @@ compileAndRunVersion()
 {
 
   echo $1 > "${ENV_DIR}/DD_AGENT_VERSION"
+  echo "true" > "${ENV_DIR}/DD_PROCESS_AGENT"
   echo "Testing Datadog Agent version $1"
   compile
   assertCaptured "Installing dependencies"
@@ -41,6 +42,16 @@ compileAndRunVersion()
   assertNotCaptured "ModuleNotFoundError"
   assertNotCaptured "Fatal Python error"
 
+  
+  SIZE_BIN=$(du -s  $HOME/.apt/opt/datadog-agent/bin | cut -f1)
+  SIZE_LIB=$(du -s  $HOME/.apt/opt/datadog-agent/embedded/lib | cut -f1)
+  SIZE_EMB_BIN=$(du -s  $HOME/.apt/opt/datadog-agent/embedded/bin | cut -f1)
+
+  assertTrue "Binary folder is too big: ${SIZE_BIN}" "[ $SIZE_BIN -lt 105000 ]"
+  assertTrue "Embedded library folder is too big: ${SIZE_LIB}" "[ $SIZE_LIB -lt 230000 ]"
+  assertTrue "Embedded binary folder is too big: ${SIZE_EMB_BIN}" "[ $SIZE_EMB_BIN -lt 115000 ]"
+
+  rm -rf $HOME/.apt/
 }
 
 testReleased6Versions()
@@ -49,7 +60,7 @@ testReleased6Versions()
 
   for VERSION in ${AGENT_VERSIONS}; do
     compileAndRunVersion $VERSION
-  done 
+  done
 }
 
 testReleased7Versions()
