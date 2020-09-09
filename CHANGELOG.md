@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
+## [1.20] - 2020-09-09
+
+### Changed
+- Removed the security-agent and system-probe dependencies to reduce slug size
+
+### Fixed
+- version-history.json is now created successfully, even if DD_LOGS_ENABLED="false"
+
 ## [1.19] - 2020-08-27
 
 ### Changed
