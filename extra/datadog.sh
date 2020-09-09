@@ -64,10 +64,8 @@ if [ "$DD_PROCESS_AGENT" == "true" ]; then
 fi
 
 # Set the right path for the log collector
-if [ "$DD_LOGS_ENABLED" == "true" ]; then
-  sed -i -e"s|^# logs_config:$|logs_config:|" "$DATADOG_CONF"
-  sed -i -e"s|^logs_config:$|logs_config:\n  run_path: $DD_RUN_DIR|" "$DATADOG_CONF"
-fi
+sed -i -e"s|^# logs_config:$|logs_config:|" "$DATADOG_CONF"
+sed -i -e"s|^logs_config:$|logs_config:\n  run_path: $DD_RUN_DIR|" "$DATADOG_CONF"
 
 # For a list of env vars to override datadog.yaml, see:
 # https://github.com/DataDog/datadog-agent/blob/master/pkg/config/config.go#L145
