@@ -155,6 +155,10 @@ done
 
 # Remove the system-probe binary, only needed for network performance monitoring
 rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/system-probe"
+rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/libbcc*
+
+# Remove the Security agent
+rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/security-agent"
 
 if [ -f "$ENV_DIR/DD_APM_ENABLED" ]; then
   DD_APM_ENABLED=$(cat "$ENV_DIR/DD_APM_ENABLED")
