@@ -47,7 +47,11 @@ compileAndRunVersion()
   SIZE_LIB=$(du -s  $HOME/.apt/opt/datadog-agent/embedded/lib | cut -f1)
   SIZE_EMB_BIN=$(du -s  $HOME/.apt/opt/datadog-agent/embedded/bin | cut -f1)
 
-  assertTrue "Binary folder is too big: ${SIZE_BIN}" "[ $SIZE_BIN -lt 105000 ]"
+  # Prior to 6.13 the agent was too big
+  BIGSIZE_VERSION="6.13.0-1"
+  if test "$BIGSIZE_VERSION" = "$(echo "$BIGSIZE_VERSION\n$1" | sort -V | head -n1)" ; then
+    assertTrue "Binary folder is too big: ${SIZE_BIN}" "[ $SIZE_BIN -lt 105000 ]"
+  fi
   assertTrue "Embedded library folder is too big: ${SIZE_LIB}" "[ $SIZE_LIB -lt 230000 ]"
   assertTrue "Embedded binary folder is too big: ${SIZE_EMB_BIN}" "[ $SIZE_EMB_BIN -lt 115000 ]"
 
