@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
+- Buildpack name reported by `bin/detect` is now "Datadog" instead of "Sysstat"
 
 ## [1.20] - 2020-09-09
 
