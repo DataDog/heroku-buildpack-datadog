@@ -19,19 +19,11 @@ heroku buildpacks:add heroku/ruby
 heroku labs:enable runtime-dyno-metadata -a $(heroku apps:info|grep ===|cut -d' ' -f2)
 
 # Add this buildpack and set your Datadog API key
-heroku buildpacks:add https://github.com/DataDog/heroku-buildpack-datadog.git#<DATADOG_BUILDPACK_RELEASE>
+heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git#<DATADOG_BUILDPACK_RELEASE>
 heroku config:add DD_API_KEY=<DATADOG_API_KEY>
 
 # Deploy to Heroku
 git push heroku master
-```
-
-**Warning**: Buildpacks that install apt packages (e.g. [apt][3], [puppeteer dependencies][4]) or buildpacks that modify the `/app` folder (e.g. [monorepo][5]) need to be added *before* the Datadog buildpack. For example, if your application uses the `ruby`, `datadog` and `apt` buildpacks, this would be a correct `heroku buildpacks` output:
-
-```text
-1. heroku/ruby
-2. https://github.com/heroku/heroku-buildpack-apt.git
-3. https://github.com/DataDog/heroku-buildpack-datadog.git
 ```
 
 Replace `<DATADOG_API_KEY>` with your [Datadog API key][6].
@@ -40,6 +32,16 @@ Replace `<DATADOG_BUILDPACK_RELEASE>` with the [Buildpack release][7] you want t
 Once complete, the Datadog Agent is started automatically when each dyno starts.
 
 The Datadog Agent provides a listening port on `8125` for statsd/dogstatsd metrics and events. Traces are collected on port `8126`.
+
+<div class="alert alert-warning">
+Warning: The last buildpack in the list will be used to determine the process type for the application. Also, buildpacks that install apt packages (e.g. [apt][3], [puppeteer dependencies][4]) or buildpacks that modify the `/app` folder (e.g. [monorepo][5]) need to be added *before* the Datadog buildpack. For example, if your application uses the `ruby`, `datadog` and `apt` buildpacks, this would be a correct `heroku buildpacks` output:
+
+```text
+1. https://github.com/heroku/heroku-buildpack-apt.git
+2. https://github.com/DataDog/heroku-buildpack-datadog.git
+3. heroku/ruby
+```
+</div>
 
 ## Upgrading and slug recompilation
 
