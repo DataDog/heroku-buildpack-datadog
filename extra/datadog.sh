@@ -8,6 +8,7 @@ DD_RUN_DIR="$DD_DIR/run"
 export DD_BIN_DIR="$DD_DIR/bin/agent"
 DD_LOG_DIR="$APT_DIR/var/log/datadog"
 DD_CONF_DIR="$APT_DIR/etc/datadog-agent"
+DD_INSTALL_INFO="$DD_CONF_DIR/install_info"
 export DATADOG_CONF="$DD_CONF_DIR/datadog.yaml"
 
 # Update Env Vars with new paths for apt packages
@@ -47,6 +48,9 @@ DYNOHOST="$(hostname )"
 DYNOTYPE=${DYNO%%.*}
 BUILDPACKVERSION="dev"
 DYNO_TAGS="dyno:$DYNO dynotype:$DYNOTYPE buildpackversion:$BUILDPACKVERSION"
+
+# Include install method
+echo -e "install_method:\n  tool: heroku\n  tool_version: heroku\n  installer_version: heroku-$BUILDPACKVERSION" > "$DD_INSTALL_INFO"
 
 if [ -n "$HEROKU_APP_NAME" ]; then
   DYNO_TAGS="$DYNO_TAGS appname:$HEROKU_APP_NAME"
