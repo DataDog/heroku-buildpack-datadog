@@ -40,14 +40,6 @@ mkdir -p "$APT_DIR"
 topic "Updating apt caches for dependencies"
 apt-get $APT_OPTIONS update | indent
 
-topic "Installing dependencies"
-DEPS="libpci-dev libpci3 libsensors4 libsensors4-dev libsnmp-base libsnmp30"
-apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommends $DEPS | indent
-IFS=" " read -a DEP_PKGS <<< "$DEPS"
-for DEP in ${DEP_PKGS[@]}; do
-  echo "Installing $DEP" | indent
-  ls -t "$APT_CACHE_DIR"/archives/"$DEP"\_*.deb | head -1 | xargs -i dpkg -x '{}' "$APT_DIR"
-done
 
 # Install GPG key
 topic "Install gpg key for Datadog APT Repository"
