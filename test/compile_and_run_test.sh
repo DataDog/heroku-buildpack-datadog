@@ -24,7 +24,6 @@ compileAndRunVersion()
   echo "true" > "${ENV_DIR}/DD_PROCESS_AGENT"
   echo "Testing Datadog Agent version $1"
   compile
-  assertCaptured "Installing dependencies"
   assertCaptured "Downloading Datadog Agent $1"
   assertCaptured "Installing Datadog Agent"
   assertCaptured "Installing Datadog runner"
