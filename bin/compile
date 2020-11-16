@@ -20,6 +20,17 @@ CACHE_DIR=$2
 ENV_DIR=$3
 BUILDPACK_DIR=$(cd "$(dirname "$0")"; cd ..; pwd)
 
+# Store which STACK we are running on in the cache to bust the cache if it changes
+if [ -f $CACHE_DIR/.apt/STACK ]; then
+  CACHED_STACK=$(cat "$CACHE_DIR/.apt/STACK")
+else
+  CACHED_STACK=$STACK
+fi
+
+# Ensure we store the STACK in the cache for next time.
+mkdir -p "$CACHE_DIR/.apt"
+echo "$STACK" > "$CACHE_DIR/.apt/STACK"
+
 # Load formating tools
 source "$BUILDPACK_DIR/bin/common.sh"
 
@@ -35,6 +46,17 @@ APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state
 mkdir -p "$APT_CACHE_DIR/archives/partial"
 mkdir -p "$APT_STATE_DIR/lists/partial"
 mkdir -p "$APT_DIR"
+
+if [[ $CACHED_STACK == $STACK ]] ; then
+  # STACK has not changed, reusing cache
+  topic "Reusing cache"
+else
+  # STACK changed, clean up APT cache
+  topic "Detected Stack changes, flushing cache"
+  rm -rf $APT_CACHE_DIR
+  mkdir -p "$APT_CACHE_DIR/archives/partial"
+  mkdir -p "$APT_STATE_DIR/lists/partial"
+fi
 
 # Install dependencies
 topic "Updating apt caches for dependencies"
