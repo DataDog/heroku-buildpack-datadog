@@ -49,7 +49,7 @@ done
 # Add tags to the config file
 DYNOHOST="$(hostname )"
 DYNOTYPE=${DYNO%%.*}
-BUILDPACKVERSION="dev"
+BUILDPACKVERSION="1.22"
 DYNO_TAGS="dyno:$DYNO dynotype:$DYNOTYPE buildpackversion:$BUILDPACKVERSION"
 
 # Include install method
