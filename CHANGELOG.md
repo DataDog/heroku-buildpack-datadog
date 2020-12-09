@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
+## [1.22] - 2020-12-09
+
+### Added
+- Datadog agent pinned versions are now `6.24.0` and `7.24.0`
+- Heroku APT cache is now cleaned up when changing stacks
+
+### Removed
+- Removed Datadog agent unneeded dependencies
+
 ## [1.21] - 2020-10-09
 
 ### Added
