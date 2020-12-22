@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Datadog agent pinned versions are now `6.24.0` and `7.24.0`
 - Heroku APT cache is now cleaned up when changing stacks
+- Heroku-20 stack is now supported
 
 ### Removed
 - Removed Datadog agent unneeded dependencies
