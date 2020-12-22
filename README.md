@@ -19,22 +19,21 @@ heroku buildpacks:add heroku/ruby
 heroku labs:enable runtime-dyno-metadata -a $(heroku apps:info|grep ===|cut -d' ' -f2)
 
 # Add this buildpack and set your Datadog API key
-heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git#<DATADOG_BUILDPACK_RELEASE>
+heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git
 heroku config:add DD_API_KEY=<DATADOG_API_KEY>
 
 # Deploy to Heroku
 git push heroku master
 ```
 
-Replace `<DATADOG_API_KEY>` with your [Datadog API key][6].
-Replace `<DATADOG_BUILDPACK_RELEASE>` with the [Buildpack release][7] you want to use.
+Replace `<DATADOG_API_KEY>` with your [Datadog API key][3].
 
 Once complete, the Datadog Agent is started automatically when each dyno starts.
 
 The Datadog Agent provides a listening port on `8125` for statsd/dogstatsd metrics and events. Traces are collected on port `8126`.
 
 <div class="alert alert-warning">
-Warning: The last buildpack in the list will be used to determine the process type for the application. Also, buildpacks that install apt packages (e.g. [apt][3], [puppeteer dependencies][4]) or buildpacks that modify the `/app` folder (e.g. [monorepo][5]) need to be added *before* the Datadog buildpack. For example, if your application uses the `ruby`, `datadog` and `apt` buildpacks, this would be a correct `heroku buildpacks` output:
+Warning: The last buildpack in the list will be used to determine the process type for the application. Also, buildpacks that install apt packages (e.g. <a href="https://github.com/heroku/heroku-buildpack-apt">apt</a>, <a href="https://github.com/jontewks/puppeteer-heroku-buildpack">puppeteer dependencies</a>) or buildpacks that modify the `/app` folder (e.g. <a href="https://github.com/lstoll/heroku-buildpack-monorepo">monorepo</a>) need to be added *before* the Datadog buildpack. For example, if your application uses the `ruby`, `datadog` and `apt` buildpacks, this would be a correct `heroku buildpacks` output:
 
 ```text
 1. https://github.com/heroku/heroku-buildpack-apt.git
@@ -42,6 +41,18 @@ Warning: The last buildpack in the list will be used to determine the process ty
 3. heroku/ruby
 ```
 </div>
+
+## Pinning a specific buildpack version and a specific Datadog agent version
+
+Heroku recommends to always use the latest commit of a buildpack. If you need to pin the buildpack version, you can do so by specifying the buildpack release tag:
+
+```
+heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git#<DATADOG_BUILDPACK_RELEASE>
+```
+
+Replace `<DATADOG_BUILDPACK_RELEASE>` with the [Buildpack release][4] you want to use.
+
+By default, the buildpack pins the latest version of the Datadog Agent at the time of release. You can pin the Agent to an earlier version by setting the `DD_AGENT_VERSION` environment variable.
 
 ## Upgrading and slug recompilation
 
@@ -81,9 +92,9 @@ In addition to the environment variables shown above, there are a number of othe
 | `DD_API_KEY`               | *Required.* Your API key is available from the [Datadog API Integrations][6] page. Note that this is the *API* key, not the application key.                                                                                                                                                                                                                                                                                                                                                                                |
 | `DD_HOSTNAME`              | *Optional.* **WARNING**: Setting the hostname manually may result in metrics continuity errors. It is recommended that you do *not* set this variable. Because dyno hosts are ephemeral it is recommended that you monitor based on the tags `dynoname` or `appname`.                                                                                                                                                                                                                                                       |
 | `DD_DYNO_HOST`             | *Optional.* Set to `true` to use the dyno name (e.g. `web.1` or `run.1234`) as the hostname. See the [hostname section](#hostname) below for more information. Defaults to `false`                                                                                                                                                                                                                                                                                                                                          |
-| `DD_TAGS`                  | *Optional.* Sets additional tags provided as a space-separated string (**Note**: comma-separated string in buildpack versions `1.16` and earlier; this is still supported to maintain backward compatibility). For example, `heroku config:set DD_TAGS="simple-tag-0 tag-key-1:tag-value-1"`. The buildpack automatically adds the tags `dyno` which represent the dyno name (e.g. web.1) and `dynotype` (the type of dyno, e.g `run` or `web`). See the ["Guide to tagging"][8] for more information.                                                                                                                                                             |
+| `DD_TAGS`                  | *Optional.* Sets additional tags provided as a space-separated string (**Note**: comma-separated string in buildpack versions `1.16` and earlier; this is still supported to maintain backward compatibility). For example, `heroku config:set DD_TAGS="simple-tag-0 tag-key-1:tag-value-1"`. The buildpack automatically adds the tags `dyno` which represent the dyno name (e.g. web.1) and `dynotype` (the type of dyno, e.g `run` or `web`). See the ["Guide to tagging"][5] for more information.                                                                                                                                                             |
 | `DD_VERSION`                  | *Optional.* Sets the version of your application, used to organize traces by version.                                                                                                                                          |
-| `DD_HISTOGRAM_PERCENTILES` | *Optional.* Optionally set additional percentiles for your histogram metrics. See [How to graph percentiles][9].                                                                                                                                                                                                                                                                                                                                                                                                            |
+| `DD_HISTOGRAM_PERCENTILES` | *Optional.* Optionally set additional percentiles for your histogram metrics. See [How to graph percentiles][6].                                                                                                                                                                                                                                                                                                                                                                                                            |
 | `DISABLE_DATADOG_AGENT`    | *Optional.* When set, the Datadog Agent does not run.                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | `DD_APM_ENABLED`           | *Optional.* Trace collection is enabled by default. Set this to `false` to disable trace collection. Changing this option requires recompilation of the slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details.                                                                                                                                                                                                                                                          |
 | `DD_PROCESS_AGENT`         | *Optional.* The Datadog Process Agent is disabled by default. Set this to `true` to enable the Process Agent. Changing this option requires recompilation of the slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details.                                                                                                                                                                                                                                                 |
@@ -93,7 +104,7 @@ In addition to the environment variables shown above, there are a number of othe
 | `DD_DISABLE_HOST_METRICS`  | *Optional.* By default, the buildpack reports system metrics for the host machine running the dyno. Set this to `true` to disable system metrics collection. See the [system metrics section](#system-metrics) below for more information.                                                                                                                                                                                                                                                                                  |
 | `DD_PYTHON_VERSION`        | *Optional.* Starting with version `6.14.0`, Datadog Agent ships with Python versions `2` and `3`. The buildpack will only keep one of the versions. Set this to `2` or `3` to select the Python version you want the agent to keep. If not set, the buildpack will keep `2`. Check the [Python versions section](#python-and-agent-versions) for more information. Changing this option requires recompiling the slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details. |
 
-For additional documentation, refer to the [Datadog Agent documentation][10].
+For additional documentation, refer to the [Datadog Agent documentation][7].
 
 ## Hostname
 
@@ -101,7 +112,7 @@ Heroku dynos are ephemeral—they can move to different host machines whenever n
 
 Depending on your use case, you may want to set your hostname so that hosts are aggregated and report a lower number.  To do this, Set `DD_DYNO_HOST` to `true`. This will cause the Agent to report the hostname as the app and dyno name (e.g. `appname.web.1` or `appname.run.1234`) and your host count will closely match your dyno usage. One drawback is that you may see some metrics continuity errors whenever a dyno is cycled.
 
-For this to work correctly, `HEROKU_APP_NAME` needs to be set. The easiest way to do this is by [enabling dyno metadata][11] Take into account that dyno metadata is not yet available in Private Spaces, in which case you will need to set `HEROKU_APP_NAME` manually.
+For this to work correctly, `HEROKU_APP_NAME` needs to be set. The easiest way to do this is by [enabling dyno metadata][8] Take into account that dyno metadata is not yet available in Private Spaces, in which case you will need to set `HEROKU_APP_NAME` manually.
 
 ## System metrics
 
@@ -109,9 +120,9 @@ By default, the buildpack collects system metrics for the host machine running y
 
 In order to collect system metrics for your dynos, you must:
 
-1. Enable the [Heroku Labs: log-runtime-metrics][12].
-2. Use the [Datadog log drain][13] to collect metric logs from the Heroku Logplex and forward them to Datadog.
-3. Generate [log-based metric][14] over the collected logs.
+1. Enable the [Heroku Labs: log-runtime-metrics][9].
+2. Use the [Datadog log drain][10] to collect metric logs from the Heroku Logplex and forward them to Datadog.
+3. Generate [log-based metric][11] over the collected logs.
 
 ## File locations
 
@@ -121,9 +132,9 @@ In order to collect system metrics for your dynos, you must:
 
 ## Enabling integrations
 
-To enable a [Datadog-<INTEGRATION_NAME> integration][15], create a file `/datadog/conf.d/<INTEGRATION_NAME>.yaml` in the root of your application. During the dyno start up, your YAML files are copied to the appropriate Datadog Agent configuration directories.
+To enable a [Datadog-<INTEGRATION_NAME> integration][12], create a file `/datadog/conf.d/<INTEGRATION_NAME>.yaml` in the root of your application. During the dyno start up, your YAML files are copied to the appropriate Datadog Agent configuration directories.
 
-For example, to enable the [Datadog-Redis integration][16], create the file `/datadog/conf.d/redisdb.yaml` at the root of your application:
+For example, to enable the [Datadog-Redis integration][13], create the file `/datadog/conf.d/redisdb.yaml` at the root of your application:
 
 ```yaml
 init_config:
@@ -141,7 +152,7 @@ instances:
     port: 6379
 ```
 
-**Note**: See the sample [redisdb.d/conf.yaml][17] for all available configuration options.
+**Note**: See the sample [redisdb.d/conf.yaml][14] for all available configuration options.
 
 ## Prerun script
 
@@ -193,7 +204,7 @@ To reduce your slug size, make sure that `DD_APM_ENABLED` is set to `false`, if 
 
 ## Debugging
 
-To run any of the information/debugging commands listed in the [Agent's documentation][18] use the `agent-wrapper` command.
+To run any of the information/debugging commands listed in the [Agent's documentation][15] use the `agent-wrapper` command.
 
 For example, to display the status of your Datadog Agent and enabled integrations, run:
 
@@ -209,11 +220,11 @@ Agent v7 only ships with Python version `3`. If you are not using custom checks 
 
 ## Heroku log collection
 
-The Datadog buildpack does not collect logs from the Heroku platform. To set up Heroku log collection, see the [dedicated guide][13].
+The Datadog buildpack does not collect logs from the Heroku platform. To set up Heroku log collection, see the [dedicated guide][9].
 
 ## Using Heroku with Docker images
 
-This buildpack only works for Heroku deployments that use [Heroku's Slug Compiler][19]. If you are deploying your application in Heroku using Docker containers you will need to add the Datadog agent as part of your Docker image and start the agent as a different process in your container.
+This buildpack only works for Heroku deployments that use [Heroku's Slug Compiler][16]. If you are deploying your application in Heroku using Docker containers you will need to add the Datadog agent as part of your Docker image and start the agent as a different process in your container.
 
 As an example, if you are building your Docker image using a Debian based OS, you will need to add the following lines to your `Dockerfile`:
 
@@ -252,15 +263,15 @@ datadog-agent run &
 /opt/datadog-agent/embedded/bin/process-agent --config=/etc/datadog-agent/datadog.yaml
 ```
 
-For more advanced options in the Docker image, reference the [Datadog Agent Docker files][20].
+For more advanced options in the Docker image, reference the [Datadog Agent Docker files][17].
 
 ## Contributing
 
-See the [contributing documentation][21] to learn how to open an issue or PR to the [Heroku-buildpack-datadog repository][22].
+See the [contributing documentation][18] to learn how to open an issue or PR to the [Heroku-buildpack-datadog repository][19].
 
 ## History
 
-Earlier versions of this project were forked from the [miketheman heroku-buildpack-datadog project][23]. It was largely rewritten for Datadog's Agent version 6. Changes and more information can be found in the [changelog][24].
+Earlier versions of this project were forked from the [miketheman heroku-buildpack-datadog project][20]. It was largely rewritten for Datadog's Agent version 6. Changes and more information can be found in the [changelog][21].
 
 ## FAQs / Troubleshooting
 
@@ -274,25 +285,22 @@ After an upgrade of the buildpack or agent, you must clear your build cache and 
 
 [1]: https://devcenter.heroku.com/articles/buildpacks
 [2]: https://docs.datadoghq.com/libraries
-[3]: https://github.com/heroku/heroku-buildpack-apt
-[4]: https://github.com/jontewks/puppeteer-heroku-buildpack
-[5]: https://github.com/lstoll/heroku-buildpack-monorepo
-[6]: https://app.datadoghq.com/account/settings#api
-[7]: https://github.com/DataDog/heroku-buildpack-datadog/releases
-[8]: https://docs.datadoghq.com/tagging/
-[9]: https://docs.datadoghq.com/dashboards/guide/how-to-graph-percentiles-in-datadog/
-[10]: https://docs.datadoghq.com/agent
-[11]: https://devcenter.heroku.com/articles/dyno-metadata
-[12]: https://devcenter.heroku.com/articles/log-runtime-metrics
-[13]: https://docs.datadoghq.com/logs/guide/collect-heroku-logs
-[14]: https://docs.datadoghq.com/logs/logs_to_metrics/
-[15]: https://docs.datadoghq.com/integrations/
-[16]: https://docs.datadoghq.com/integrations/redisdb/
-[17]: https://github.com/DataDog/integrations-core/blob/master/redisdb/datadog_checks/redisdb/data/conf.yaml.example
-[18]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
-[19]: https://devcenter.heroku.com/articles/slug-compiler
-[20]: https://github.com/DataDog/datadog-agent/tree/master/Dockerfiles
-[21]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CONTRIBUTING.md
-[22]: https://github.com/DataDog/heroku-buildpack-datadog
-[23]: https://github.com/miketheman/heroku-buildpack-datadog
-[24]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
+[3]: https://app.datadoghq.com/account/settings#api
+[4]: https://github.com/DataDog/heroku-buildpack-datadog/releases
+[5]: https://docs.datadoghq.com/tagging/
+[6]: https://docs.datadoghq.com/dashboards/guide/how-to-graph-percentiles-in-datadog/
+[7]: https://docs.datadoghq.com/agent
+[8]: https://devcenter.heroku.com/articles/dyno-metadata
+[9]: https://devcenter.heroku.com/articles/log-runtime-metrics
+[10]: https://docs.datadoghq.com/logs/guide/collect-heroku-logs
+[11]: https://docs.datadoghq.com/logs/logs_to_metrics/
+[12]: https://docs.datadoghq.com/integrations/
+[13]: https://docs.datadoghq.com/integrations/redisdb/
+[14]: https://github.com/DataDog/integrations-core/blob/master/redisdb/datadog_checks/redisdb/data/conf.yaml.example
+[15]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
+[16]: https://devcenter.heroku.com/articles/slug-compiler
+[17]: https://github.com/DataDog/datadog-agent/tree/master/Dockerfiles
+[18]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CONTRIBUTING.md
+[19]: https://github.com/DataDog/heroku-buildpack-datadog
+[20]: https://github.com/miketheman/heroku-buildpack-datadog
+[21]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
