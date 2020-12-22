@@ -52,7 +52,7 @@ heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-data
 
 Replace `<DATADOG_BUILDPACK_RELEASE>` with the [Buildpack release][4] you want to use.
 
-In both cases, the version of the Datadog agent can be pinned as well by setting `DD_AGENT_VERSION` environment variable.
+By default, the buildpack pins the latest version of the Datadog Agent at the time of release. You can pin the Agent to an earlier version by setting the `DD_AGENT_VERSION` environment variable.
 
 ## Upgrading and slug recompilation
 
