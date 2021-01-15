@@ -31,6 +31,32 @@ fi
 mkdir -p "$CACHE_DIR/.apt"
 echo "$STACK" > "$CACHE_DIR/.apt/STACK"
 
+# If a version hasn't been specified, use the pinned version
+if [ -f "$ENV_DIR/DD_AGENT_VERSION" ]; then
+  DD_AGENT_VERSION=$(cat "$ENV_DIR/DD_AGENT_VERSION")
+else
+  if [ -f "$ENV_DIR/DD_AGENT_MAJOR_VERSION" ]; then
+    DD_AGENT_MAJOR_VERSION=$(cat "$ENV_DIR/DD_AGENT_MAJOR_VERSION")
+    if [ "$DD_AGENT_MAJOR_VERSION" == "7" ]; then
+      DD_AGENT_VERSION="$DD_AGENT_PINNED_VERSION_7"
+    else
+      DD_AGENT_VERSION="$DD_AGENT_PINNED_VERSION_6"
+    fi
+  else
+    DD_AGENT_VERSION="$DD_AGENT_PINNED_VERSION_6"
+  fi
+fi
+
+# Store which Datadog agent we deployed in the previous compile to bust the cache if it changes
+if [ -f $CACHE_DIR/.apt/DD_AGENT_VERSION ]; then
+  CACHED_DD_AGENT_VERSION=$(cat "$CACHE_DIR/.apt/DD_AGENT_VERSION")
+else
+  CACHED_DD_AGENT_VERSION=$DD_AGENT_VERSION
+fi
+
+# Ensure we store the agent version in the cache for next time.
+echo "$DD_AGENT_VERSION" > "$CACHE_DIR/.apt/DD_AGENT_VERSION"
+
 # Load formating tools
 source "$BUILDPACK_DIR/bin/common.sh"
 
@@ -47,12 +73,12 @@ mkdir -p "$APT_CACHE_DIR/archives/partial"
 mkdir -p "$APT_STATE_DIR/lists/partial"
 mkdir -p "$APT_DIR"
 
-if [[ $CACHED_STACK == $STACK ]] ; then
-  # STACK has not changed, reusing cache
-  topic "Reusing cache"
+if [[ $CACHED_STACK == $STACK ]] && [[ $CACHED_DD_AGENT_VERSION == $DD_AGENT_VERSION ]]; then
+  # STACK nor DD_AGENT_VERSION have changed, reusing cache
+  topic "Stack version and agent version haven't changed, reusing cache"
 else
-  # STACK changed, clean up APT cache
-  topic "Detected Stack changes, flushing cache"
+  # STACK or DD_AGENT_VERSION changed, clean up APT cache
+  topic "Detected Stack and/or agent version changes, flushing cache"
   rm -rf $APT_CACHE_DIR
   mkdir -p "$APT_CACHE_DIR/archives/partial"
   mkdir -p "$APT_STATE_DIR/lists/partial"
@@ -71,21 +97,6 @@ GPG_HOME_DIR="$BUILD_DIR/.gnupg"
 mkdir -p "$GPG_HOME_DIR"
 gpg --ignore-time-conflict --no-options --no-default-keyring --homedir "$GPG_HOME_DIR" --keyring "$APT_KEYRING" --import "$GPG_KEY_FILE" | indent
 
-# If a version hasn't been specified, use the pinned version
-if [ -f "$ENV_DIR/DD_AGENT_VERSION" ]; then
-  DD_AGENT_VERSION=$(cat "$ENV_DIR/DD_AGENT_VERSION")
-else
-  if [ -f "$ENV_DIR/DD_AGENT_MAJOR_VERSION" ]; then
-    DD_AGENT_MAJOR_VERSION=$(cat "$ENV_DIR/DD_AGENT_MAJOR_VERSION")
-    if [ "$DD_AGENT_MAJOR_VERSION" == "7" ]; then
-      DD_AGENT_VERSION="$DD_AGENT_PINNED_VERSION_7"
-    else
-      DD_AGENT_VERSION="$DD_AGENT_PINNED_VERSION_6"
-    fi
-  else
-    DD_AGENT_VERSION="$DD_AGENT_PINNED_VERSION_6"
-  fi
-fi
 
 # Prior to Agent 6.14 there was only 1 python version
 DD_AGENT_BASE_VERSION="6.14"
