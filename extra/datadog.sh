@@ -35,7 +35,8 @@ sed -i -e"s|^.*additional_checksd:.*$|additional_checksd: $DD_CONF_DIR/checks.d\
 sed -i -e"s|^.*cloud_provider_metadata:.*$|cloud_provider_metadata: []|" "$DATADOG_CONF"
 
 # Include application's datadog configs
-APP_DATADOG="/app/datadog"
+APP_DATADOG_DEFAULT="/app/datadog"
+APP_DATADOG="${DD_HEROKU_CONF_FOLDER:=$APP_DATADOG_DEFAULT}"
 APP_DATADOG_CONF_DIR="$APP_DATADOG/conf.d"
 
 for file in "$APP_DATADOG_CONF_DIR"/*.yaml; do
