@@ -133,9 +133,9 @@ In order to collect system metrics for your dynos, you must:
 
 ## Enabling integrations
 
-To enable a [Datadog-<INTEGRATION_NAME> integration][12], create a file `/datadog/conf.d/<INTEGRATION_NAME>.yaml` in the root of your application. During the dyno start up, your YAML files are copied to the appropriate Datadog Agent configuration directories.
+To enable a [Datadog-<INTEGRATION_NAME> integration][12], create a file in the datadog configuration folder within your application. During the dyno start up, your YAML files are copied to the appropriate Datadog Agent configuration directories.
 
-For example, to enable the [Datadog-Redis integration][13], create the file `/datadog/conf.d/redisdb.yaml` at the root of your application:
+For example, to enable the [Datadog-Redis integration][13], add the file `/datadog/conf.d/redisdb.yaml` at the root of your application (or `/$DD_HEROKU_CONF_FOLDER/conf.d/redisdb.yaml` if you have changed this [configuration option](#configuration)):
 
 ```yaml
 init_config:
