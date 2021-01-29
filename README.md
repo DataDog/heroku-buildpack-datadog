@@ -155,9 +155,21 @@ instances:
 
 **Note**: See the sample [redisdb.d/conf.yaml][14] for all available configuration options.
 
+If the integration you are enabling is part of the [Community Integrations][22], you will also need to install the package as part of the [prerun script](#prerun-script).
+
+```
+agent-wrapper integration install -t datadog-<INTEGRATION_NAME>==<INTEGRATION_VERSION>
+```
+
+For example, to install the [ping integration][23], create the configuration file `datadog/conf.d/ping.yaml` and add the following line to your prerun script:
+
+```
+agent-wrapper integration install -t datadog-ping==1.0.0
+```
+
 ## Prerun script
 
-In addition to all of the configurations above, you can include a prerun script, `/datadog/prerun.sh`, in your application. The prerun script will run after all of the standard configuration actions and immediately before starting the Datadog Agent. This allows you to modify the environment variables (for example, DD_TAGS or DD_VERSION), perform additional configurations, or even disable the Datadog Agent programmatically.
+In addition to all of the configurations above, you can include a prerun script, `/datadog/prerun.sh`, in your application. The prerun script will run after all of the standard configuration actions and immediately before starting the Datadog Agent. This allows you to modify the environment variables (for example, DD_TAGS or DD_VERSION), perform additional configurations, install community integrations, or even disable the Datadog Agent programmatically.
 
 The example below demonstrates a few of the things you can do in the `prerun.sh` script:
 
@@ -185,6 +197,9 @@ if [ -n "$DATABASE_URL" ]; then
     sed -i "s/<YOUR DBNAME>/${BASH_REMATCH[5]}/" "$DD_CONF_DIR/conf.d/postgres.d/conf.yaml"
   fi
 fi
+
+# Install the "ping" community integration
+agent-wrapper integration install -t datadog-ping==1.0.0
 ```
 
 ## Limiting Datadog's console output
@@ -305,3 +320,5 @@ After an upgrade of the buildpack or agent, you must clear your build cache and 
 [19]: https://github.com/DataDog/heroku-buildpack-datadog
 [20]: https://github.com/miketheman/heroku-buildpack-datadog
 [21]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
+[22]: https://github.com/DataDog/integrations-extras/
+[23]: https://github.com/DataDog/integrations-extras/tree/master/ping
