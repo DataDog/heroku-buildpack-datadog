@@ -103,6 +103,7 @@ In addition to the environment variables shown above, there are a number of othe
 | `DD_AGENT_MAJOR_VERSION`   | *Optional.* By default, the buildpack installs the latest 6.x version of the Datadog Agent available in the package repository. Set this variable to `7` to install the latest 7.x version of the Datadog Agent. Check the [Python versions section](#python-and-agent-versions) for more information on the relation of the agent version and Python version. Changing this option requires recompiling the slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details.     |
 | `DD_DISABLE_HOST_METRICS`  | *Optional.* By default, the buildpack reports system metrics for the host machine running the dyno. Set this to `true` to disable system metrics collection. See the [system metrics section](#system-metrics) below for more information.                                                                                                                                                                                                                                                                                  |
 | `DD_PYTHON_VERSION`        | *Optional.* Starting with version `6.14.0`, Datadog Agent ships with Python versions `2` and `3`. The buildpack will only keep one of the versions. Set this to `2` or `3` to select the Python version you want the agent to keep. If not set, the buildpack will keep `2`. Check the [Python versions section](#python-and-agent-versions) for more information. Changing this option requires recompiling the slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details. |
+| `DD_HEROKU_CONF_FOLDER`    | *Optional.* By default, the buildpack will look in the root of your application for a folder `/datadog` for any configuration files you wish to include, eg see [prerun.sh script](#prerun-script). This location can be overridden by setting this to your desired path. |
 
 For additional documentation, refer to the [Datadog Agent documentation][7].
 
@@ -132,9 +133,9 @@ In order to collect system metrics for your dynos, you must:
 
 ## Enabling integrations
 
-To enable a [Datadog-<INTEGRATION_NAME> integration][12], create a file `/datadog/conf.d/<INTEGRATION_NAME>.yaml` in the root of your application. During the dyno start up, your YAML files are copied to the appropriate Datadog Agent configuration directories.
+To enable a [Datadog-<INTEGRATION_NAME> integration][12], create a file in the datadog configuration folder within your application. During the dyno start up, your YAML files are copied to the appropriate Datadog Agent configuration directories.
 
-For example, to enable the [Datadog-Redis integration][13], create the file `/datadog/conf.d/redisdb.yaml` at the root of your application:
+For example, to enable the [Datadog-Redis integration][13], add the file `/datadog/conf.d/redisdb.yaml` at the root of your application (or `/$DD_HEROKU_CONF_FOLDER/conf.d/redisdb.yaml` if you have changed this [configuration option](#configuration)):
 
 ```yaml
 init_config:
