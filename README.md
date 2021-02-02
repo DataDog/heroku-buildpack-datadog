@@ -155,13 +155,13 @@ instances:
 
 **Note**: See the sample [redisdb.d/conf.yaml][14] for all available configuration options.
 
-If the integration you are enabling is part of the [Community Integrations][22], you will also need to install the package as part of the [prerun script](#prerun-script).
+If the integration you are enabling is part of the [Community Integrations][15], you will also need to install the package as part of the [prerun script](#prerun-script).
 
 ```
 agent-wrapper integration install -t datadog-<INTEGRATION_NAME>==<INTEGRATION_VERSION>
 ```
 
-For example, to install the [ping integration][23], create the configuration file `datadog/conf.d/ping.yaml` and add the following line to your prerun script:
+For example, to install the [ping integration][16], create the configuration file `datadog/conf.d/ping.yaml` and add the following line to your prerun script:
 
 ```
 agent-wrapper integration install -t datadog-ping==1.0.0
@@ -220,7 +220,7 @@ To reduce your slug size, make sure that `DD_APM_ENABLED` is set to `false`, if 
 
 ## Debugging
 
-To run any of the information/debugging commands listed in the [Agent's documentation][15] use the `agent-wrapper` command.
+To run any of the information/debugging commands listed in the [Agent's documentation][17] use the `agent-wrapper` command.
 
 For example, to display the status of your Datadog Agent and enabled integrations, run:
 
@@ -240,7 +240,7 @@ The Datadog buildpack does not collect logs from the Heroku platform. To set up 
 
 ## Using Heroku with Docker images
 
-This buildpack only works for Heroku deployments that use [Heroku's Slug Compiler][16]. If you are deploying your application in Heroku using Docker containers you will need to add the Datadog agent as part of your Docker image and start the agent as a different process in your container.
+This buildpack only works for Heroku deployments that use [Heroku's Slug Compiler][18]. If you are deploying your application in Heroku using Docker containers you will need to add the Datadog agent as part of your Docker image and start the agent as a different process in your container.
 
 As an example, if you are building your Docker image using a Debian based OS, you will need to add the following lines to your `Dockerfile`:
 
@@ -279,15 +279,15 @@ datadog-agent run &
 /opt/datadog-agent/embedded/bin/process-agent --config=/etc/datadog-agent/datadog.yaml
 ```
 
-For more advanced options in the Docker image, reference the [Datadog Agent Docker files][17].
+For more advanced options in the Docker image, reference the [Datadog Agent Docker files][19].
 
 ## Contributing
 
-See the [contributing documentation][18] to learn how to open an issue or PR to the [Heroku-buildpack-datadog repository][19].
+See the [contributing documentation][20] to learn how to open an issue or PR to the [Heroku-buildpack-datadog repository][21].
 
 ## History
 
-Earlier versions of this project were forked from the [miketheman heroku-buildpack-datadog project][20]. It was largely rewritten for Datadog's Agent version 6. Changes and more information can be found in the [changelog][21].
+Earlier versions of this project were forked from the [miketheman heroku-buildpack-datadog project][22]. It was largely rewritten for Datadog's Agent version 6. Changes and more information can be found in the [changelog][23].
 
 ## FAQs / Troubleshooting
 
@@ -313,12 +313,12 @@ After an upgrade of the buildpack or agent, you must clear your build cache and 
 [12]: https://docs.datadoghq.com/integrations/
 [13]: https://docs.datadoghq.com/integrations/redisdb/
 [14]: https://github.com/DataDog/integrations-core/blob/master/redisdb/datadog_checks/redisdb/data/conf.yaml.example
-[15]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
-[16]: https://devcenter.heroku.com/articles/slug-compiler
-[17]: https://github.com/DataDog/datadog-agent/tree/master/Dockerfiles
-[18]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CONTRIBUTING.md
-[19]: https://github.com/DataDog/heroku-buildpack-datadog
-[20]: https://github.com/miketheman/heroku-buildpack-datadog
-[21]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
-[22]: https://github.com/DataDog/integrations-extras/
-[23]: https://github.com/DataDog/integrations-extras/tree/master/ping
+[15]: https://github.com/DataDog/integrations-extras/
+[16]: https://github.com/DataDog/integrations-extras/tree/master/ping
+[17]: https://docs.datadoghq.com/agent/guide/agent-commands/#agent-status-and-information
+[18]: https://devcenter.heroku.com/articles/slug-compiler
+[19]: https://github.com/DataDog/datadog-agent/tree/master/Dockerfiles
+[20]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CONTRIBUTING.md
+[21]: https://github.com/DataDog/heroku-buildpack-datadog
+[22]: https://github.com/miketheman/heroku-buildpack-datadog
+[23]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
