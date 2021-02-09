@@ -70,13 +70,13 @@ To upgrade this buildpack and/or to change any of these options, for example `DD
 
 ```shell
 # Install the Heroku Repo plugin
-heroku plugins:install heroku-repo
+heroku plugins:install heroku-builds
 
 # Set new version of the Agent
 heroku config:set DD_AGENT_VERSION=<NEW_AGENT_VERSION> -a appname
 
 # Clears Heroku's build cache for "appname" application
-heroku repo:purge_cache -a appname
+heroku builds:cache:purge -a appname
 
 # Rebuild your slug with the new Agent version:
 git commit --allow-empty -m "Purge cache"
