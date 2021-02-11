@@ -32,15 +32,16 @@ Once complete, the Datadog Agent is started automatically when each dyno starts.
 
 The Datadog Agent provides a listening port on `8125` for statsd/dogstatsd metrics and events. Traces are collected on port `8126`.
 
-<div class="alert alert-warning">
-Warning: The last buildpack in the list will be used to determine the process type for the application. Also, buildpacks that install apt packages (e.g. <a href="https://github.com/heroku/heroku-buildpack-apt">apt</a>, <a href="https://github.com/jontewks/puppeteer-heroku-buildpack">puppeteer dependencies</a>) or buildpacks that modify the `/app` folder (e.g. <a href="https://github.com/lstoll/heroku-buildpack-monorepo">monorepo</a>) need to be added *before* the Datadog buildpack. For example, if your application uses the `ruby`, `datadog` and `apt` buildpacks, this would be a correct `heroku buildpacks` output:
+### Order of buildpacks
+As explained in [Heroku's documentation](https://devcenter.heroku.com/articles/using-multiple-buildpacks-for-an-app#viewing-buildpacks), the last buildpack in the list will be used to determine the process type for the application.
+
+Buildpacks that install apt packages (e.g. [heroku-buildpack-apt](https://github.com/heroku/heroku-buildpack-apt), [puppeteer-heroku-buildpack](https://github.com/jontewks/puppeteer-heroku-buildpack)) or buildpacks that modify the `/app` folder (e.g. [heroku-buildpack-monorepo](https://github.com/lstoll/heroku-buildpack-monorepo)) need to be added **before** the Datadog buildpack. For example, if your application uses the `ruby`, `datadog` and `apt` buildpacks, this would be a correct `heroku buildpacks` output:
 
 ```text
 1. https://github.com/heroku/heroku-buildpack-apt.git
 2. https://github.com/DataDog/heroku-buildpack-datadog.git
 3. heroku/ruby
 ```
-</div>
 
 ## Pinning a specific buildpack version and a specific Datadog agent version
 
