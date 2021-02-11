@@ -57,7 +57,7 @@ By default, the buildpack pins the latest version of the Datadog Agent at the ti
 
 ## Upgrading and slug recompilation
 
-Upgrading this buildpack or modifying certain buildpack options requires you to clear your application's build cache and recompile your slug.
+Upgrading this buildpack or modifying certain buildpack options requires you to recompile your slug.
 
 The following options require a slug recompilation:
 
@@ -70,17 +70,11 @@ The following options require a slug recompilation:
 To upgrade this buildpack and/or to change any of these options, for example `DD_AGENT_VERSION`, the following steps are required:
 
 ```shell
-# Install the Heroku Repo plugin
-heroku plugins:install heroku-builds
-
 # Set new version of the Agent
 heroku config:set DD_AGENT_VERSION=<NEW_AGENT_VERSION> -a appname
 
-# Clears Heroku's build cache for "appname" application
-heroku builds:cache:purge -a appname
-
 # Rebuild your slug with the new Agent version:
-git commit --allow-empty -m "Purge cache"
+git commit --allow-empty -m "Rebuild slug"
 git push heroku master
 ```
 
