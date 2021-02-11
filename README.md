@@ -33,9 +33,9 @@ Once complete, the Datadog Agent is started automatically when each dyno starts.
 The Datadog Agent provides a listening port on `8125` for statsd/dogstatsd metrics and events. Traces are collected on port `8126`.
 
 ### Order of buildpacks
-As explained in [Heroku's documentation](https://devcenter.heroku.com/articles/using-multiple-buildpacks-for-an-app#viewing-buildpacks), the last buildpack in the list will be used to determine the process type for the application.
+As explained in [Heroku's documentation][24], the last buildpack in the list will be used to determine the process type for the application.
 
-Buildpacks that install apt packages (e.g. [heroku-buildpack-apt](https://github.com/heroku/heroku-buildpack-apt), [puppeteer-heroku-buildpack](https://github.com/jontewks/puppeteer-heroku-buildpack)) or buildpacks that modify the `/app` folder (e.g. [heroku-buildpack-monorepo](https://github.com/lstoll/heroku-buildpack-monorepo)) need to be added **before** the Datadog buildpack. For example, if your application uses the `ruby`, `datadog` and `apt` buildpacks, this would be a correct `heroku buildpacks` output:
+Buildpacks that install apt packages (e.g. [heroku-buildpack-apt][25], [puppeteer-heroku-buildpack][26]) or buildpacks that modify the `/app` folder (e.g. [heroku-buildpack-monorepo][27]) need to be added **before** the Datadog buildpack. For example, if your application uses the `ruby`, `datadog` and `apt` buildpacks, this would be a correct `heroku buildpacks` output:
 
 ```text
 1. https://github.com/heroku/heroku-buildpack-apt.git
@@ -317,3 +317,7 @@ After an upgrade of the buildpack or agent, you must clear your build cache and 
 [21]: https://github.com/DataDog/heroku-buildpack-datadog
 [22]: https://github.com/miketheman/heroku-buildpack-datadog
 [23]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
+[24]: https://devcenter.heroku.com/articles/using-multiple-buildpacks-for-an-app#viewing-buildpacks
+[25]: https://github.com/heroku/heroku-buildpack-apt
+[26]: https://github.com/jontewks/puppeteer-heroku-buildpack
+[27]: https://github.com/lstoll/heroku-buildpack-monorepo
