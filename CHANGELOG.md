@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - Non-https repo url and apt fetching
 
+## [1.24] - 2021-03-03
+
+### Added
+- Datadog agent pinned versions are now `6.26.0` and `7.26.0`
+- Datadog configuration path can now be configured with the `DD_HEROKU_CONF_FOLDER` environment variable
+
 ## [1.23] - 2021-01-20
 
 ### Added
