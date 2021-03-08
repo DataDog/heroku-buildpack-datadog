@@ -33,7 +33,7 @@ Once complete, the Datadog Agent is started automatically when each dyno starts.
 The Datadog Agent provides a listening port on `8125` for statsd/dogstatsd metrics and events. Traces are collected on port `8126`.
 
 ### Order of buildpacks
-As explained in [Heroku's documentation][4], the last buildpack in the list will be used to determine the process type for the application.
+As explained in [Heroku's documentation][4], the last buildpack in the list is used to determine the process type for the application.
 
 Buildpacks that install apt packages (e.g. [heroku-buildpack-apt][5], [puppeteer-heroku-buildpack][6]) or buildpacks that modify the `/app` folder (e.g. [heroku-buildpack-monorepo][7]) need to be added **before** the Datadog buildpack. For example, if your application uses the `ruby`, `datadog` and `apt` buildpacks, this would be a correct `heroku buildpacks` output:
 
@@ -43,7 +43,7 @@ Buildpacks that install apt packages (e.g. [heroku-buildpack-apt][5], [puppeteer
 3. heroku/ruby
 ```
 
-## Pinning a specific buildpack version and a specific Datadog agent version
+## Pinning a specific buildpack version and a specific Datadog Agent version
 
 Heroku recommends to always use the latest commit of a buildpack. If you need to pin the buildpack version, you can do so by specifying the buildpack release tag:
 
@@ -95,10 +95,10 @@ In addition to the environment variables shown above, there are a number of othe
 | `DD_PROCESS_AGENT`         | *Optional.* The Datadog Process Agent is disabled by default. Set this to `true` to enable the Process Agent. Changing this option requires recompilation of the slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details.                                                                                                                                                                                                                                                 |
 | `DD_SITE`                  | *Optional.* If you use the app.datadoghq.eu service, set this to `datadoghq.eu`. Defaults to `datadoghq.com`.                                                                                                                                                                                                                                                                                                                                                                                                               |
 | `DD_AGENT_VERSION`         | *Optional.* By default, the buildpack installs the latest 6.x version of the Datadog Agent available in the package repository. Use this variable to install older versions of the Datadog Agent (note that not all versions of the Agent may be available). This option takes precedence over `DD_AGENT_MAJOR_VERSION`. Changing this option requires recompiling the slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details.                                           |
-| `DD_AGENT_MAJOR_VERSION`   | *Optional.* By default, the buildpack installs the latest 6.x version of the Datadog Agent available in the package repository. Set this variable to `7` to install the latest 7.x version of the Datadog Agent. Check the [Python versions section](#python-and-agent-versions) for more information on the relation of the agent version and Python version. Changing this option requires recompiling the slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details.     |
+| `DD_AGENT_MAJOR_VERSION`   | *Optional.* By default, the buildpack installs the latest 6.x version of the Datadog Agent available in the package repository. Set this variable to `7` to install the latest 7.x version of the Datadog Agent. Check the [Python versions section](#python-and-agent-versions) for more information on the relation of the Agent version and Python version. Changing this option requires recompiling the slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details.     |
 | `DD_DISABLE_HOST_METRICS`  | *Optional.* By default, the buildpack reports system metrics for the host machine running the dyno. Set this to `true` to disable system metrics collection. See the [system metrics section](#system-metrics) below for more information.                                                                                                                                                                                                                                                                                  |
-| `DD_PYTHON_VERSION`        | *Optional.* Starting with version `6.14.0`, Datadog Agent ships with Python versions `2` and `3`. The buildpack will only keep one of the versions. Set this to `2` or `3` to select the Python version you want the agent to keep. If not set, the buildpack will keep `2`. Check the [Python versions section](#python-and-agent-versions) for more information. Changing this option requires recompiling the slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details. |
-| `DD_HEROKU_CONF_FOLDER`    | *Optional.* By default, the buildpack will look in the root of your application for a folder `/datadog` for any configuration files you wish to include, eg see [prerun.sh script](#prerun-script). This location can be overridden by setting this to your desired path. |
+| `DD_PYTHON_VERSION`        | *Optional.* Starting with version `6.14.0`, Datadog Agent ships with Python versions `2` and `3`. The buildpack only keeps one of the versions. Set this to `2` or `3` to select the Python version you want the Agent to keep. If not set, the buildpack keeps `2`. Check the [Python versions section](#python-and-agent-versions) for more information. Changing this option requires recompiling the slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details. |
+| `DD_HEROKU_CONF_FOLDER`    | *Optional.* By default, the buildpack looks in the root of your application for a folder `/datadog` for any configuration files you wish to include, eg see [prerun.sh script](#prerun-script). This location can be overridden by setting this to your desired path. |
 
 For additional documentation, refer to the [Datadog Agent documentation][12].
 
@@ -106,9 +106,9 @@ For additional documentation, refer to the [Datadog Agent documentation][12].
 
 Heroku dynos are ephemeral—they can move to different host machines whenever new code is deployed, configuration changes are made, or resouce needs/availability changes. This makes Heroku flexible and responsive, but can potentially lead to a high number of reported hosts in Datadog. Datadog bills on a per-host basis, and the buildpack default is to report actual hosts, which can lead to higher than expected costs.
 
-Depending on your use case, you may want to set your hostname so that hosts are aggregated and report a lower number.  To do this, Set `DD_DYNO_HOST` to `true`. This will cause the Agent to report the hostname as the app and dyno name (e.g. `appname.web.1` or `appname.run.1234`) and your host count will closely match your dyno usage. One drawback is that you may see some metrics continuity errors whenever a dyno is cycled.
+Depending on your use case, you may want to set your hostname so that hosts are aggregated and report a lower number. To do this, Set `DD_DYNO_HOST` to `true`. This causes the Agent to report the hostname as the app and dyno name (for example `appname.web.1` or `appname.run.1234`) and your host count will closely match your dyno usage. One drawback is that you may see some metrics continuity errors whenever a dyno is cycled.
 
-For this to work correctly, `HEROKU_APP_NAME` needs to be set. The easiest way to do this is by [enabling dyno metadata][13] Take into account that dyno metadata is not yet available in Private Spaces, in which case you will need to set `HEROKU_APP_NAME` manually.
+For this to work correctly, `HEROKU_APP_NAME` needs to be set. The easiest way to do this is by [enabling dyno metadata][13]. **Note**: Dyno metadata is not yet available in Private Spaces, in which case you need to set `HEROKU_APP_NAME` manually.
 
 ## System metrics
 
@@ -150,7 +150,7 @@ instances:
 
 **Note**: See the sample [redisdb.d/conf.yaml][19] for all available configuration options.
 
-If the integration you are enabling is part of the [Community Integrations][20], you will also need to install the package as part of the [prerun script](#prerun-script).
+If the integration you are enabling is part of the [Community Integrations][20], install the package as part of the [prerun script](#prerun-script).
 
 ```
 agent-wrapper integration install -t datadog-<INTEGRATION_NAME>==<INTEGRATION_VERSION>
@@ -164,7 +164,7 @@ agent-wrapper integration install -t datadog-ping==1.0.0
 
 ## Prerun script
 
-In addition to all of the configurations above, you can include a prerun script, `/datadog/prerun.sh`, in your application. The prerun script will run after all of the standard configuration actions and immediately before starting the Datadog Agent. This allows you to modify the environment variables (for example, DD_TAGS or DD_VERSION), perform additional configurations, install community integrations, or even disable the Datadog Agent programmatically.
+In addition to all of the configurations above, you can include a prerun script, `/datadog/prerun.sh`, in your application. The prerun script runs after all of the standard configuration actions and immediately before starting the Datadog Agent. This allows you to modify the environment variables (for example, DD_TAGS or DD_VERSION), perform additional configurations, install community integrations, or even disable the Datadog Agent programmatically.
 
 The example below demonstrates a few of the things you can do in the `prerun.sh` script:
 
@@ -225,7 +225,7 @@ agent-wrapper status
 
 ## Python and Agent versions
 
-Prior to version `6.14` the Datadog v6 agent shipped with Python version `2` embedded. Starting with `6.14`, and in preparation for Python version `2` End Of Life, announced for January 2020, the Datadog v6 agent ships with both Python versions `2` and `3`, to give customers enough time to migrate their custom checks to Python version `3`. The Heroku buildpack will only keep one of the versions. Set `DD_PYTHON_VERSION` to `2` or `3` to select the Python version you want the agent to keep. If not set, the buildpack will keep Python version `2`. If you are using custom checks that only work with Python version `2`, we recommend to migrate them to version `3` before its EOL.
+Prior to version `6.14` the Datadog v6 Agent shipped with Python version `2` embedded. Starting with `6.14`, and in preparation for Python version `2` End Of Life, announced for January 2020, the Datadog v6 Agent ships with both Python versions `2` and `3`, to give customers enough time to migrate their custom checks to Python version `3`. The Heroku buildpack only keeps one of the versions. Set `DD_PYTHON_VERSION` to `2` or `3` to select the Python version you want the Agent to keep. If not set, the buildpack keeps Python version `2`. If you are using custom checks that only work with Python version `2`, we recommend to migrate them to version `3` before its EOL.
 
 Agent v7 only ships with Python version `3`. If you are not using custom checks or your custom checks are already migrated to version `3`, we recommend moving to Agent 7 as soon as possible. Starting with `6.15`, v7 releases with the same minor version share the same feature set, making it safe to move between those two. For example, if you are running `6.16` and you don't need Python version `2`, it is safe to jump to `7.16`.
 
@@ -235,9 +235,9 @@ The Datadog buildpack does not collect logs from the Heroku platform. To set up 
 
 ## Using Heroku with Docker images
 
-This buildpack only works for Heroku deployments that use [Heroku's Slug Compiler][23]. If you are deploying your application in Heroku using Docker containers you will need to add the Datadog agent as part of your Docker image and start the agent as a different process in your container.
+This buildpack only works for Heroku deployments that use [Heroku's Slug Compiler][23]. If you are deploying your application in Heroku using Docker containers, add the Datadog Agent as part of your Docker image and start the Agent as a different process in your container.
 
-As an example, if you are building your Docker image using a Debian based OS, you will need to add the following lines to your `Dockerfile`:
+As an example, if you are building your Docker image using a Debian based OS, add the following lines to your `Dockerfile`:
 
 ```
 # Install GPG dependencies
@@ -249,7 +249,7 @@ RUN sh -c "echo 'deb https://apt.datadoghq.com/ stable 7' > /etc/apt/sources.lis
 RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 A2923DFF56EDA6E76E55E492D3A80E30382E94DE
 RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 D75CEA17048B9ACBF186794B32637D44F14F620E
 
-# Install the Datadog agent
+# Install the Datadog Agent
 RUN apt-get update && apt-get -y --force-yes install --reinstall datadog-agent
 
 # Copy entrypoint
@@ -264,7 +264,7 @@ COPY datadog-config/ /etc/datadog-agent/
 CMD ["/entrypoint.sh"]
 ```
 
-In your Docker container entry point you will to start the Datadog Agent, the Datadog APM agent and the Datadog process agent:
+In your Docker container entry point, start the Datadog Agent, Datadog APM Agent, and Datadog Process Agent:
 
 ```
 #!/bin/bash
@@ -284,15 +284,15 @@ See the [contributing documentation][25] to learn how to open an issue or PR to 
 
 Earlier versions of this project were forked from the [miketheman heroku-buildpack-datadog project][27]. It was largely rewritten for Datadog's Agent version 6. Changes and more information can be found in the [changelog][28].
 
-## FAQs / Troubleshooting
+## Troubleshooting
 
 ### Datadog is reporting a higher number of agents than dynos
 
 Make sure you have `DD_DYNO_HOST` set to `true` and that `HEROKU_APP_NAME` has a value set for every Heroku application. See the [Hostname section](#hostname) for details.
 
-### After upgrading the buildpack or the agent, the agent is reporting errors when starting up
+### After upgrading the buildpack or the Agent, the Agent is reporting errors when starting up
 
-After an upgrade of the buildpack or agent, you must recompile your application's slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details.
+After an upgrade of the buildpack or Agent, you must recompile your application's slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details.
 
 [1]: https://devcenter.heroku.com/articles/buildpacks
 [2]: https://docs.datadoghq.com/libraries
