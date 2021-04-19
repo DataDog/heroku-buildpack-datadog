@@ -84,19 +84,25 @@ else
   mkdir -p "$APT_STATE_DIR/lists/partial"
 fi
 
-# Install dependencies
-topic "Updating apt caches for dependencies"
-apt-get $APT_OPTIONS update | indent
-
-
 # Install GPG key
 topic "Install gpg key for Datadog APT Repository"
 APT_KEYRING="$CACHE_DIR/apt/trusted.gpg"
+APT_KEYBOX="$CACHE_DIR/apt/temp.gpg"
 GPG_KEY_FILE="$BUILDPACK_DIR/etc/datadog.gpg"
 GPG_HOME_DIR="$BUILD_DIR/.gnupg"
 mkdir -p "$GPG_HOME_DIR"
-gpg --ignore-time-conflict --no-options --no-default-keyring --homedir "$GPG_HOME_DIR" --keyring "$APT_KEYRING" --import "$GPG_KEY_FILE" | indent
 
+# Remove old APT keyrings to avoid type conflicts
+if [ -f $APT_KEYRING ]; then
+  rm $APT_KEYRING
+fi
+
+if [[ $STACK == "heroku-16" ]]; then
+  gpg --ignore-time-conflict --no-options --no-default-keyring --homedir "$GPG_HOME_DIR" --keyring "$APT_KEYRING" --import "$GPG_KEY_FILE" | indent
+else
+  gpg --ignore-time-conflict --no-options --no-default-keyring --homedir "$GPG_HOME_DIR" --keyring "$APT_KEYBOX" --trustdb "$APT_KEYRING" --import "$GPG_KEY_FILE" | indent
+  gpg --no-default-keyring --keyring "$APT_KEYBOX" --export > $APT_KEYRING
+fi
 
 # Prior to Agent 6.14 there was only 1 python version
 DD_AGENT_BASE_VERSION="6.14"
