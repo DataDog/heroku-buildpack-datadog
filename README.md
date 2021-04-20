@@ -16,7 +16,7 @@ heroku create
 heroku buildpacks:add heroku/ruby
 
 # Enable Heroku Labs Dyno Metadata
-heroku labs:enable runtime-dyno-metadata -a $(heroku apps:info|grep ===|cut -d' ' -f2)
+heroku labs:enable runtime-dyno-metadata -a <YOUR_APP_NAME>
 
 # Add this buildpack and set your Datadog API key
 heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git
@@ -71,7 +71,7 @@ To upgrade this buildpack and/or to change any of these options, for example `DD
 
 ```shell
 # Set new version of the Agent
-heroku config:set DD_AGENT_VERSION=<NEW_AGENT_VERSION> -a appname
+heroku config:set DD_AGENT_VERSION=<NEW_AGENT_VERSION> -a <YOUR_APP_NAME>
 
 # Rebuild your slug with the new Agent version:
 git commit --allow-empty -m "Rebuild slug"
