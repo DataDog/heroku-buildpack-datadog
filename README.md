@@ -4,30 +4,39 @@ This [Heroku buildpack][1] installs the Datadog Agent in your Heroku dyno to col
 
 ## Installation
 
-To add this buildpack to your project, as well as set the required environment variables:
+This guide assumes that you already have your application running on Heroku. Please, refer to Heroku documentation to learn how to deploy your application to Heroku.
+
+1. Go to [Datadog API settings][3] and copy your Datadog API key. Export it to an environment variable:
+
+ ```shell
+ export DD_API_KEY=<YOUR_API_KEY>
+ ```
+
+2. Export your application name to the APPNAME environment variable:
+
+```shell
+export APPNAME=<YOUR_HEROKU_APP_NAME>
+```
+
+3. Add the Datadog buildpack to your project:
 
 ```shell
 cd <HEROKU_PROJECT_ROOT_FOLDER>
 
-# If this is a new Heroku project
-heroku create
+# Enable Heroku Labs Dyno Metadata to set HEROKU_APP_NAME env variable automatically
+heroku labs:enable runtime-dyno-metadata -a $APPNAME
 
-# Add the appropriate language-specific buildpack. For example:
-heroku buildpacks:add heroku/ruby
-
-# Enable Heroku Labs Dyno Metadata
-heroku labs:enable runtime-dyno-metadata -a <YOUR_APP_NAME>
+# Set hostname in Datadog as appname.dynotype.dynonumber for metrics continuity
+heroku config:add DD_DYNO_HOST=true
 
 # Add this buildpack and set your Datadog API key
 heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git
-heroku config:add DD_API_KEY=<DATADOG_API_KEY>
+heroku config:add DD_API_KEY=$DD_API_KEY
 
 # Deploy to Heroku forcing a rebuild
 git commit --allow-empty -m "Rebuild slug"
 git push heroku master
 ```
-
-Replace `<DATADOG_API_KEY>` with your [Datadog API key][3].
 
 Once complete, the Datadog Agent is started automatically when each dyno starts.
 
