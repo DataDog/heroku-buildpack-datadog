@@ -22,7 +22,8 @@ heroku labs:enable runtime-dyno-metadata -a <YOUR_APP_NAME>
 heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git
 heroku config:add DD_API_KEY=<DATADOG_API_KEY>
 
-# Deploy to Heroku
+# Deploy to Heroku forcing a rebuild
+git commit --allow-empty -m "Rebuild slug"
 git push heroku master
 ```
 
