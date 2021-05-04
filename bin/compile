@@ -80,6 +80,7 @@ else
   # STACK or DD_AGENT_VERSION changed, clean up APT cache
   topic "Detected Stack and/or agent version changes, flushing cache"
   rm -rf $APT_CACHE_DIR
+  rm -rf $APT_STATE_DIR
   mkdir -p "$APT_CACHE_DIR/archives/partial"
   mkdir -p "$APT_STATE_DIR/lists/partial"
 fi
