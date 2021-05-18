@@ -86,23 +86,17 @@ fi
 
 # Install GPG key
 topic "Install gpg key for Datadog APT Repository"
-APT_KEYRING="$CACHE_DIR/apt/trusted.gpg"
-APT_KEYBOX="$CACHE_DIR/apt/temp.gpg"
-GPG_KEY_FILE="$BUILDPACK_DIR/etc/datadog.gpg"
+DATADOG_APT_KEYRING="$BUILDPACK_DIR/datadog-archive-keyring.gpg"
+DATADOG_APT_KEYS=("DATADOG_APT_KEY_CURRENT.public" "DATADOG_APT_KEY_F14F620E.public" "DATADOG_APT_KEY_382E94DE.public")
+DATADOG_APT_KEYS_URL="https://keys.datadoghq.com"
 GPG_HOME_DIR="$BUILD_DIR/.gnupg"
 mkdir -p "$GPG_HOME_DIR"
+touch $DATADOG_APT_KEYRING
 
-# Remove old APT keyrings to avoid type conflicts
-if [ -f $APT_KEYRING ]; then
-  rm $APT_KEYRING
-fi
-
-if [[ $STACK == "heroku-16" ]]; then
-  gpg --ignore-time-conflict --no-options --no-default-keyring --homedir "$GPG_HOME_DIR" --keyring "$APT_KEYRING" --import "$GPG_KEY_FILE" | indent
-else
-  gpg --ignore-time-conflict --no-options --no-default-keyring --homedir "$GPG_HOME_DIR" --keyring "$APT_KEYBOX" --trustdb "$APT_KEYRING" --import "$GPG_KEY_FILE" | indent
-  gpg --no-default-keyring --keyring "$APT_KEYBOX" --export > $APT_KEYRING
-fi
+for key in "${DATADOG_APT_KEYS[@]}"; do
+  curl -o "/tmp/${key}" "${DATADOG_APT_KEYS_URL}/${key}" | indent
+  gpg --ignore-time-conflict --no-options --no-default-keyring --homedir "$GPG_HOME_DIR" --keyring "$DATADOG_APT_KEYRING" --import "/tmp/${key}" | indent
+done
 
 # Prior to Agent 6.14 there was only 1 python version
 DD_AGENT_BASE_VERSION="6.14"
@@ -129,9 +123,12 @@ if [ "$DD_AGENT_VERSION" != "$(echo -e "$DD_AGENT_BASE_VERSION\n$DD_AGENT_VERSIO
   cp "$APT_REPO_FILE_7" "$APT_REPO_FILE"
 fi
 
+# Replace the placeholder in the source file by the actual path to the constructed keyring
+sed -i "s|SIGNED_BY_PLACEHOLDER|${DATADOG_APT_KEYRING}|" $APT_REPO_FILE
+
 # Install Datadog Agent
 topic "Updating apt caches for Datadog Agent"
-APT_OPTIONS="$APT_OPTIONS -o Dir::Etc::Trusted=$APT_KEYRING -o Dir::Etc::SourceList=$APT_REPO_FILE"
+APT_OPTIONS="$APT_OPTIONS -o Dir::Etc::SourceList=$APT_REPO_FILE"
 apt-get $APT_OPTIONS update | indent
 
 # Accommodate for earlier pinned versions. Give deprecation warning.
