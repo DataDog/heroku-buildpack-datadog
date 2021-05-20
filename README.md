@@ -296,9 +296,9 @@ Earlier versions of this project were forked from the [miketheman heroku-buildpa
 
 ## Troubleshooting
 
-### Getting the agent status
+### Getting the Agent status
 
-If you have set up the buildpack and you are not getting some of the data you expected in Datadog, you can run the status command for the Datadog agent to help you finding the cause.
+If you have set up the buildpack and you are not getting some of the data you expect in Datadog, you can run the status command for the Datadog Agent to help you find the cause.
 
 ```shell
 # Export the name of your Heroku application as an environment variable
@@ -314,7 +314,7 @@ heroku ps:exec -a $APPNAME
 ~ $
 ```
 
-You can ignore the warnings about the DD_API_KEY not being set. This is normal. The reason is that [Heroku doesn’t set configuration variables for the SSH session itself](https://devcenter.heroku.com/articles/exec#environment-variables), but the Datadog agent process was able to access those.
+You can ignore the warnings about DD_API_KEY not being set. While [Heroku doesn't set configuration variables for the SSH session itself](https://devcenter.heroku.com/articles/exec#environment-variables), the Datadog Agent process is able to access them.
 
 Once inside the SSH session, execute the Datadog status command.
 
@@ -331,7 +331,7 @@ Agent (v7.27.0)
 
 ```
 
-We will hightligth some of the sections you should focus on, depending on what you are trying to debug.
+We will highligth some of the sections you should focus on, depending on what you are trying to debug.
 
 #### I am not getting any data in Datadog
 
@@ -377,7 +377,7 @@ Collector
 
 #### Check APM agent
 
-If you have instrumented your application for APM and not getting traces in Datadog, you can check that the APM agent is running correctly and collecting traces:
+If you have instrumented your application for APM and are not getting traces in Datadog, you can check that the APM Agent is running correctly and collecting traces:
 
 ````
 [...]
@@ -406,7 +406,7 @@ APM Agent
 [...]
 ```
 
-### Datadog is reporting a higher number of agents than dynos
+### Datadog is reporting a higher number of Agents than dynos
 
 Make sure you have `DD_DYNO_HOST` set to `true` and that `HEROKU_APP_NAME` has a value set for every Heroku application. See the [Hostname section](#hostname) for details.
 
