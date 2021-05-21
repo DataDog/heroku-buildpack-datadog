@@ -59,7 +59,9 @@ compileAndRunVersion()
 
 testReleased6Versions()
 {
+  echo "deb [trusted=yes] https://apt.datadoghq.com/ stable 6" > "${BUILDPACK_HOME}/etc/datadog.list"
   getAvailableVersions "datadog.list"
+  echo "deb [signed-by=SIGNED_BY_PLACEHOLDER] https://apt.datadoghq.com/ stable 6" > "${BUILDPACK_HOME}/etc/datadog.list"
 
   for VERSION in ${AGENT_VERSIONS}; do
     compileAndRunVersion $VERSION
@@ -68,7 +70,9 @@ testReleased6Versions()
 
 testReleased7Versions()
 {
+  echo "deb [trusted=yes] https://apt.datadoghq.com/ stable 7" > "${BUILDPACK_HOME}/etc/datadog7.list"
   getAvailableVersions "datadog7.list"
+  echo "deb [signed-by=SIGNED_BY_PLACEHOLDER] https://apt.datadoghq.com/ stable 7" > "${BUILDPACK_HOME}/etc/datadog7.list"
 
   for VERSION in ${AGENT_VERSIONS}; do
     compileAndRunVersion $VERSION
