@@ -296,7 +296,117 @@ Earlier versions of this project were forked from the [miketheman heroku-buildpa
 
 ## Troubleshooting
 
-### Datadog is reporting a higher number of agents than dynos
+### Getting the Agent status
+
+If you have set up the buildpack and you are not getting some of the data you expect in Datadog, you can run the status command for the Datadog Agent to help you find the cause.
+
+```shell
+# Export the name of your Heroku application as an environment variable
+export APPNAME=your-application-name
+
+heroku ps:exec -a $APPNAME
+
+# Establishing credentials... done
+# Connecting to web.1 on ⬢ ruby-heroku-datadog...
+# DD_API_KEY environment variable not set. Run: heroku config:add DD_API_KEY=<your API key>
+# The Datadog Agent has been disabled. Unset the DISABLE_DATADOG_AGENT or set missing environment variables.
+
+~ $
+```
+
+You can ignore the warnings about DD_API_KEY not being set. While [Heroku doesn't set configuration variables for the SSH session itself](https://devcenter.heroku.com/articles/exec#environment-variables), the Datadog Agent process is able to access them.
+
+Once inside the SSH session, execute the Datadog status command.
+
+```shell
+~ $ agent-wrapper status
+
+Getting the status from the agent.
+
+===============
+Agent (v7.27.0)
+===============
+
+[...]
+
+```
+
+We will highligth some of the sections you should focus on, depending on what you are trying to debug.
+
+#### I am not getting any data in Datadog
+
+Make sure that the `status` command runs correctly and that this section of the output tells you that your API key is valid:
+
+```
+  API Keys status
+  ===============
+    API key ending with 68306: API Key valid
+```
+
+#### Check integrations
+
+To check if the integration you have enabled is running correctly, focus on the `Collector` section and verify that your check is running correctly:
+
+```
+=========
+Collector
+=========
+
+  Running Checks
+  ==============
+
+[...]
+    postgres (5.4.0)
+    ----------------
+      Instance ID: postgres:e07ef94b907fe733 [OK]
+      Configuration Source: file:/app/.apt/etc/datadog-agent/conf.d/postgres.d/conf.yaml
+      Total Runs: 4,282
+      Metric Samples: Last Run: 15, Total: 64,230
+      Events: Last Run: 0, Total: 0
+      Service Checks: Last Run: 1, Total: 4,282
+      Average Execution Time : 43ms
+      Last Execution Date : 2021-05-13 08:15:46 UTC (1620893746000)
+      Last Successful Execution Date : 2021-05-13 08:15:46 UTC (1620893746000)
+      metadata:
+        version.major: 13
+        version.minor: 2
+        version.patch: 0
+        version.raw: 13.2 (Ubuntu 13.2-1.pgdg20.04+1)
+        version.scheme: semver
+```
+
+#### Check APM agent
+
+If you have instrumented your application for APM and are not getting traces in Datadog, you can check that the APM Agent is running correctly and collecting traces:
+
+````
+[...]
+=========
+APM Agent
+=========
+  Status: Running
+  Pid: 63
+  Uptime: 64702 seconds
+  Mem alloc: 10,331,128 bytes
+  Hostname: ruby-heroku-datadog.web.1
+  Receiver: localhost:8126
+  Endpoints:
+    https://trace.agent.datadoghq.com
+
+  Receiver (previous minute)
+  ==========================
+    From ruby 2.6.6 (ruby-x86_64-linux), client 0.48.0
+      Traces received: 11 (14,181 bytes)
+      Spans received: 33
+
+    Default priority sampling rate: 100.0%
+    Priority sampling rate for 'service:ruby-heroku-datadog,env:': 100.0%
+    Priority sampling rate for 'service:ruby-heroku-datadog,env:development': 100.0%
+
+[...]
+```
+
+### Datadog is reporting a higher number of Agents than dynos
 
 Make sure you have `DD_DYNO_HOST` set to `true` and that `HEROKU_APP_NAME` has a value set for every Heroku application. See the [Hostname section](#hostname) for details.
 
