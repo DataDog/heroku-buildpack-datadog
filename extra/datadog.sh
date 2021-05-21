@@ -53,6 +53,9 @@ DYNOTYPE=${DYNO%%.*}
 BUILDPACKVERSION="dev"
 DYNO_TAGS="dyno:$DYNO dynotype:$DYNOTYPE buildpackversion:$BUILDPACKVERSION"
 
+# We want always to have the Dyno ID as a host alias to improve correlation
+export DD_HOST_ALIASES="$DYNOHOST"
+
 # Include install method
 echo -e "install_method:\n  tool: heroku\n  tool_version: heroku\n  installer_version: heroku-$BUILDPACKVERSION" > "$DD_INSTALL_INFO"
 
