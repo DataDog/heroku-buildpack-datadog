@@ -387,7 +387,7 @@ Collector
 
 If you have instrumented your application for APM and are not getting traces in Datadog, you can check that the APM Agent is running correctly and collecting traces:
 
-````
+```
 [...]
 =========
 APM Agent
