@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.27] - 2021-06-28
+
+### Added
+- Datadog agent pinned versions are now `6.29.0` and `7.29.0`
+- The Dyno ID is now sent as host alias (requires Agent 6.29.0/7.29.0 or newer)
+
 ## [1.26] - 2021-05-28
 
 ### Added
