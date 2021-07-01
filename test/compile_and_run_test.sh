@@ -51,7 +51,7 @@ compileAndRunVersion()
   if test "$BIGSIZE_VERSION" = "$(echo "$BIGSIZE_VERSION\n$1" | sort -V | head -n1)" ; then
     assertTrue "Binary folder is too big: ${SIZE_BIN}" "[ $SIZE_BIN -lt 105000 ]"
   fi
-  assertTrue "Embedded library folder is too big: ${SIZE_LIB}" "[ $SIZE_LIB -lt 230000 ]"
+  assertTrue "Embedded library folder is too big: ${SIZE_LIB}" "[ $SIZE_LIB -lt 255000 ]"
   assertTrue "Embedded binary folder is too big: ${SIZE_EMB_BIN}" "[ $SIZE_EMB_BIN -lt 115000 ]"
 
   rm -rf $HOME/.apt/
