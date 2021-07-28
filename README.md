@@ -120,6 +120,19 @@ Depending on your use case, you may want to set your hostname so that hosts are 
 
 For this to work correctly, `HEROKU_APP_NAME` needs to be set. The easiest way to do this is by [enabling dyno metadata][13]. **Note**: Dyno metadata is not yet available in Private Spaces, in which case you need to set `HEROKU_APP_NAME` manually.
 
+## Disabling the Datadog Agent for short-lived dynos
+
+By default, the Datadog Agent will run on each of the dynos that are part of the application. This includes `scheduler`, `release` or `run` dynos. In many cases the metrics from these dynos are not needed and it makes sense to disable the Datadog Agent for those.
+
+To disable the Datadog Agent based on dyno type, add the following snippet to your [prerun.sh script](#prerun-script) (adapting it to the type of dynos you don't want to monitor):
+
+```shell
+# Disable the Datadog Agent based on dyno type
+if [ "$DYNOTYPE" == "run" ] || [ "$DYNOTYPE" == "scheduler" ] || [ "$DYNOTYPE" == "release" ]; then
+  DISABLE_DATADOG_AGENT="true"
+fi
+```
+
 ## System metrics
 
 By default, the buildpack collects system metrics for the host machine running your dyno. System metrics are not available for individual dynos using this buildpack. To disable host system metrics collection, set the `DD_DISABLE_HOST_METRICS` environment variable to `true`.
