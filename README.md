@@ -187,7 +187,7 @@ agent-wrapper integration install -t datadog-ping==1.0.0
 
 ## Prerun script
 
-In addition to all of the configurations above, you can include a prerun script, `/datadog/prerun.sh`, in your application. The prerun script runs after all of the standard configuration actions and immediately before starting the Datadog Agent. This allows you to modify the environment variables (for example, DD_TAGS, or DD_VERSION), perform additional configurations, install community integrations, or even disable the Datadog Agent programmatically.
+In addition to all of the configurations above, you can include a prerun script, `/datadog/prerun.sh`, in your application. The prerun script runs after all of the standard configuration actions and immediately before starting the Datadog Agent. This allows you to modify the environment variables (for example: DD_TAGS or DD_VERSION), perform additional configurations, install community integrations, or even disable the Datadog Agent programmatically.
 
 The example below demonstrates a few of the things you can do in the `prerun.sh` script:
 
