@@ -186,6 +186,9 @@ done
 rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/system-probe"
 rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/libbcc*
 
+# Remove static libraries
+rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/*.a
+
 # Remove the Security agent
 rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/security-agent"
 
