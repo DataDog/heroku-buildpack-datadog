@@ -94,7 +94,7 @@ In addition to the environment variables shown above, there are several others y
 
 | Setting                    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 |----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `DD_API_KEY`               | *Required.* Your API key is available from the [Datadog API Integrations][9] page. **Note**: This is the *API* key, not the application key.                                                                                                                                                                                                                                                                                                                                                                                |
+| `DD_API_KEY`               | *Required.* Your API key is available from the [Datadog API Integrations][3] page. **Note**: This is the *API* key, not the application key.                                                                                                                                                                                                                                                                                                                                                                                |
 | `DD_HOSTNAME`              | *Optional.* **WARNING**: Setting the hostname manually may result in metrics continuity errors. It is recommended that you do *not* set this variable. Because dyno hosts are ephemeral it is recommended that you monitor based on the tags `dynoname` or `appname`.                                                                                                                                                                                                                                                       |
 | `DD_DYNO_HOST`             | *Optional.* Set to `true` to use the dyno name, such as `web.1` or `run.1234`, as the hostname. See the [hostname section](#hostname) below for more information. Defaults to `false`                                                                                                                                                                                                                                                                                                                                          |
 | `DD_TAGS` | *Optional.* Sets additional tags provided as a space-separated string (**Note**: comma-separated string in buildpack versions `1.16` and earlier; this is still supported to maintain backward compatibility). For example, `heroku config:set DD_TAGS="simple-tag-0 tag-key-1:tag-value-1"`. The buildpack automatically adds the tags `dyno` which represent the dyno name, such as `web.1`, and `dynotype` (the type of dyno, e.g `run` or `web`). See the [Guide to tagging][10] for more information. |
@@ -437,13 +437,12 @@ After an upgrade of the buildpack or Agent, you must recompile your application'
 
 [1]: https://devcenter.heroku.com/articles/buildpacks
 [2]: https://docs.datadoghq.com/libraries
-[3]: https://app.datadoghq.com/account/settings#api
+[3]: https://app.datadoghq.com/organization-settings/api-keys
 [4]: https://devcenter.heroku.com/articles/using-multiple-buildpacks-for-an-app#viewing-buildpacks
 [5]: https://github.com/heroku/heroku-buildpack-apt
 [6]: https://github.com/jontewks/puppeteer-heroku-buildpack
 [7]: https://github.com/lstoll/heroku-buildpack-monorepo
 [8]: https://github.com/DataDog/heroku-buildpack-datadog/releases
-[9]: https://app.datadoghq.com/account/settings#api
 [10]: https://docs.datadoghq.com/tagging/
 [11]: https://docs.datadoghq.com/dashboards/guide/how-to-graph-percentiles-in-datadog/
 [12]: https://docs.datadoghq.com/agent
