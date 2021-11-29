@@ -114,7 +114,7 @@ For additional documentation, see the [Datadog Agent documentation][12].
 
 ## Hostname
 
-Heroku dynos are ephemeral—they can move to different host machines whenever new code is deployed, configuration changes are made, or resouce needs/availability changes. This makes Heroku flexible and responsive, but can potentially lead to a high number of reported hosts in Datadog. Datadog bills on a per-host basis, and the buildpack default is to report actual hosts, which can lead to higher than expected costs.
+Heroku dynos are ephemeral—they can move to different host machines whenever new code is deployed, configuration changes are made, or resource needs/availability changes. This makes Heroku flexible and responsive, but can potentially lead to a high number of reported hosts in Datadog. Datadog bills on a per-host basis, and the buildpack default is to report actual hosts, which can lead to higher than expected costs.
 
 Depending on your use case, you may want to set your hostname so that hosts are aggregated and report a lower number. To do this, Set `DD_DYNO_HOST` to `true`. This causes the Agent to report the hostname as the app and dyno name (for example `appname.web.1` or `appname.run.1234`) and your host count closely matches your dyno usage. One drawback is that you may see some metrics continuity errors whenever a dyno is cycled.
 
