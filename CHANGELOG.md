@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased & outstanding issues]
-- The `process-agent` increased in size between 7.31 and 7.32. We are currently investigating the reason. We are aware of the slug size issues with this buildpack and we are working on providing a long term solution. For updates on this you can follow [issue 269 in Github](https://github.com/DataDog/heroku-buildpack-datadog/issues/269)
+- The `process-agent` increased in size between 7.31 and 7.32. We are aware the increasing slug size with this buildpack presents issues for some users, and we are working on providing a long term solution. For updates on this you can follow [issue 269 in Github](https://github.com/DataDog/heroku-buildpack-datadog/issues/269)
 
 ## [1.30] - 2021-12-13
 
