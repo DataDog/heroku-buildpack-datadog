@@ -24,7 +24,7 @@ export APPNAME=<YOUR_HEROKU_APP_NAME>
 cd <HEROKU_PROJECT_ROOT_FOLDER>
 
 # Use the latest major Agent version
-export DD_AGENT_MAJOR_VERSION=7
+heroku config:add DD_AGENT_MAJOR_VERSION=7
 
 # Enable Heroku Labs Dyno Metadata to set HEROKU_APP_NAME env variable automatically
 heroku labs:enable runtime-dyno-metadata -a $APPNAME
