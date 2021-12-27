@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Security
 
-- Agents `6.32.4` and `7.33.4` remove all dependencies on log4j and use java.util.logging instead.
+- Agents `6.32.4` and `7.32.4` remove all dependencies on log4j and use java.util.logging instead.
 
 ### Added
 - Datadog agent pinned versions are now `6.32.4` and `7.32.4`
