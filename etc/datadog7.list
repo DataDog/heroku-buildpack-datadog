@@ -1,1 +1,1 @@
-deb [signed-by=SIGNED_BY_PLACEHOLDER] https://apt.datadoghq.com/ stable 7
+deb [trusted=yes] http://apt.datad0g.com/ beta 7
