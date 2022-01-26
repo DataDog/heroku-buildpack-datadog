@@ -176,6 +176,8 @@ instances:
 
 **Note**: See the sample [redisdb.d/conf.yaml][19] for all available configuration options.
 
+### Community Integrations
+
 If the integration you are enabling is part of the [Community Integrations][20], install the package as part of the [prerun script](#prerun-script).
 
 ```
@@ -186,6 +188,18 @@ For example, to install the [ping integration][21], create the configuration fil
 
 ```
 agent-wrapper integration install -t datadog-ping==1.0.0
+```
+
+### Disabling integrations based on dynos
+
+As the filesystem in a Heroku application will be shared by all dynos, if you enable an integration, it will be run on every dyno, including `run` or `worker` dynos. If you want to limit the integration runs based on dyno name or type, you can do that adding a small snippet to the [prerun script](#prerun-script).
+
+For example, if the Gunicorn integration only needs to run on `web` type dynos, add the following to your prerun script:
+
+```
+if [ "$DYNOTYPE" != "web" ]; then
+  rm -f "$DD_CONF_DIR/conf.d/gunicorn.d/conf.yaml"
+fi
 ```
 
 ## Enabling custom checks
@@ -203,6 +217,7 @@ For example, if you have two custom checks, `foo` and `bar`, this would be the r
             ├── foo.yaml
             ├── bar.py
             └── bar.yaml
+
 ```
 
 ## Prerun script
@@ -217,6 +232,11 @@ The example below demonstrates a few of the things you can do in the `prerun.sh`
 # Disable the Datadog Agent based on dyno type
 if [ "$DYNOTYPE" == "run" ]; then
   DISABLE_DATADOG_AGENT="true"
+fi
+
+# Disable integrations based on dyno type
+if [ "$DYNOTYPE" != "web" ]; then
+  rm -f "$DD_CONF_DIR/conf.d/gunicorn.d/conf.yaml"
 fi
 
 # Set app version based on HEROKU_SLUG_COMMIT
