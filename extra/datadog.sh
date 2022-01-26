@@ -38,13 +38,27 @@ sed -i -e"s|^.*cloud_provider_metadata:.*$|cloud_provider_metadata: []|" "$DATAD
 APP_DATADOG_DEFAULT="/app/datadog"
 APP_DATADOG="${DD_HEROKU_CONF_FOLDER:=$APP_DATADOG_DEFAULT}"
 APP_DATADOG_CONF_DIR="$APP_DATADOG/conf.d"
+APP_DATADOG_CHECKS_DIR="$APP_DATADOG/checks.d"
 
+# Agent integrations configuration
 for file in "$APP_DATADOG_CONF_DIR"/*.yaml; do
   test -e "$file" || continue # avoid errors when glob doesn't match anything
   filename="$(basename -- "$file")"
   filename="${filename%.*}"
   mkdir -p "$DD_CONF_DIR/conf.d/${filename}.d"
   cp "$file" "$DD_CONF_DIR/conf.d/${filename}.d/conf.yaml"
+done
+
+# Custom checks configuration
+for file in "$APP_DATADOG_CHECKS_DIR"/*.yaml; do
+  test -e "$file" || continue # avoid errors when glob doesn't match anything
+  cp "$file" "$DD_CONF_DIR/conf.d/"
+done
+
+# Custom checks code
+for file in "$APP_DATADOG_CHECKS_DIR"/*.py; do
+  test -e "$file" || continue # avoid errors when glob doesn't match anything
+  cp "$file" "$DD_CONF_DIR/checks.d/"
 done
 
 # Add tags to the config file
