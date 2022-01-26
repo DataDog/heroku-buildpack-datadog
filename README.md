@@ -194,7 +194,7 @@ agent-wrapper integration install -t datadog-ping==1.0.0
 
 As the filesystem in a Heroku application will be shared by all dynos, if you enable an integration, it will be run on every dyno, including `run` or `worker` dynos. If you want to limit the integration runs based on dyno name or type, you can do that adding a small snippet to the [prerun script](#prerun-script).
 
-For example, if the Gunicorn only needs to be run on `web` type dynos, add the following to your prerun script:
+For example, if the Gunicorn integration only needs to run on `web` type dynos, add the following to your prerun script:
 
 ```
 if [ "$DYNOTYPE" != "web" ]; then
