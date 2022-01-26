@@ -218,6 +218,8 @@ For example, if you have two custom checks, `foo` and `bar`, this would be the r
             ├── bar.py
             └── bar.yaml
 
+```
+
 ## Prerun script
 
 In addition to all of the configurations above, you can include a prerun script, `/datadog/prerun.sh`, in your application. The prerun script runs after all of the standard configuration actions and immediately before starting the Datadog Agent. This allows you to modify the environment variables (for example: DD_TAGS or DD_VERSION), perform additional configurations, install community integrations, or even disable the Datadog Agent programmatically.
