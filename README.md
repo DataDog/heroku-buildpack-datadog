@@ -188,6 +188,23 @@ For example, to install the [ping integration][21], create the configuration fil
 agent-wrapper integration install -t datadog-ping==1.0.0
 ```
 
+## Enabling custom checks
+
+To enable your own [Agent Custom Checks][29], create a `checks.d` folder in the datadog configuration folder within your application. Under it, copy all `.py` and `.yaml` files from your custom checks. During the dyno start up, your files are copied to the appropriate Datadog Agent configuration directories.
+
+For example, if you have two custom checks, `foo` and `bar`, this would be the right folder tree:
+
+```
+.
+└── app
+    └── datadog
+        └── checks.d
+            ├── foo.py
+            ├── foo.yaml
+            ├── bar.py
+            └── bar.yaml
+```
+
 ## Prerun script
 
 In addition to all of the configurations above, you can include a prerun script, `/datadog/prerun.sh`, in your application. The prerun script runs after all of the standard configuration actions and immediately before starting the Datadog Agent. This allows you to modify the environment variables (for example: DD_TAGS or DD_VERSION), perform additional configurations, install community integrations, or even disable the Datadog Agent programmatically.
@@ -465,3 +482,4 @@ After an upgrade of the buildpack or Agent, you must recompile your application'
 [26]: https://github.com/DataDog/heroku-buildpack-datadog
 [27]: https://github.com/miketheman/heroku-buildpack-datadog
 [28]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
+[29]: https://docs.datadoghq.com/developers/custom_checks/
