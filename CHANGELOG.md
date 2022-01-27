@@ -7,10 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased & outstanding issues]
 - The `process-agent` increased in size between 7.31 and 7.32. We are aware the increasing slug size with this buildpack presents issues for some users, and we are working on providing a long term solution. For updates on this you can follow [issue 269 in Github](https://github.com/DataDog/heroku-buildpack-datadog/issues/269)
 
+## [1.33] - 2022-01-27
+
+### Added
+- Datadog agent pinned versions are now `6.33.0` and `7.33.0`
+- Custom checks are now easier to set up. (https://docs.datadoghq.com/agent/basic_agent_usage/heroku/#enabling-custom-checks)
+
 ## [1.32] - 2021-12-27
 
 ### Security
-
 - Agents `6.32.4` and `7.32.4` remove all dependencies on log4j and use java.util.logging instead.
 
 ### Added
