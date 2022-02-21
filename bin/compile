@@ -142,22 +142,32 @@ fi
 
 AGENT_VERSIONS=$(apt-cache $APT_OPTIONS show datadog-agent | grep "Version: ")
 AGENT_VERSIONS=$(sed 's/Version: 1://g' <<<"$AGENT_VERSIONS")
+AGENT_HEROKU_VERSIONS=$(apt-cache $APT_OPTIONS show datadog-heroku-agent | grep "Version: ")
+AGENT_HEROKU_VERSIONS=$(sed 's/Version: 1://g' <<<"$AGENT_HEROKU_VERSIONS")
 
-# If specified version doesn't exist, list available versions.
-if [ -z $(echo "$AGENT_VERSIONS" | grep -x "$DD_AGENT_VERSION") ]; then
-  topic "ERROR: Version \"$DD_AGENT_VERSION\" was not found."
-  echo "Available versions:" | indent
-  echo "$AGENT_VERSIONS" | indent
-  exit 1
+PACKAGE_NAME="datadog-heroku-agent"
+
+# If specified version doesn't exist as heroku build, try regular agent
+if [ -z $(echo "$AGENT_HEROKU_VERSIONS" | grep -x "$DD_AGENT_VERSION") ]; then
+  # If specified version doesn't exist as regular build either, err and quit
+  if [ -z $(echo "$AGENT_VERSIONS" | grep -x "$DD_AGENT_VERSION") ]; then
+    topic "ERROR: Version \"$DD_AGENT_VERSION\" was not found."
+    echo "Available Heroku versions:" | indent
+    echo "$AGENT_HEROKU_VERSIONS" | indent
+    echo "Available regular Agent versions:" | indent
+    echo "$AGENT_VERSIONS" | indent
+    exit 1
+  fi
+  PACKAGE_NAME="datadog-agent"
 fi
 
 # Set the  specified version.
-PACKAGE="datadog-agent=1:$DD_AGENT_VERSION"
+PACKAGE="$PACKAGE_NAME=1:$DD_AGENT_VERSION"
 
 topic "Downloading Datadog Agent $DD_AGENT_VERSION"
 apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommends "$PACKAGE" | indent
 
-DPKG_STUB="$APT_CACHE_DIR/archives/datadog-agent_1%3a"
+DPKG_STUB="$APT_CACHE_DIR/archives/${PACKAGE_NAME}_1%3a"
 if [ -z $DD_AGENT_VERSION ]; then
   DEB=$(ls -t "$DPKG_STUB"*.deb | head -n 1)
   DD_AGENT_VERSION=${DEB:${#DPKG_STUB}:(${#DEB}-${#DPKG_STUB}-10)}
