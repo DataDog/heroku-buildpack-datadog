@@ -172,10 +172,18 @@ dpkg -x "$DEB" "$APT_DIR"
 # Removing unneeded content
 rm -rf "$APT_DIR"/opt/datadog-agent/sources \
        "$APT_DIR"/opt/datadog-agent/embedded/share/doc \
-       "$APT_DIR"/opt/datadog-agent/embedded/share/man
+       "$APT_DIR"/opt/datadog-agent/embedded/share/man \
+       "$APT_DIR"/opt/datadog-agent/embedded/.installed_by_pkg.txt
 
 # Remove Cryptodome Selftest
 rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python*/site-packages/Cryptodome/SelfTest
+
+# Remove unused botocore data
+for i in `ls $APT_DIR/opt/datadog-agent/embedded/lib/python*/site-packages/botocore/data`; do
+  if [ "$i" != "s3" ]; then
+    rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python*/site-packages/botocore/data/"$i"
+  fi
+done
 
 # Remove unnedded Python packages
 for i in "${DELETE_PACKAGES[@]}"; do
@@ -185,9 +193,11 @@ done
 # Remove the system-probe binary, only needed for network performance monitoring
 rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/system-probe"
 rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/libbcc*
+rm -rf "$APT_DIR"/opt/datadog-agent/embedded/nikos/
 
 # Remove static libraries
 rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/*.a
+rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python*/config*/*.a
 
 # Remove the Security agent
 rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/security-agent"
