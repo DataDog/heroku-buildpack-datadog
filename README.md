@@ -298,7 +298,14 @@ The Datadog buildpack does not collect logs from the Heroku platform. To set up 
 
 ## Using Heroku with Docker images
 
-This buildpack only works for Heroku deployments that use [Heroku's Slug Compiler][24]. If you are deploying your application in Heroku using Docker containers, add the Datadog Agent as part of your Docker image and start the Agent as a different process in your container.
+This buildpack only works for Heroku deployments that use [Heroku's Slug Compiler][24]. If you are deploying your application in Heroku using Docker containers:
+
+1. Add the Datadog Agent as part of your Docker image and start the Agent as a different process in your container.
+2. Set the following configuration option in your Heroku application, to ensure that Datadog reports it correctly as a Heroku dyno:
+
+```shell
+heroku config:add DD_HEROKU_DYNO=true
+```
 
 As an example, if you are building your Docker image using a Debian based OS, add the following lines to your `Dockerfile`:
 
