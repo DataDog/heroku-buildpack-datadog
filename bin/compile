@@ -202,6 +202,8 @@ done
 
 # Remove the system-probe binary, only needed for network performance monitoring
 rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/system-probe"
+rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/clang-bpf"
+rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/llc-bpf"
 rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/libbcc*
 rm -rf "$APT_DIR"/opt/datadog-agent/embedded/nikos/
 
