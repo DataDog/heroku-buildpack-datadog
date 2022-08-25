@@ -217,6 +217,7 @@ rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/security-agent"
 if [ -f "$ENV_DIR/DD_APM_ENABLED" ]; then
   DD_APM_ENABLED=$(cat "$ENV_DIR/DD_APM_ENABLED")
   if [ "$DD_APM_ENABLED" == "false" ]; then
+    topic "DD_APM_ENABLE set to false. Removing the trace agent."
     rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/trace-agent"
   fi
 fi
@@ -225,9 +226,11 @@ fi
 if [ -f "$ENV_DIR/DD_PROCESS_AGENT" ]; then
   DD_PROCESS_AGENT=$(cat "$ENV_DIR/DD_PROCESS_AGENT")
   if [ "$DD_PROCESS_AGENT" == "false" ]; then
+    topic "DD_PROCESS_AGENT set to false. Removing the process agent."
     rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/process-agent"
   fi
 else
+  topic "DD_PROCESS_AGENT not set. Removing the process agent."
   rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/process-agent"
 fi
 
