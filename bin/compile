@@ -183,7 +183,8 @@ dpkg -x "$DEB" "$APT_DIR"
 rm -rf "$APT_DIR"/opt/datadog-agent/sources \
        "$APT_DIR"/opt/datadog-agent/embedded/share/doc \
        "$APT_DIR"/opt/datadog-agent/embedded/share/man \
-       "$APT_DIR"/opt/datadog-agent/embedded/.installed_by_pkg.txt
+       "$APT_DIR"/opt/datadog-agent/embedded/.installed_by_pkg.txt \
+       "$DEB"
 
 # Remove Cryptodome Selftest
 rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python*/site-packages/Cryptodome/SelfTest
