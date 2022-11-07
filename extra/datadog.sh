@@ -41,8 +41,14 @@ APP_DATADOG_CONF_DIR="$APP_DATADOG/conf.d"
 APP_DATADOG_CHECKS_DIR="$APP_DATADOG/checks.d"
 
 # Agent integrations configuration
+for dir in "$APP_DATADOG_CONF_DIR"/*; do
+  test -d "$dir" || continue # only match directories
+  cp -R "$dir" "$DD_CONF_DIR/conf.d/"
+done
+
+# Agent integrations configuration - Deprecated
 for file in "$APP_DATADOG_CONF_DIR"/*.yaml; do
-  test -e "$file" || continue # avoid errors when glob doesn't match anything
+  test -f "$file" || continue # avoid errors when glob doesn't match anything
   filename="$(basename -- "$file")"
   filename="${filename%.*}"
   mkdir -p "$DD_CONF_DIR/conf.d/${filename}.d"
