@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.8] - 2022-01-25
+
+### Removed
+- Installing checks with `agent-wrapper integration install` is no longer supported for Datadog Agent 6.x.\
+Upgrade to Datadog Agent 7.x by setting the environment variable `DD_AGENT_MAJOR_VERSION=7` in your Heroku application and rebuilding the slug.
+
+### Added
+- Datadog agent pinned versions are now `6.42.0` and `7.42.0`
+
 ## [2.7] - 2022-12-22
 
 ### Added
