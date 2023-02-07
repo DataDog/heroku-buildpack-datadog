@@ -198,16 +198,18 @@ if [ "$ENABLE_HEROKU_REDIS" == "true" ]; then
 
   cp "$REDIS_CONF/conf.yaml.example" "$REDIS_CONF/conf.yaml"
 
-  if [ -n "$REDIS_TLS_URL" ]; then
-    REDISREGEX='^rediss://([^:]*):([^@]+)@([^:]+):(.+)$'
-    if [[ $REDIS_TLS_URL =~ $REDISREGEX ]]; then
-      sed -i "s/^  - host:.*/  - host: ${BASH_REMATCH[3]}/" "$REDIS_CONF/conf.yaml"
-      sed -i "s/^    # password:.*/    password: ${BASH_REMATCH[2]}/" "$REDIS_CONF/conf.yaml"
-      sed -i "s/^    port:.*/    port: ${BASH_REMATCH[4]}/" "$REDIS_CONF/conf.yaml"
-      sed -i "s/^    # ssl:.*/    ssl: True/" "$REDIS_CONF/conf.yaml"
-      sed -i "s/^    # ssl_cert_reqs:.*/    ssl_cert_reqs: 0/" "$REDIS_CONF/conf.yaml"
+  if [ -n "$REDIS_URL" ]; then
+    REDISREGEX='^redis(s?)://([^:]*):([^@]+)@([^:]+):(.+)$'
+    if [[ $REDIS_URL =~ $REDISREGEX ]]; then
+      sed -i "s/^  - host:.*/  - host: ${BASH_REMATCH[4]}/" "$REDIS_CONF/conf.yaml"
+      sed -i "s/^    # password:.*/    password: ${BASH_REMATCH[3]}/" "$REDIS_CONF/conf.yaml"
+      sed -i "s/^    port:.*/    port: ${BASH_REMATCH[5]}/" "$REDIS_CONF/conf.yaml"
       if [[ ! -z ${BASH_REMATCH[1]} ]]; then
-        sed -i "s/^#    username:.*/    username: ${BASH_REMATCH[1]}/" "$REDIS_CONF/conf.yaml"
+        sed -i "s/^    # ssl:.*/    ssl: True/" "$REDIS_CONF/conf.yaml"
+        sed -i "s/^    # ssl_cert_reqs:.*/    ssl_cert_reqs: 0/" "$REDIS_CONF/conf.yaml"
+      fi
+      if [[ ! -z ${BASH_REMATCH[2]} ]]; then
+        sed -i "s/^    # username:.*/    username: ${BASH_REMATCH[2]}/" "$REDIS_CONF/conf.yaml"
       fi
     fi
   fi
