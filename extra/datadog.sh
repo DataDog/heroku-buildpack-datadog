@@ -10,6 +10,9 @@ DD_LOG_DIR="$APT_DIR/var/log/datadog"
 DD_CONF_DIR="$APT_DIR/etc/datadog-agent"
 DD_INSTALL_INFO="$DD_CONF_DIR/install_info"
 export DATADOG_CONF="$DD_CONF_DIR/datadog.yaml"
+export INTEGRATIONS_CONF="$DD_CONF_DIR/conf.d"
+export POSTGRES_CONF="$INTEGRATIONS_CONF/postgres.d"
+export REDIS_CONF="$INTEGRATIONS_CONF/redisdb.d"
 
 # Update Env Vars with new paths for apt packages
 export PATH="$APT_DIR/usr/bin:$DD_BIN_DIR:$PATH"
@@ -169,6 +172,26 @@ DD_PYTHONPATH="$DD_PYTHONPATH:$SETUPTOOLS_PATH:$PIP_PATH"
 
 # Export agent's PYTHONPATH be used by the agent-wrapper
 export DD_PYTHONPATH="$DD_DIR/embedded/lib:$DD_PYTHONPATH"
+
+## Default integrations configuration
+
+# Update the Postgres configuration from above using the Heroku application environment variable
+if [ "$ENABLE_HEROKU_POSTGRES" == "true" ]; then
+
+  cp "$POSTGRES_CONF/conf.yaml.example" "$POSTGRES_CONF/conf.yaml"
+
+  if [ -n "$DATABASE_URL" ]; then
+    POSTGREGEX='^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.*)$'
+    if [[ $DATABASE_URL =~ $POSTGREGEX ]]; then
+      sed -i "s/^  - host:.*/  - host: ${BASH_REMATCH[3]}/" "$POSTGRES_CONF/conf.yaml"
+      sed -i "s/^    username:.*/    username: ${BASH_REMATCH[1]}/" "$POSTGRES_CONF/conf.yaml"
+      sed -i "s/^    # password:.*/    password: ${BASH_REMATCH[2]}/" "$POSTGRES_CONF/conf.yaml"
+      sed -i "s/^    # port:.*/    port: ${BASH_REMATCH[4]}/" "$POSTGRES_CONF/conf.yaml"
+      sed -i "s/^    # dbname:.*/    dbname: ${BASH_REMATCH[5]}/" "$POSTGRES_CONF/conf.yaml"
+      sed -i "s/^    # ssl:.*/    ssl: True/" "$POSTGRES_CONF/conf.yaml"
+    fi
+  fi
+fi
 
 # Give applications a chance to modify env vars prior to running.
 # Note that this can modify existing env vars or perform other actions (e.g. modify the conf file).
