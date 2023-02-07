@@ -193,6 +193,26 @@ if [ "$ENABLE_HEROKU_POSTGRES" == "true" ]; then
   fi
 fi
 
+# Update the Redis configuration from above using the Heroku application environment variable
+if [ "$ENABLE_HEROKU_REDIS" == "true" ]; then
+
+  cp "$REDIS_CONF/conf.yaml.example" "$REDIS_CONF/conf.yaml"
+
+  if [ -n "$REDIS_TLS_URL" ]; then
+    REDISREGEX='^rediss://([^:]*):([^@]+)@([^:]+):(.+)$'
+    if [[ $REDIS_TLS_URL =~ $REDISREGEX ]]; then
+      sed -i "s/^  - host:.*/  - host: ${BASH_REMATCH[3]}/" "$REDIS_CONF/conf.yaml"
+      sed -i "s/^    # password:.*/    password: ${BASH_REMATCH[2]}/" "$REDIS_CONF/conf.yaml"
+      sed -i "s/^    port:.*/    port: ${BASH_REMATCH[4]}/" "$REDIS_CONF/conf.yaml"
+      sed -i "s/^    # ssl:.*/    ssl: True/" "$REDIS_CONF/conf.yaml"
+      sed -i "s/^    # ssl_cert_reqs:.*/    ssl_cert_reqs: 0/" "$REDIS_CONF/conf.yaml"
+      if [[ ! -z ${BASH_REMATCH[1]} ]]; then
+        sed -i "s/^#    username:.*/    username: ${BASH_REMATCH[1]}/" "$REDIS_CONF/conf.yaml"
+      fi
+    fi
+  fi
+fi
+
 # Give applications a chance to modify env vars prior to running.
 # Note that this can modify existing env vars or perform other actions (e.g. modify the conf file).
 # For more information on variables and other things you may wish to modify, reference this script
