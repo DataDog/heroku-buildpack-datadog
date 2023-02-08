@@ -178,16 +178,15 @@ export DD_PYTHONPATH="$DD_DIR/embedded/lib:$DD_PYTHONPATH"
 # Update the Postgres configuration from above using the Heroku application environment variable
 if [ "$ENABLE_HEROKU_POSTGRES" == "true" ]; then
   # The connection URL is, by default DATABASE_URL, but can be configured by the user
-  DATABASE_URL="DATABASE_URL"
-  if [[ ! -z ${POSTGRES_URL_VAR} ]]; then
-    DATABASE_URL=${POSTGRES_URL_VAR}
+  if [[ -z ${POSTGRES_URL_VAR} ]]; then
+    POSTGRES_URL_VAR="DATABASE_URL"
   fi
 
   cp "$POSTGRES_CONF/conf.yaml.example" "$POSTGRES_CONF/conf.yaml"
 
-  if [ -n "${!DATABASE_URL}" ]; then
+  if [ -n "${!POSTGRES_URL_VAR}" ]; then
     POSTGREGEX='^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.*)$'
-    if [[ ${!DATABASE_URL} =~ $POSTGREGEX ]]; then
+    if [[ ${!POSTGRES_URL_VAR} =~ $POSTGREGEX ]]; then
       sed -i "s/^  - host:.*/  - host: ${BASH_REMATCH[3]}/" "$POSTGRES_CONF/conf.yaml"
       sed -i "s/^    username:.*/    username: ${BASH_REMATCH[1]}/" "$POSTGRES_CONF/conf.yaml"
       sed -i "s/^    # password:.*/    password: ${BASH_REMATCH[2]}/" "$POSTGRES_CONF/conf.yaml"
@@ -201,16 +200,15 @@ fi
 # Update the Redis configuration from above using the Heroku application environment variable
 if [ "$ENABLE_HEROKU_REDIS" == "true" ]; then
   # The connection URL is, by default REDIS_URL, but can be configured by the user
-  REDIS_URL="REDIS_URL"
-  if [[ ! -z ${REDIS_URL_VAR} ]]; then
-    REDIS_URL=${REDIS_URL_VAR}
+  if [[ -z ${REDIS_URL_VAR} ]]; then
+    REDIS_URL_VAR="REDIS_URL"
   fi
 
   cp "$REDIS_CONF/conf.yaml.example" "$REDIS_CONF/conf.yaml"
 
-  if [ -n "${!REDIS_URL}" ]; then
+  if [ -n "${!REDIS_URL_VAR}" ]; then
     REDISREGEX='^redis(s?)://([^:]*):([^@]+)@([^:]+):([^/]+)/?(.*)$'
-    if [[ ${!REDIS_URL} =~ $REDISREGEX ]]; then
+    if [[ ${!REDIS_URL_VAR} =~ $REDISREGEX ]]; then
       sed -i "s/^  - host:.*/  - host: ${BASH_REMATCH[4]}/" "$REDIS_CONF/conf.yaml"
       sed -i "s/^    # password:.*/    password: ${BASH_REMATCH[3]}/" "$REDIS_CONF/conf.yaml"
       sed -i "s/^    port:.*/    port: ${BASH_REMATCH[5]}/" "$REDIS_CONF/conf.yaml"
