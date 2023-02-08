@@ -193,6 +193,7 @@ if [ "$ENABLE_HEROKU_POSTGRES" == "true" ]; then
       sed -i "s/^    # port:.*/    port: ${BASH_REMATCH[4]}/" "$POSTGRES_CONF/conf.yaml"
       sed -i "s/^    # dbname:.*/    dbname: ${BASH_REMATCH[5]}/" "$POSTGRES_CONF/conf.yaml"
       sed -i "s/^    # ssl:.*/    ssl: True/" "$POSTGRES_CONF/conf.yaml"
+      sed -i "s/^    disable_generic_tags:.*/    disable_generic_tags: false/" "$POSTGRES_CONF/conf.yaml"
     fi
   fi
 fi
