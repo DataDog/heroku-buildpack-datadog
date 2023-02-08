@@ -177,12 +177,17 @@ export DD_PYTHONPATH="$DD_DIR/embedded/lib:$DD_PYTHONPATH"
 
 # Update the Postgres configuration from above using the Heroku application environment variable
 if [ "$ENABLE_HEROKU_POSTGRES" == "true" ]; then
+  # The connection URL is, by default DATABASE_URL, but can be configured by the user
+  DATABASE_URL="DATABASE_URL"
+  if [[ ! -z ${POSTGRES_URL_VAR} ]]; then
+    DATABASE_URL=${POSTGRES_URL_VAR}
+  fi
 
   cp "$POSTGRES_CONF/conf.yaml.example" "$POSTGRES_CONF/conf.yaml"
 
-  if [ -n "$DATABASE_URL" ]; then
+  if [ -n "${!DATABASE_URL}" ]; then
     POSTGREGEX='^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.*)$'
-    if [[ $DATABASE_URL =~ $POSTGREGEX ]]; then
+    if [[ ${!DATABASE_URL} =~ $POSTGREGEX ]]; then
       sed -i "s/^  - host:.*/  - host: ${BASH_REMATCH[3]}/" "$POSTGRES_CONF/conf.yaml"
       sed -i "s/^    username:.*/    username: ${BASH_REMATCH[1]}/" "$POSTGRES_CONF/conf.yaml"
       sed -i "s/^    # password:.*/    password: ${BASH_REMATCH[2]}/" "$POSTGRES_CONF/conf.yaml"
