@@ -195,12 +195,17 @@ fi
 
 # Update the Redis configuration from above using the Heroku application environment variable
 if [ "$ENABLE_HEROKU_REDIS" == "true" ]; then
+  # The connection URL is, by default REDIS_URL, but can be configured by the user
+  REDIS_URL="REDIS_URL"
+  if [[ ! -z ${REDIS_URL_VAR} ]]; then
+    REDIS_URL=${REDIS_URL_VAR}
+  fi
 
   cp "$REDIS_CONF/conf.yaml.example" "$REDIS_CONF/conf.yaml"
 
-  if [ -n "$REDIS_URL" ]; then
-    REDISREGEX='^redis(s?)://([^:]*):([^@]+)@([^:]+):(.+)$'
-    if [[ $REDIS_URL =~ $REDISREGEX ]]; then
+  if [ -n "${!REDIS_URL}" ]; then
+    REDISREGEX='^redis(s?)://([^:]*):([^@]+)@([^:]+):([^/]+)/?(.*)$'
+    if [[ ${!REDIS_URL} =~ $REDISREGEX ]]; then
       sed -i "s/^  - host:.*/  - host: ${BASH_REMATCH[4]}/" "$REDIS_CONF/conf.yaml"
       sed -i "s/^    # password:.*/    password: ${BASH_REMATCH[3]}/" "$REDIS_CONF/conf.yaml"
       sed -i "s/^    port:.*/    port: ${BASH_REMATCH[5]}/" "$REDIS_CONF/conf.yaml"
@@ -210,6 +215,9 @@ if [ "$ENABLE_HEROKU_REDIS" == "true" ]; then
       fi
       if [[ ! -z ${BASH_REMATCH[2]} ]]; then
         sed -i "s/^    # username:.*/    username: ${BASH_REMATCH[2]}/" "$REDIS_CONF/conf.yaml"
+      fi
+      if [[ ! -z ${BASH_REMATCH[6]} ]]; then
+        sed -i "s/^    # db:.*/    db: ${BASH_REMATCH[6]}/" "$REDIS_CONF/conf.yaml"
       fi
     fi
   fi
