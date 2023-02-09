@@ -156,15 +156,15 @@ In order to collect system metrics for your dynos, you must:
 
 ### Enabling the Datadog Redis integration
 
-If you are using a Redis addon in your Heroku application (for example, Heroku Data for Redis or Redis Enterprise Cloud), you can easily enable the Datadog Redis integration by setting an envionment variable:
+If you are using a Redis add-on in your Heroku application (for example, Heroku Data for Redis or Redis Enterprise Cloud), you can enable the Datadog Redis integration by setting an environment variable:
 
 ```
 heroku config:set ENABLE_HEROKU_REDIS=true
 ```
 
-By default, this integration assumes the Redis connection URL is defined in an environement variable called `REDIS_URL` (this is default for Heroku Data for Redis and other addons).
+By default, this integration assumes the Redis connection URL is defined in an environment variable called `REDIS_URL` (this is the default configuration for Heroku Data for Redis and other Redis add-ons).
 
-If your connection URL is defined in a different environment variable, set the `REDIS_URL_VAR` environment variable to the name of the variable name. For example, if you're using Redis Enterprise Cloud, set it to "REDISCLOUD_URL":
+If your connection URL is defined in a different environment variable, set the `REDIS_URL_VAR` environment variable to the variable name. For example, if you're using Redis Enterprise Cloud, set it to `REDISCLOUD_URL`:
 
 ```
 heroku config:set REDIS_URL_VAR=REDISCLOUD_URL
@@ -172,15 +172,15 @@ heroku config:set REDIS_URL_VAR=REDISCLOUD_URL
 
 ### Enabling the Datadog Postgres integration
 
-If you are using a Postgres addon in your Heroku application (for example, Heroku Postgres), you can easily enable the Datadog Postgres integration by setting an envionment variable:
+If you are using a Postgres add-on in your Heroku application (for example, Heroku Postgres), you can enable the Datadog Postgres integration by setting an environment variable:
 
 ```
 heroku config:set ENABLE_HEROKU_POSTGRES=true
 ```
 
-By default, this integration assumes the Postgres connection URL is defined in an environement variable called `DATABASE_URL` (this is default for Heroku Postgres and other addons).
+By default, this integration assumes the Postgres connection URL is defined in an environment variable called `DATABASE_URL` (this is the default configuration for Heroku Postgres and other Postgres add-ons).
 
-If your connection URL is defined in a different environment variable, set the `POSTGRES_URL_VAR` environment variable to the name of the variable name.
+If your connection URL is defined in a different environment variable, set the `POSTGRES_URL_VAR` environment variable to the variable name.
 
 ### Enabling other integrations
 
