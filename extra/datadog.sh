@@ -177,7 +177,7 @@ export DD_PYTHONPATH="$DD_DIR/embedded/lib:$DD_PYTHONPATH"
 
 # Update the Postgres configuration from above using the Heroku application environment variable
 if [ "$ENABLE_HEROKU_POSTGRES" == "true" ]; then
-  # The default connection URL is DATABASE_URL, but can be configured by the user
+  # The default connection URL is set in DATABASE_URL, but can be configured by the user
   if [[ -z ${POSTGRES_URL_VAR} ]]; then
     POSTGRES_URL_VAR="DATABASE_URL"
   fi
@@ -200,7 +200,7 @@ fi
 
 # Update the Redis configuration from above using the Heroku application environment variable
 if [ "$ENABLE_HEROKU_REDIS" == "true" ]; then
-  # The default connection URL is REDIS_URL, but can be configured by the user
+  # The default connection URL is set in REDIS_URL, but can be configured by the user
   if [[ -z ${REDIS_URL_VAR} ]]; then
     REDIS_URL_VAR="REDIS_URL"
   fi
