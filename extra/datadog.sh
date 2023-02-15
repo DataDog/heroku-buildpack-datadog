@@ -10,6 +10,9 @@ DD_LOG_DIR="$APT_DIR/var/log/datadog"
 DD_CONF_DIR="$APT_DIR/etc/datadog-agent"
 DD_INSTALL_INFO="$DD_CONF_DIR/install_info"
 export DATADOG_CONF="$DD_CONF_DIR/datadog.yaml"
+export INTEGRATIONS_CONF="$DD_CONF_DIR/conf.d"
+export POSTGRES_CONF="$INTEGRATIONS_CONF/postgres.d"
+export REDIS_CONF="$INTEGRATIONS_CONF/redisdb.d"
 
 # Update Env Vars with new paths for apt packages
 export PATH="$APT_DIR/usr/bin:$DD_BIN_DIR:$PATH"
@@ -169,6 +172,60 @@ DD_PYTHONPATH="$DD_PYTHONPATH:$SETUPTOOLS_PATH:$PIP_PATH"
 
 # Export agent's PYTHONPATH be used by the agent-wrapper
 export DD_PYTHONPATH="$DD_DIR/embedded/lib:$DD_PYTHONPATH"
+
+## Default integrations configuration
+
+# Update the Postgres configuration from above using the Heroku application environment variable
+if [ "$ENABLE_HEROKU_POSTGRES" == "true" ]; then
+  # The default connection URL is set in DATABASE_URL, but can be configured by the user
+  if [[ -z ${POSTGRES_URL_VAR} ]]; then
+    POSTGRES_URL_VAR="DATABASE_URL"
+  fi
+
+  cp "$POSTGRES_CONF/conf.yaml.example" "$POSTGRES_CONF/conf.yaml"
+
+  if [ -n "${!POSTGRES_URL_VAR}" ]; then
+    POSTGREGEX='^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.*)$'
+    if [[ ${!POSTGRES_URL_VAR} =~ $POSTGREGEX ]]; then
+      sed -i "s/^  - host:.*/  - host: ${BASH_REMATCH[3]}/" "$POSTGRES_CONF/conf.yaml"
+      sed -i "s/^    username:.*/    username: ${BASH_REMATCH[1]}/" "$POSTGRES_CONF/conf.yaml"
+      sed -i "s/^    # password:.*/    password: ${BASH_REMATCH[2]}/" "$POSTGRES_CONF/conf.yaml"
+      sed -i "s/^    # port:.*/    port: ${BASH_REMATCH[4]}/" "$POSTGRES_CONF/conf.yaml"
+      sed -i "s/^    # dbname:.*/    dbname: ${BASH_REMATCH[5]}/" "$POSTGRES_CONF/conf.yaml"
+      sed -i "s/^    # ssl:.*/    ssl: True/" "$POSTGRES_CONF/conf.yaml"
+      sed -i "s/^    disable_generic_tags:.*/    disable_generic_tags: false/" "$POSTGRES_CONF/conf.yaml"
+    fi
+  fi
+fi
+
+# Update the Redis configuration from above using the Heroku application environment variable
+if [ "$ENABLE_HEROKU_REDIS" == "true" ]; then
+  # The default connection URL is set in REDIS_URL, but can be configured by the user
+  if [[ -z ${REDIS_URL_VAR} ]]; then
+    REDIS_URL_VAR="REDIS_URL"
+  fi
+
+  cp "$REDIS_CONF/conf.yaml.example" "$REDIS_CONF/conf.yaml"
+
+  if [ -n "${!REDIS_URL_VAR}" ]; then
+    REDISREGEX='^redis(s?)://([^:]*):([^@]+)@([^:]+):([^/]+)/?(.*)$'
+    if [[ ${!REDIS_URL_VAR} =~ $REDISREGEX ]]; then
+      sed -i "s/^  - host:.*/  - host: ${BASH_REMATCH[4]}/" "$REDIS_CONF/conf.yaml"
+      sed -i "s/^    # password:.*/    password: ${BASH_REMATCH[3]}/" "$REDIS_CONF/conf.yaml"
+      sed -i "s/^    port:.*/    port: ${BASH_REMATCH[5]}/" "$REDIS_CONF/conf.yaml"
+      if [[ ! -z ${BASH_REMATCH[1]} ]]; then
+        sed -i "s/^    # ssl:.*/    ssl: True/" "$REDIS_CONF/conf.yaml"
+        sed -i "s/^    # ssl_cert_reqs:.*/    ssl_cert_reqs: 0/" "$REDIS_CONF/conf.yaml"
+      fi
+      if [[ ! -z ${BASH_REMATCH[2]} ]]; then
+        sed -i "s/^    # username:.*/    username: ${BASH_REMATCH[2]}/" "$REDIS_CONF/conf.yaml"
+      fi
+      if [[ ! -z ${BASH_REMATCH[6]} ]]; then
+        sed -i "s/^    # db:.*/    db: ${BASH_REMATCH[6]}/" "$REDIS_CONF/conf.yaml"
+      fi
+    fi
+  fi
+fi
 
 # Give applications a chance to modify env vars prior to running.
 # Note that this can modify existing env vars or perform other actions (e.g. modify the conf file).

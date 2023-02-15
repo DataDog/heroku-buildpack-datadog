@@ -154,7 +154,37 @@ In order to collect system metrics for your dynos, you must:
 
 ## Enabling integrations
 
-To enable a [Datadog-<INTEGRATION_NAME> integration][17]:
+### Enabling the Datadog Redis integration
+
+If you are using a Redis add-on in your Heroku application (for example, Heroku Data for Redis or Redis Enterprise Cloud), you can enable the Datadog Redis integration by setting an environment variable:
+
+```
+heroku config:set ENABLE_HEROKU_REDIS=true
+```
+
+By default, this integration assumes the Redis connection URL is defined in an environment variable called `REDIS_URL` (this is the default configuration for Heroku Data for Redis and other Redis add-ons).
+
+If your connection URL is defined in a different environment variable, set the `REDIS_URL_VAR` environment variable to the variable name. For example, if you're using Redis Enterprise Cloud, set it to `REDISCLOUD_URL`:
+
+```
+heroku config:set REDIS_URL_VAR=REDISCLOUD_URL
+```
+
+### Enabling the Datadog Postgres integration
+
+If you are using a Postgres add-on in your Heroku application (for example, Heroku Postgres), you can enable the Datadog Postgres integration by setting an environment variable:
+
+```
+heroku config:set ENABLE_HEROKU_POSTGRES=true
+```
+
+By default, this integration assumes the Postgres connection URL is defined in an environment variable called `DATABASE_URL` (this is the default configuration for Heroku Postgres and other Postgres add-ons).
+
+If your connection URL is defined in a different environment variable, set the `POSTGRES_URL_VAR` environment variable to the variable name.
+
+### Enabling other integrations
+
+To enable any [Datadog-<INTEGRATION_NAME> integration][17]:
 
 * Create a `datadog/conf.d` folder within your application.
 * For each integration to enable, create an `<INTEGRATION_NAME>.d` folder
@@ -162,25 +192,19 @@ To enable a [Datadog-<INTEGRATION_NAME> integration][17]:
 
 During the dyno start up, your YAML files are copied to the appropriate Datadog Agent configuration directories.
 
-For example, to enable the [Datadog-Redis integration][19], add the file `/datadog/conf.d/redisdb.d/conf.yaml` at the root of your application (or `/$DD_HEROKU_CONF_FOLDER/conf.d/redisdb.d/conf.yaml` if you have changed this [configuration option](#configuration)):
+For example, to enable the [Datadog-Memcache integration][19], add the file `/datadog/conf.d/mcache.d/conf.yaml` at the root of your application (or `/$DD_HEROKU_CONF_FOLDER/conf.d/mcache.d/conf.yaml` if you have changed this [configuration option](#configuration)):
 
 ```yaml
 init_config:
 
 instances:
-
-    ## @param host - string - required
-    ## Enter the host to connect to.
-    #
-  - host: <REDIS_HOST>
-
-    ## @param port - integer - required
-    ## Enter the port of the host to connect to.
-    #
-    port: 6379
+  ## @param url - string - required
+  ## url used to connect to the Memcached instance.
+  #
+  - url: localhost
 ```
 
-**Note**: See the sample [redisdb.d/conf.yaml][20] for all available configuration options.
+**Note**: See the sample [mcache.d/conf.yaml][20] for all available configuration options.
 
 ### Community Integrations
 
@@ -248,18 +272,6 @@ fi
 # Set app version based on HEROKU_SLUG_COMMIT
 if [ -n "$HEROKU_SLUG_COMMIT" ]; then
   DD_VERSION=$HEROKU_SLUG_COMMIT
-fi
-
-# Update the Postgres configuration from above using the Heroku application environment variable
-if [ -n "$DATABASE_URL" ]; then
-  POSTGREGEX='^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.*)$'
-  if [[ $DATABASE_URL =~ $POSTGREGEX ]]; then
-    sed -i "s/<YOUR HOSTNAME>/${BASH_REMATCH[3]}/" "$DD_CONF_DIR/conf.d/postgres.d/conf.yaml"
-    sed -i "s/<YOUR USERNAME>/${BASH_REMATCH[1]}/" "$DD_CONF_DIR/conf.d/postgres.d/conf.yaml"
-    sed -i "s/<YOUR PASSWORD>/${BASH_REMATCH[2]}/" "$DD_CONF_DIR/conf.d/postgres.d/conf.yaml"
-    sed -i "s/<YOUR PORT>/${BASH_REMATCH[4]}/" "$DD_CONF_DIR/conf.d/postgres.d/conf.yaml"
-    sed -i "s/<YOUR DBNAME>/${BASH_REMATCH[5]}/" "$DD_CONF_DIR/conf.d/postgres.d/conf.yaml"
-  fi
 fi
 
 # Install the "ping" community integration
@@ -505,8 +517,8 @@ After an upgrade of the buildpack or Agent, you must recompile your application'
 [16]: https://docs.datadoghq.com/logs/logs_to_metrics/
 [17]: https://docs.datadoghq.com/integrations/
 [18]: https://docs.datadoghq.com/getting_started/integrations/#configuring-agent-integrations
-[19]: https://docs.datadoghq.com/integrations/redisdb/
-[20]: https://github.com/DataDog/integrations-core/blob/master/redisdb/datadog_checks/redisdb/data/conf.yaml.example
+[19]: https://docs.datadoghq.com/integrations/mcache/
+[20]: https://github.com/DataDog/integrations-core/blob/master/mcache/datadog_checks/mcache/data/conf.yaml.example
 [21]: https://github.com/DataDog/integrations-extras/
 [22]: https://github.com/DataDog/integrations-extras/tree/master/ping
 [23]: https://docs.datadoghq.com/developers/custom_checks/
