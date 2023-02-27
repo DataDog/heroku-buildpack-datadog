@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.9] - 2023-02-27
+
+### Added
+- Datadog agent pinned versions are now `6.43.0` and `7.43.0`
+- Redis and Postgres integrations can be now configured setting an environment variable, without using the prerun.sh script.
+
+### Deprecated
+- This is the last buildpack version with Datadog Agent 6.x as default. Upgrade today to Datadog Agent 7.x by setting the environment variable `DD_AGENT_MAJOR_VERSION=7` in your Heroku application and rebuilding the slug.
+
 ## [2.8] - 2023-01-25
 
 ### Removed
