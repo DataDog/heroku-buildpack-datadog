@@ -182,20 +182,27 @@ if [ "$ENABLE_HEROKU_POSTGRES" == "true" ]; then
     POSTGRES_URL_VAR="DATABASE_URL"
   fi
 
-  cp "$POSTGRES_CONF/conf.yaml.example" "$POSTGRES_CONF/conf.yaml"
+  IFS=","
 
-  if [ -n "${!POSTGRES_URL_VAR}" ]; then
-    POSTGREGEX='^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.*)$'
-    if [[ ${!POSTGRES_URL_VAR} =~ $POSTGREGEX ]]; then
-      sed -i "s/^  - host:.*/  - host: ${BASH_REMATCH[3]}/" "$POSTGRES_CONF/conf.yaml"
-      sed -i "s/^    username:.*/    username: ${BASH_REMATCH[1]}/" "$POSTGRES_CONF/conf.yaml"
-      sed -i "s/^    # password:.*/    password: ${BASH_REMATCH[2]}/" "$POSTGRES_CONF/conf.yaml"
-      sed -i "s/^    # port:.*/    port: ${BASH_REMATCH[4]}/" "$POSTGRES_CONF/conf.yaml"
-      sed -i "s/^    # dbname:.*/    dbname: ${BASH_REMATCH[5]}/" "$POSTGRES_CONF/conf.yaml"
-      sed -i "s/^    # ssl:.*/    ssl: True/" "$POSTGRES_CONF/conf.yaml"
-      sed -i "s/^    disable_generic_tags:.*/    disable_generic_tags: false/" "$POSTGRES_CONF/conf.yaml"
+  touch "$POSTGRES_CONF/conf.yaml"
+  echo -e "init_config: \ninstances: \n" > "$POSTGRES_CONF/conf.yaml"
+
+  for PG_URL in $POSTGRES_URL_VAR
+  do
+    if [ -n "${!PG_URL}" ]; then
+      POSTGREGEX='^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.*)$'
+      if [[ ${!PG_URL} =~ $POSTGREGEX ]]; then
+        echo -e "  - host: ${BASH_REMATCH[3]}" >>  "$POSTGRES_CONF/conf.yaml"
+        echo -e "    username: ${BASH_REMATCH[1]}" >> "$POSTGRES_CONF/conf.yaml"
+        echo -e "    password: ${BASH_REMATCH[2]}" >> "$POSTGRES_CONF/conf.yaml"
+        echo -e "    port: ${BASH_REMATCH[4]}" >> "$POSTGRES_CONF/conf.yaml"
+        echo -e "    dbname: ${BASH_REMATCH[5]}" >> "$POSTGRES_CONF/conf.yaml"
+        echo -e "    ssl: True" >> "$POSTGRES_CONF/conf.yaml"
+        echo -e "    disable_generic_tags: false" >> "$POSTGRES_CONF/conf.yaml"
+      fi
     fi
-  fi
+  done
+  unset IFS
 fi
 
 # Update the Redis configuration from above using the Heroku application environment variable
