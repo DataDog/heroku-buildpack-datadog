@@ -112,6 +112,10 @@ In addition to the environment variables shown above, there are several others y
 | `DD_DISABLE_HOST_METRICS`  | *Optional.* By default, the buildpack reports system metrics for the host machine running the dyno. Set this to `true` to disable system metrics collection. See the [system metrics section](#system-metrics) below for more information.                                                                                                                                                                                                                                                                                  |
 | `DD_PYTHON_VERSION`        | *Optional.* Starting with version `6.14.0`, Datadog Agent ships with Python versions `2` and `3`. The buildpack only keeps one of the versions. Set this to `2` or `3` to select the Python version you want the Agent to keep. If not set, the buildpack keeps `2`. Check the [Python versions section](#python-and-agent-versions) for more information. Changing this option requires recompiling the slug. Check [the upgrading and slug recompilation section](#upgrading-and-slug-recompilation) for details. |
 | `DD_HEROKU_CONF_FOLDER`    | *Optional.* By default, the buildpack looks in the root of your application for a folder `/datadog` for any configuration files you wish to include, see [prerun.sh script](#prerun-script). This location can be overridden by setting this to your desired path. |
+| `ENABLE_HEROKU_REDIS`    | *Optional.* Set it to true to enable Redis integration auto-discovery. Check [the Enabling the Datadog Redis Integration section](#enabling-the-datadog-redis-integration) for details. |
+| `REDIS_URL_VAR`    | *Optional.* By default, Redis integration auto-discovery uses the connection string stored at `REDIS_URL`, to override it, set this variable to a comma-separated list of variable names storing the connection strings. Check [the Enabling the Datadog Redis Integration section](#enabling-the-datadog-redis-integration) for details. |
+| `ENABLE_HEROKU_POSTGRES`    | *Optional.* Set it to true to enable Postgres integration auto-discovery. Check [the Enabling the Datadog Postgres Integration section](#enabling-the-datadog-postgres-integration) for details. |
+| `POSTGRES_URL_VAR`    | *Optional.* By default, Postgres integration auto-discovery uses the connection string stored at `DATABASE_URL`, to override it, set this variable to a comma-separated list of variable names storing the connection strings. Check [the Enabling the Datadog Postgres Integration section](#enabling-the-datadog-postgres-integration) for details. |
 
 For additional documentation, see the [Datadog Agent documentation][12].
 
@@ -164,10 +168,10 @@ heroku config:set ENABLE_HEROKU_REDIS=true
 
 By default, this integration assumes the Redis connection URL is defined in an environment variable called `REDIS_URL` (this is the default configuration for Heroku Data for Redis and other Redis add-ons).
 
-If your connection URL is defined in a different environment variable, set the `REDIS_URL_VAR` environment variable to the variable name. For example, if you're using Redis Enterprise Cloud, set it to `REDISCLOUD_URL`:
+If your connection URL is defined in a different environment variable, or you want to configure more than 1 Redis instance, set the `REDIS_URL_VAR` environment variable to the comma-separated variable names of your connection strings. For example, if you're using both Heroku Redis and Redis Enterprise Cloud, set `REDIS_URL_VAR` accordingly:
 
 ```
-heroku config:set REDIS_URL_VAR=REDISCLOUD_URL
+heroku config:set REDIS_URL_VAR=REDIS_URL,REDISCLOUD_URL
 ```
 
 ### Enabling the Datadog Postgres integration
@@ -180,7 +184,11 @@ heroku config:set ENABLE_HEROKU_POSTGRES=true
 
 By default, this integration assumes the Postgres connection URL is defined in an environment variable called `DATABASE_URL` (this is the default configuration for Heroku Postgres and other Postgres add-ons).
 
-If your connection URL is defined in a different environment variable, set the `POSTGRES_URL_VAR` environment variable to the variable name.
+If your connection URL is defined in a different environment variable, or you want to configure more than 1 Postgres instance, set the `POSTGRES_URL_VAR` environment variable to the comma-separated variable names of your connection strings. For example, if you have 2 Postgres instances and the connection strings are stored in `POSTGRES_URL1` and `POSTGRES_URL2`, set `POSTGRES_URL_VAR` accordingly:
+
+```
+heroku config:set POSTGRES_URL_VAR=POSTGRES_URL1,POSTGRES_URL2
+```
 
 ### Enabling other integrations
 
