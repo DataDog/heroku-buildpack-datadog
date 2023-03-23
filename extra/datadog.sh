@@ -182,20 +182,28 @@ if [ "$ENABLE_HEROKU_POSTGRES" == "true" ]; then
     POSTGRES_URL_VAR="DATABASE_URL"
   fi
 
-  cp "$POSTGRES_CONF/conf.yaml.example" "$POSTGRES_CONF/conf.yaml"
+  # Use a comma separator instead of new line
+  IFS=","
 
-  if [ -n "${!POSTGRES_URL_VAR}" ]; then
-    POSTGREGEX='^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.*)$'
-    if [[ ${!POSTGRES_URL_VAR} =~ $POSTGREGEX ]]; then
-      sed -i "s/^  - host:.*/  - host: ${BASH_REMATCH[3]}/" "$POSTGRES_CONF/conf.yaml"
-      sed -i "s/^    username:.*/    username: ${BASH_REMATCH[1]}/" "$POSTGRES_CONF/conf.yaml"
-      sed -i "s/^    # password:.*/    password: ${BASH_REMATCH[2]}/" "$POSTGRES_CONF/conf.yaml"
-      sed -i "s/^    # port:.*/    port: ${BASH_REMATCH[4]}/" "$POSTGRES_CONF/conf.yaml"
-      sed -i "s/^    # dbname:.*/    dbname: ${BASH_REMATCH[5]}/" "$POSTGRES_CONF/conf.yaml"
-      sed -i "s/^    # ssl:.*/    ssl: True/" "$POSTGRES_CONF/conf.yaml"
-      sed -i "s/^    disable_generic_tags:.*/    disable_generic_tags: false/" "$POSTGRES_CONF/conf.yaml"
+  touch "$POSTGRES_CONF/conf.yaml"
+  echo -e "init_config: \ninstances: \n" > "$POSTGRES_CONF/conf.yaml"
+
+  for PG_URL in $POSTGRES_URL_VAR
+  do
+    if [ -n "${!PG_URL}" ]; then
+      POSTGREGEX='^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.*)$'
+      if [[ ${!PG_URL} =~ $POSTGREGEX ]]; then
+        echo -e "  - host: ${BASH_REMATCH[3]}" >>  "$POSTGRES_CONF/conf.yaml"
+        echo -e "    username: ${BASH_REMATCH[1]}" >> "$POSTGRES_CONF/conf.yaml"
+        echo -e "    password: ${BASH_REMATCH[2]}" >> "$POSTGRES_CONF/conf.yaml"
+        echo -e "    port: ${BASH_REMATCH[4]}" >> "$POSTGRES_CONF/conf.yaml"
+        echo -e "    dbname: ${BASH_REMATCH[5]}" >> "$POSTGRES_CONF/conf.yaml"
+        echo -e "    ssl: True" >> "$POSTGRES_CONF/conf.yaml"
+        echo -e "    disable_generic_tags: false" >> "$POSTGRES_CONF/conf.yaml"
+      fi
     fi
-  fi
+  done
+  unset IFS
 fi
 
 # Update the Redis configuration from above using the Heroku application environment variable
@@ -205,26 +213,34 @@ if [ "$ENABLE_HEROKU_REDIS" == "true" ]; then
     REDIS_URL_VAR="REDIS_URL"
   fi
 
-  cp "$REDIS_CONF/conf.yaml.example" "$REDIS_CONF/conf.yaml"
+  # Use a comma separator instead of new line
+  IFS=","
 
-  if [ -n "${!REDIS_URL_VAR}" ]; then
-    REDISREGEX='^redis(s?)://([^:]*):([^@]+)@([^:]+):([^/]+)/?(.*)$'
-    if [[ ${!REDIS_URL_VAR} =~ $REDISREGEX ]]; then
-      sed -i "s/^  - host:.*/  - host: ${BASH_REMATCH[4]}/" "$REDIS_CONF/conf.yaml"
-      sed -i "s/^    # password:.*/    password: ${BASH_REMATCH[3]}/" "$REDIS_CONF/conf.yaml"
-      sed -i "s/^    port:.*/    port: ${BASH_REMATCH[5]}/" "$REDIS_CONF/conf.yaml"
-      if [[ ! -z ${BASH_REMATCH[1]} ]]; then
-        sed -i "s/^    # ssl:.*/    ssl: True/" "$REDIS_CONF/conf.yaml"
-        sed -i "s/^    # ssl_cert_reqs:.*/    ssl_cert_reqs: 0/" "$REDIS_CONF/conf.yaml"
-      fi
-      if [[ ! -z ${BASH_REMATCH[2]} ]]; then
-        sed -i "s/^    # username:.*/    username: ${BASH_REMATCH[2]}/" "$REDIS_CONF/conf.yaml"
-      fi
-      if [[ ! -z ${BASH_REMATCH[6]} ]]; then
-        sed -i "s/^    # db:.*/    db: ${BASH_REMATCH[6]}/" "$REDIS_CONF/conf.yaml"
+  touch "$REDIS_CONF/conf.yaml"
+  echo -e "init_config: \ninstances: \n" > "$REDIS_CONF/conf.yaml"
+
+  for RD_URL in $REDIS_URL_VAR
+  do
+    if [ -n "${!RD_URL}" ]; then
+      REDISREGEX='^redis(s?)://([^:]*):([^@]+)@([^:]+):([^/]+)/?(.*)$'
+      if [[ ${!RD_URL} =~ $REDISREGEX ]]; then
+        echo -e "  - host: ${BASH_REMATCH[4]}" >> "$REDIS_CONF/conf.yaml"
+        echo -e "    password: ${BASH_REMATCH[3]}" >> "$REDIS_CONF/conf.yaml"
+        echo -e "    port: ${BASH_REMATCH[5]}" >> "$REDIS_CONF/conf.yaml"
+        if [[ ! -z ${BASH_REMATCH[1]} ]]; then
+          echo -e "    ssl: True" >> "$REDIS_CONF/conf.yaml"
+          echo -e "    ssl_cert_reqs: 0" >> "$REDIS_CONF/conf.yaml"
+        fi
+        if [[ ! -z ${BASH_REMATCH[2]} ]]; then
+          echo -e "    username: ${BASH_REMATCH[2]}" >> "$REDIS_CONF/conf.yaml"
+        fi
+        if [[ ! -z ${BASH_REMATCH[6]} ]]; then
+          echo -e "    db: ${BASH_REMATCH[6]}" >> "$REDIS_CONF/conf.yaml"
+        fi
       fi
     fi
-  fi
+  done
+  unset IFS
 fi
 
 # Give applications a chance to modify env vars prior to running.
