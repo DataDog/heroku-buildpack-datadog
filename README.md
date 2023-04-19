@@ -8,38 +8,47 @@ This guide assumes that you already have your application running on Heroku. See
 
 1. Go to [Datadog API settings][3] and copy your Datadog API key. Export it to an environment variable:
 
- ```shell
- export DD_API_KEY=<YOUR_API_KEY>
- ```
+   ```shell
+   export DD_API_KEY=<YOUR_API_KEY>
+   ```
 
 2. Export your application name to the APPNAME environment variable:
 
-```shell
-export APPNAME=<YOUR_HEROKU_APP_NAME>
-```
+   ```shell
+   export APPNAME=<YOUR_HEROKU_APP_NAME>
+   ```
 
-3. Add the Datadog buildpack to your project:
+3. Export your Datadog site to the DD_SITE environment variable:
 
-```shell
-cd <HEROKU_PROJECT_ROOT_FOLDER>
+   ```shell
+   export DD_SITE={{< region-param key=dd_site code="true" >}}
+   ```
 
-# Use the latest major Agent version
-heroku config:add DD_AGENT_MAJOR_VERSION=7
+4. Add the Datadog buildpack to your project:
 
-# Enable Heroku Labs Dyno Metadata to set HEROKU_APP_NAME env variable automatically
-heroku labs:enable runtime-dyno-metadata -a $APPNAME
+   ```shell
+   cd <HEROKU_PROJECT_ROOT_FOLDER>
 
-# Set hostname in Datadog as appname.dynotype.dynonumber for metrics continuity
-heroku config:add DD_DYNO_HOST=true
+   # Use the latest major Agent version
+   heroku config:add DD_AGENT_MAJOR_VERSION=7
 
-# Add this buildpack and set your Datadog API key
-heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git
-heroku config:add DD_API_KEY=$DD_API_KEY
+   # Enable Heroku Labs Dyno Metadata to set HEROKU_APP_NAME env variable automatically
+   heroku labs:enable runtime-dyno-metadata -a $APPNAME
 
-# Deploy to Heroku forcing a rebuild
-git commit --allow-empty -m "Rebuild slug"
-git push heroku main
-```
+   # Set hostname in Datadog as appname.dynotype.dynonumber for metrics continuity
+   heroku config:add DD_DYNO_HOST=true
+
+   # Set the DD_SITE env variable automatically
+   heroku config:add DD_SITE=$DD_SITE
+
+   # Add this buildpack and set your Datadog API key
+   heroku buildpacks:add --index 1 https://github.com/DataDog/heroku-buildpack-datadog.git
+   heroku config:add DD_API_KEY=$DD_API_KEY
+
+   # Deploy to Heroku forcing a rebuild
+   git commit --allow-empty -m "Rebuild slug"
+   git push heroku main
+   ```
 
 Once complete, the Datadog Agent is started automatically when each dyno starts.
 
