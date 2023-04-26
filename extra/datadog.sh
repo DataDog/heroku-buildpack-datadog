@@ -175,11 +175,25 @@ export DD_PYTHONPATH="$DD_DIR/embedded/lib:$DD_PYTHONPATH"
 
 ## Default integrations configuration
 
+# Deprecated variable names for integration configuration
+if [[ ! -z "$ENABLE_HEROKU_POSTGRES" ]]; then
+  echo "[WARN] ENABLE_HEROKU_POSTGRES is deprecated and it will be removed in a future release. Use DD_ENABLE_HEROKU_POSTGRES instead."
+  if [[ -z ${DD_ENABLE_HEROKU_POSTGRES} ]]; then
+    DD_ENABLE_HEROKU_POSTGRES="$ENABLE_HEROKU_POSTGRES"
+  fi
+  if [[ ! -z ${POSTGRES_URL_VAR} ]]; then
+    echo "[WARN] POSTGRES_URL_VAR is deprecated and it will be removed in a future release. Use DD_POSTGRES_URL_VAR instead."
+    if [[ -z ${DD_POSTGRES_URL_VAR} ]]; then
+      DD_POSTGRES_URL_VAR="$POSTGRES_URL_VAR"
+    fi
+  fi
+fi
+
 # Update the Postgres configuration from above using the Heroku application environment variable
-if [ "$ENABLE_HEROKU_POSTGRES" == "true" ]; then
+if [ "$DD_ENABLE_HEROKU_POSTGRES" == "true" ]; then
   # The default connection URL is set in DATABASE_URL, but can be configured by the user
-  if [[ -z ${POSTGRES_URL_VAR} ]]; then
-    POSTGRES_URL_VAR="DATABASE_URL"
+  if [[ -z ${DD_POSTGRES_URL_VAR} ]]; then
+    DD_POSTGRES_URL_VAR="DATABASE_URL"
   fi
 
   # Use a comma separator instead of new line
@@ -188,7 +202,7 @@ if [ "$ENABLE_HEROKU_POSTGRES" == "true" ]; then
   touch "$POSTGRES_CONF/conf.yaml"
   echo -e "init_config: \ninstances: \n" > "$POSTGRES_CONF/conf.yaml"
 
-  for PG_URL in $POSTGRES_URL_VAR
+  for PG_URL in $DD_POSTGRES_URL_VAR
   do
     if [ -n "${!PG_URL}" ]; then
       POSTGREGEX='^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.*)$'
@@ -206,11 +220,26 @@ if [ "$ENABLE_HEROKU_POSTGRES" == "true" ]; then
   unset IFS
 fi
 
+# Deprecated variable names for integration configuration
+if [[ ! -z "$ENABLE_HEROKU_REDIS" ]]; then
+  echo "[WARN] ENABLE_HEROKU_REDIS is deprecated and it will be removed in a future release. Use DD_ENABLE_HEROKU_REDIS instead."
+  if [[ -z ${DD_ENABLE_HEROKU_REDIS} ]]; then
+    DD_ENABLE_HEROKU_REDIS="$ENABLE_HEROKU_REDIS"
+  fi
+  if [[ ! -z ${REDIS_URL_VAR} ]]; then
+    echo "[WARN] REDIS_URL_VAR is deprecated and it will be removed in a future release. Use DD_REDIS_URL_VAR instead."
+    if [[ -z ${DD_REDIS_URL_VAR} ]]; then
+      DD_REDIS_URL_VAR="$REDIS_URL_VAR"
+    fi
+  fi
+fi
+
 # Update the Redis configuration from above using the Heroku application environment variable
-if [ "$ENABLE_HEROKU_REDIS" == "true" ]; then
+if [ "$DD_ENABLE_HEROKU_REDIS" == "true" ]; then
+
   # The default connection URL is set in REDIS_URL, but can be configured by the user
-  if [[ -z ${REDIS_URL_VAR} ]]; then
-    REDIS_URL_VAR="REDIS_URL"
+  if [[ -z ${DD_REDIS_URL_VAR} ]]; then
+    DD_REDIS_URL_VAR="REDIS_URL"
   fi
 
   # Use a comma separator instead of new line
@@ -219,7 +248,7 @@ if [ "$ENABLE_HEROKU_REDIS" == "true" ]; then
   touch "$REDIS_CONF/conf.yaml"
   echo -e "init_config: \ninstances: \n" > "$REDIS_CONF/conf.yaml"
 
-  for RD_URL in $REDIS_URL_VAR
+  for RD_URL in $DD_REDIS_URL_VAR
   do
     if [ -n "${!RD_URL}" ]; then
       REDISREGEX='^redis(s?)://([^:]*):([^@]+)@([^:]+):([^/]+)/?(.*)$'
