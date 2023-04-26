@@ -172,15 +172,15 @@ In order to collect system metrics for your dynos, you must:
 If you are using a Redis add-on in your Heroku application (for example, Heroku Data for Redis or Redis Enterprise Cloud), you can enable the Datadog Redis integration by setting an environment variable:
 
 ```
-heroku config:set ENABLE_HEROKU_REDIS=true
+heroku config:set DD_ENABLE_HEROKU_REDIS=true
 ```
 
 By default, this integration assumes the Redis connection URL is defined in an environment variable called `REDIS_URL` (this is the default configuration for Heroku Data for Redis and other Redis add-ons).
 
-If your connection URL is defined in a different environment variable, or you want to configure more than 1 Redis instance, set the `REDIS_URL_VAR` environment variable to the comma-separated variable names of your connection strings. For example, if you're using both Heroku Redis and Redis Enterprise Cloud, set `REDIS_URL_VAR` accordingly:
+If your connection URL is defined in a different environment variable, or you want to configure more than 1 Redis instance, set the `DD_REDIS_URL_VAR` environment variable to the comma-separated variable names of your connection strings. For example, if you're using both Heroku Redis and Redis Enterprise Cloud, set `DD_REDIS_URL_VAR` accordingly:
 
 ```
-heroku config:set REDIS_URL_VAR=REDIS_URL,REDISCLOUD_URL
+heroku config:set DD_REDIS_URL_VAR=REDIS_URL,REDISCLOUD_URL
 ```
 
 ### Enabling the Datadog Postgres integration
@@ -188,15 +188,15 @@ heroku config:set REDIS_URL_VAR=REDIS_URL,REDISCLOUD_URL
 If you are using a Postgres add-on in your Heroku application (for example, Heroku Postgres), you can enable the Datadog Postgres integration by setting an environment variable:
 
 ```
-heroku config:set ENABLE_HEROKU_POSTGRES=true
+heroku config:set DD_ENABLE_HEROKU_POSTGRES=true
 ```
 
 By default, this integration assumes the Postgres connection URL is defined in an environment variable called `DATABASE_URL` (this is the default configuration for Heroku Postgres and other Postgres add-ons).
 
-If your connection URL is defined in a different environment variable, or you want to configure more than 1 Postgres instance, set the `POSTGRES_URL_VAR` environment variable to the comma-separated variable names of your connection strings. For example, if you have 2 Postgres instances and the connection strings are stored in `POSTGRES_URL1` and `POSTGRES_URL2`, set `POSTGRES_URL_VAR` accordingly:
+If your connection URL is defined in a different environment variable, or you want to configure more than 1 Postgres instance, set the `DD_POSTGRES_URL_VAR` environment variable to the comma-separated variable names of your connection strings. For example, if you have 2 Postgres instances and the connection strings are stored in `POSTGRES_URL1` and `POSTGRES_URL2`, set `DD_POSTGRES_URL_VAR` accordingly:
 
 ```
-heroku config:set POSTGRES_URL_VAR=POSTGRES_URL1,POSTGRES_URL2
+heroku config:set DD_POSTGRES_URL_VAR=POSTGRES_URL1,POSTGRES_URL2
 ```
 
 ### Enabling other integrations
