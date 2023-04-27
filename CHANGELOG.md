@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [2.10] - 2023-04-28
 
 ### Added
-- Datadog agent pinned versions are now `7.44.0` and `6.44.0`.
-- Redis and Postgres integrations configuration now supports more than one URL.
+- Datadog Agent pinned versions are now `7.44.0` and `6.44.0`.
+- Redis and Postgres integrations now supports more than one URL.
 
 ### Changed
 - Datadog Agent 7.x is now the default pinned version. If you need to keep 6.x, set the environment variable `DD_AGENT_MAJOR_VERSION=6` in your Heroku application and rebuild the slug.
