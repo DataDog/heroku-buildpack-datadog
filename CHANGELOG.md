@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.10] - 2023-04-28
+
+### Added
+- Datadog Agent pinned versions are now `7.44.0` and `6.44.0`.
+- Redis and Postgres integrations now support more than one URL.
+
+### Changed
+- Datadog Agent 7.x is now the default pinned version. If you need to keep 6.x, set the environment variable `DD_AGENT_MAJOR_VERSION=6` in your Heroku application and rebuild the slug.
+- `DD_ENABLE_HEROKU_REDIS`, `DD_ENABLE_HEROKU_POSTGRES`, `DD_REDIS_URL_VAR`, and `DD_POSTGRES_URL_VAR` are now the environment variables to configure the Redis and Postgres integrations.
+
+### Deprecated
+- `ENABLE_HEROKU_REDIS`, `ENABLE_HEROKU_POSTGRES`, `REDIS_URL_VAR`, and `POSTGRES_URL_VAR` are now deprecated in favor of `DD_ENABLE_HEROKU_REDIS`, `DD_ENABLE_HEROKU_POSTGRES`, `DD_REDIS_URL_VAR`, and `DD_POSTGRES_URL_VAR`. The previous ones still work for now, but they will be removed in a future release.
+
 ## [2.9] - 2023-02-27
 
 ### Added
