@@ -122,6 +122,7 @@ In addition to the environment variables shown above, there are several others y
 | `DD_REDIS_URL_VAR`    | *Optional.* By default, Redis integration auto-discovery uses the connection string stored at `REDIS_URL`. To override it, set this variable to a comma-separated list of variable names storing the connection strings. Check [the Enabling the Datadog Redis Integration section](#enabling-the-datadog-redis-integration) for details. |
 | `DD_ENABLE_HEROKU_POSTGRES`    | *Optional.* Set it to true to enable Postgres integration auto-discovery. Check [the Enabling the Datadog Postgres Integration section](#enabling-the-datadog-postgres-integration) for details. |
 | `DD_POSTGRES_URL_VAR`    | *Optional.* By default, Postgres integration auto-discovery uses the connection string stored at `DATABASE_URL`. To override it, set this variable to a comma-separated list of variable names storing the connection strings. Check [the Enabling the Datadog Postgres Integration section](#enabling-the-datadog-postgres-integration) for details. |
+| `DD_ENABLE_DBM`    | *Optional.* By default, Database Monitoring (DBM) is disabled. Set this to `true` to enable DBM for the Postgres instances. Check [the Enabling the Datadog Postgres Integration section](#enabling-the-datadog-postgres-integration) for details. |
 
 For additional documentation, see the [Datadog Agent documentation][12].
 
@@ -194,6 +195,12 @@ If your connection URL is defined in a different environment variable, or you wa
 
 ```
 heroku config:set DD_POSTGRES_URL_VAR=POSTGRES_URL1,POSTGRES_URL2
+```
+
+If you want to enable [Database Monitoring][31] for your Postgres instances, set `DD_ENABLE_DBM` to true:
+
+```
+heroku config:set DD_ENABLE_DBM=true
 ```
 
 ### Enabling other integrations
@@ -543,3 +550,4 @@ After an upgrade of the buildpack or Agent, you must recompile your application'
 [28]: https://github.com/DataDog/heroku-buildpack-datadog
 [29]: https://github.com/miketheman/heroku-buildpack-datadog
 [30]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
+[31]: https://docs.datadoghq.com/database_monitoring/

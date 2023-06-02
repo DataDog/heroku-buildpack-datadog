@@ -214,6 +214,9 @@ if [ "$DD_ENABLE_HEROKU_POSTGRES" == "true" ]; then
         echo -e "    dbname: ${BASH_REMATCH[5]}" >> "$POSTGRES_CONF/conf.yaml"
         echo -e "    ssl: True" >> "$POSTGRES_CONF/conf.yaml"
         echo -e "    disable_generic_tags: false" >> "$POSTGRES_CONF/conf.yaml"
+        if [ "$DD_ENABLE_DBM" == "true" ]; then
+          echo -e "    dbm: true" >> "$POSTGRES_CONF/conf.yaml"
+        fi
       fi
     fi
   done
