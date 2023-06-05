@@ -197,11 +197,13 @@ If your connection URL is defined in a different environment variable, or you wa
 heroku config:set DD_POSTGRES_URL_VAR=POSTGRES_URL1,POSTGRES_URL2
 ```
 
-If you want to enable [Database Monitoring][17] for your Postgres instances, set `DD_ENABLE_DBM` to true:
+To enable [Database Monitoring][17] for your Postgres instances, set `DD_ENABLE_DBM` to true:
 
 ```
 heroku config:set DD_ENABLE_DBM=true
 ```
+
+Database Monitoring requires [creating database credentials for the Datadog Agent][32], therefore, DBM is not available in the Heroku Postgres Essential Tier plans.
 
 ### Enabling other integrations
 
@@ -551,3 +553,4 @@ After an upgrade of the buildpack or Agent, you must recompile your application'
 [29]: https://github.com/DataDog/heroku-buildpack-datadog
 [30]: https://github.com/miketheman/heroku-buildpack-datadog
 [31]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
+[32]: https://docs.datadoghq.com/database_monitoring/setup_postgres/selfhosted/?tab=postgres10#grant-the-agent-access
