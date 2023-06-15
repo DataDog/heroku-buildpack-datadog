@@ -122,7 +122,7 @@ In addition to the environment variables shown above, there are several others y
 | `DD_REDIS_URL_VAR`    | *Optional.* By default, Redis integration auto-discovery uses the connection string stored at `REDIS_URL`. To override it, set this variable to a comma-separated list of variable names storing the connection strings. Check [the Enabling the Datadog Redis Integration section](#enabling-the-datadog-redis-integration) for details. |
 | `DD_ENABLE_HEROKU_POSTGRES`    | *Optional.* Set it to true to enable Postgres integration auto-discovery. Check [the Enabling the Datadog Postgres Integration section](#enabling-the-datadog-postgres-integration) for details. |
 | `DD_POSTGRES_URL_VAR`    | *Optional.* By default, Postgres integration auto-discovery uses the connection string stored at `DATABASE_URL`. To override it, set this variable to a comma-separated list of variable names storing the connection strings. Check [the Enabling the Datadog Postgres Integration section](#enabling-the-datadog-postgres-integration) for details. |
-| `DD_ENABLE_DBM`    | *Optional.* If you are enabling the Datadog Postgres Integration following [this guide](#enabling-the-datadog-postgres-integration), set `DD_ENABLE_DBM` to `true` to enable Database Monitoring. |
+| `DD_ENABLE_DBM`    | *Optional.* If you are enabling the Datadog Postgres integration following [this guide](#enabling-the-datadog-postgres-integration), set `DD_ENABLE_DBM` to `true` to enable Database Monitoring. |
 
 For additional documentation, see the [Datadog Agent documentation][12].
 
@@ -210,7 +210,7 @@ Database Monitoring requires creating database credentials for the Datadog Agent
 To enable any [Datadog-<INTEGRATION_NAME> integration][19]:
 
 * Create a `datadog/conf.d` folder within your application.
-* For each integration to enable, create an `<INTEGRATION_NAME>.d` folder
+* For each integration to enable, create an `<INTEGRATION_NAME>.d` folder.
 * Under that folder, create a `conf.yaml` with the [configuration for the integration][20].
 
 During the dyno start up, your YAML files are copied to the appropriate Datadog Agent configuration directories.
