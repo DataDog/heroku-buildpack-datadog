@@ -122,7 +122,7 @@ In addition to the environment variables shown above, there are several others y
 | `DD_REDIS_URL_VAR`    | *Optional.* By default, Redis integration auto-discovery uses the connection string stored at `REDIS_URL`. To override it, set this variable to a comma-separated list of variable names storing the connection strings. Check [the Enabling the Datadog Redis Integration section](#enabling-the-datadog-redis-integration) for details. |
 | `DD_ENABLE_HEROKU_POSTGRES`    | *Optional.* Set it to true to enable Postgres integration auto-discovery. Check [the Enabling the Datadog Postgres Integration section](#enabling-the-datadog-postgres-integration) for details. |
 | `DD_POSTGRES_URL_VAR`    | *Optional.* By default, Postgres integration auto-discovery uses the connection string stored at `DATABASE_URL`. To override it, set this variable to a comma-separated list of variable names storing the connection strings. Check [the Enabling the Datadog Postgres Integration section](#enabling-the-datadog-postgres-integration) for details. |
-| `DD_ENABLE_DBM`    | *Optional.* By default, Database Monitoring (DBM) is disabled. Set this to `true` to enable DBM for the Postgres instances. Check [the Enabling the Datadog Postgres Integration section](#enabling-the-datadog-postgres-integration) for details. |
+| `DD_ENABLE_DBM`    | *Optional.* If you are enabling the Datadog Postgres Integration following [this guide](#enabling-the-datadog-postgres-integration), set `DD_ENABLE_DBM` to `true` to enable Database Monitoring. |
 
 For additional documentation, see the [Datadog Agent documentation][12].
 
@@ -197,13 +197,13 @@ If your connection URL is defined in a different environment variable, or you wa
 heroku config:set DD_POSTGRES_URL_VAR=POSTGRES_URL1,POSTGRES_URL2
 ```
 
-To enable [Database Monitoring][17] for your Postgres instances, set `DD_ENABLE_DBM` to true:
+To enable [Database Monitoring][17] for your Postgres instances, grant the Agent access to your database following [these instructions][18], and set `DD_ENABLE_DBM` to true:
 
 ```
 heroku config:set DD_ENABLE_DBM=true
 ```
 
-Database Monitoring requires [creating database credentials for the Datadog Agent][18], therefore, DBM is not available in the Heroku Postgres Essential Tier plans.
+Database Monitoring requires creating database credentials for the Datadog Agent, therefore, DBM is not available in the Heroku Postgres Essential Tier plans.
 
 ### Enabling other integrations
 
