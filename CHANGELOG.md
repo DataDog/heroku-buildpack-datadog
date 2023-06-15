@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.11] - 2023-06-15
+
+### Added
+- Postgres integration easy configuration now supports DBM.
+
+### Deprecated
+- `ENABLE_HEROKU_REDIS`, `ENABLE_HEROKU_POSTGRES`, `REDIS_URL_VAR`, and `POSTGRES_URL_VAR` are deprecated in favor of `DD_ENABLE_HEROKU_REDIS`, `DD_ENABLE_HEROKU_POSTGRES`, `DD_REDIS_URL_VAR`, and `DD_POSTGRES_URL_VAR`. The previous ones still work for now, but they will be removed in a future release.
+
 ## [2.10] - 2023-04-28
 
 ### Added
