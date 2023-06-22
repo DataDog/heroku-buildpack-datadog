@@ -88,7 +88,7 @@ fi
 # Install GPG key
 topic "Install gpg key for Datadog APT Repository"
 DATADOG_APT_KEYRING="$BUILDPACK_DIR/datadog-archive-keyring.gpg"
-DATADOG_APT_KEYS=("DATADOG_APT_KEY_CURRENT.public" "DATADOG_APT_KEY_F14F620E.public" "DATADOG_APT_KEY_382E94DE.public")
+DATADOG_APT_KEYS=("DATADOG_APT_KEY_CURRENT.public" "DATADOG_APT_KEY_C0962C7D.public" "DATADOG_APT_KEY_F14F620E.public" "DATADOG_APT_KEY_382E94DE.public")
 DATADOG_APT_KEYS_URL="https://keys.datadoghq.com"
 GPG_HOME_DIR="$BUILD_DIR/.gnupg"
 mkdir -p "$GPG_HOME_DIR"
