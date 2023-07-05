@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # bin/compile <build-dir> <cache-dir>
 
-DELETE_PACKAGES=(kubernetes lxml openstack pysnmp_mibs pyVim pyVmomi)
+DELETE_PACKAGES=(kubernetes lxml openstack pysnmp_mibs pyVim pyVmomi cm_client)
 
 # Fail fast
 set -e
