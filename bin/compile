@@ -183,6 +183,7 @@ dpkg -x "$DEB" "$APT_DIR"
 rm -rf "$APT_DIR"/opt/datadog-agent/sources \
        "$APT_DIR"/opt/datadog-agent/embedded/share/doc \
        "$APT_DIR"/opt/datadog-agent/embedded/share/man \
+       "$APT_DIR"/opt/datadog-agent/embedded/sbin/gstatus \
        "$APT_DIR"/opt/datadog-agent/embedded/.installed_by_pkg.txt \
        "$DEB"
 
