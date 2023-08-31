@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.12] - 2023-08-31
+
+### Added
+- Datadog Agent pinned versions are now `7.47.0` and `6.47.0`.
+
+### Fixed
+- Allow forward slashes in tags.
+
 ## [2.11] - 2023-06-15
 
 ### Added
