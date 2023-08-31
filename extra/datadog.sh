@@ -287,6 +287,7 @@ fi
 # Convert comma delimited tags from env vars to yaml
 if [ -n "$DD_TAGS" ]; then
   DD_TAGS_NORMALIZED="$(sed "s/,[ ]\?/\ /g"  <<< "$DD_TAGS")"
+  DD_TAGS_NORMALIZED="$(sed 's/\//\\\//g'  <<< "$DD_TAGS_NORMALIZED")"
   DD_TAGS="$DYNO_TAGS $DD_TAGS_NORMALIZED"
 else
   DD_TAGS="$DYNO_TAGS"
@@ -298,7 +299,7 @@ if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
   echo "[DEBUG] Buildpack normalized tags: $DD_TAGS_NORMALIZED"
 fi
 
-DD_TAGS_YAML="tags:\n  - $(sed "s/\ /\\\n  - /g"  <<< "$DD_TAGS")"
+DD_TAGS_YAML="tags:\n  - $(sed 's/\ /\\n  - /g'  <<< "$DD_TAGS")"
 
 # Inject tags after example tags.
 # Config files for agent versions 6.11 and earlier:
