@@ -73,7 +73,7 @@ done
 # Add tags to the config file
 DYNOHOST="$(hostname )"
 DYNOTYPE=${DYNO%%.*}
-BUILDPACKVERSION="dev"
+BUILDPACKVERSION="2.13"
 DYNO_TAGS="dyno:$DYNO dynotype:$DYNOTYPE buildpackversion:$BUILDPACKVERSION"
 
 # We want always to have the Dyno ID as a host alias to improve correlation
@@ -287,8 +287,8 @@ fi
 # Convert comma delimited tags from env vars to yaml
 if [ -n "$DD_TAGS" ]; then
   DD_TAGS_NORMALIZED="$(sed "s/,[ ]\?/\ /g"  <<< "$DD_TAGS")"
-  DD_TAGS_NORMALIZED="$(sed 's/\//\\\//g'  <<< "$DD_TAGS_NORMALIZED")"
   DD_TAGS="$DYNO_TAGS $DD_TAGS_NORMALIZED"
+  DD_TAGS_NORMALIZED_YAML="$(sed 's/\//\\\//g'  <<< "$DD_TAGS_NORMALIZED")"
 else
   DD_TAGS="$DYNO_TAGS"
 fi
@@ -297,9 +297,10 @@ export DD_VERSION="$DD_VERSION"
 export DD_TAGS="$DD_TAGS"
 if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
   echo "[DEBUG] Buildpack normalized tags: $DD_TAGS_NORMALIZED"
+  echo "[DEBUG] Buildpack normalized tags to yaml: $DD_TAGS_NORMALIZED_YAML"
 fi
 
-DD_TAGS_YAML="tags:\n  - $(sed 's/\ /\\n  - /g'  <<< "$DD_TAGS")"
+DD_TAGS_YAML="tags:\n  - $(sed 's/\ /\\n  - /g'  <<< "$DD_TAGS_NORMALIZED_YAML")"
 
 # Inject tags after example tags.
 # Config files for agent versions 6.11 and earlier:
