@@ -73,7 +73,7 @@ done
 # Add tags to the config file
 DYNOHOST="$(hostname )"
 DYNOTYPE=${DYNO%%.*}
-BUILDPACKVERSION="dev"
+BUILDPACKVERSION="2.14"
 DYNO_TAGS="dyno:$DYNO dynotype:$DYNOTYPE buildpackversion:$BUILDPACKVERSION"
 
 # We want always to have the Dyno ID as a host alias to improve correlation
@@ -212,7 +212,7 @@ if [ "$DD_ENABLE_HEROKU_POSTGRES" == "true" ]; then
         echo -e "    password: ${BASH_REMATCH[2]}" >> "$POSTGRES_CONF/conf.yaml"
         echo -e "    port: ${BASH_REMATCH[4]}" >> "$POSTGRES_CONF/conf.yaml"
         echo -e "    dbname: ${BASH_REMATCH[5]}" >> "$POSTGRES_CONF/conf.yaml"
-        echo -e "    ssl: True" >> "$POSTGRES_CONF/conf.yaml"
+        echo -e "    ssl: require" >> "$POSTGRES_CONF/conf.yaml"
         echo -e "    disable_generic_tags: false" >> "$POSTGRES_CONF/conf.yaml"
         if [ "$DD_ENABLE_DBM" == "true" ]; then
           echo -e "    dbm: true" >> "$POSTGRES_CONF/conf.yaml"
@@ -260,7 +260,7 @@ if [ "$DD_ENABLE_HEROKU_REDIS" == "true" ]; then
         echo -e "    password: ${BASH_REMATCH[3]}" >> "$REDIS_CONF/conf.yaml"
         echo -e "    port: ${BASH_REMATCH[5]}" >> "$REDIS_CONF/conf.yaml"
         if [[ ! -z ${BASH_REMATCH[1]} ]]; then
-          echo -e "    ssl: True" >> "$REDIS_CONF/conf.yaml"
+          echo -e "    ssl: true" >> "$REDIS_CONF/conf.yaml"
           echo -e "    ssl_cert_reqs: 0" >> "$REDIS_CONF/conf.yaml"
         fi
         if [[ ! -z ${BASH_REMATCH[2]} ]]; then
