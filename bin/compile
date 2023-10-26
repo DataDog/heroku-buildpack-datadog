@@ -202,7 +202,7 @@ for i in "${DELETE_PACKAGES[@]}"; do
   rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python*/site-packages/"$i"
 done
 
-POSTGRES_BINARIES=(postgres psql reindexdb vacuumdb createuser clusterdb createdb dropuser dropdb initdb pg_test_timing pg_archivecleanup pg_config pg_test_fsync pg_controldata pg_isready pg_resetwal pg_ctl pg_receivewal pg_recvlogical pg_rewind pg_waldump pg_dumpall pg_basebackup pg_upgrade pgbench pg_restore pg_dump ecpg)
+POSTGRES_BINARIES=(postgres postmaster psql reindexdb vacuumdb createuser clusterdb createdb dropuser dropdb initdb pg_test_timing pg_archivecleanup pg_config pg_test_fsync pg_controldata pg_isready pg_resetwal pg_ctl pg_receivewal pg_recvlogical pg_rewind pg_waldump pg_dumpall pg_basebackup pg_upgrade pgbench pg_restore pg_dump ecpg)
 
 # Remove Postgres binaries
 for i in "${POSTGRES_BINARIES[@]}"; do
