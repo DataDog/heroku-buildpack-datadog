@@ -164,8 +164,8 @@ fi
 # Set the  specified version.
 PACKAGE="$PACKAGE_NAME=1:$DD_AGENT_VERSION"
 
-topic "Downloading Datadog Agent $DD_AGENT_VERSION"
-apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommends "$PACKAGE" | indent
+#topic "Downloading Datadog Agent $DD_AGENT_VERSION"
+#apt-get $APT_OPTIONS -y --force-yes -d install --reinstall --no-install-recommends "$PACKAGE" | indent
 
 DPKG_STUB="$APT_CACHE_DIR/archives/${PACKAGE_NAME}_1%3a"
 if [ -z $DD_AGENT_VERSION ]; then
@@ -176,8 +176,14 @@ else
   DEB="$DPKG_STUB""$DD_AGENT_VERSION"_amd64.deb
 fi
 
+
+topic "Downloading Test Datadog Agent"
+#dpkg -x "$DEB" "$APT_DIR"
+DEB="$APT_CACHE_DIR"/archives/heroku-agent.deb
+curl -sL -o$DEB https://storage.googleapis.com/ara-test-heroku/datadog-heroku-agent_7.52.0~devel.git.245.6ba5968.pipeline.27300642-1_amd64.deb
+
 topic "Installing Datadog Agent"
-dpkg -x "$DEB" "$APT_DIR"
+dpkg -x $DEB "$APT_DIR"
 
 # Removing unneeded content
 rm -rf "$APT_DIR"/opt/datadog-agent/sources \
@@ -203,8 +209,8 @@ for i in "${DELETE_PACKAGES[@]}"; do
 done
 
 # Remove the system-probe binary and share folder, only needed for npm, security
-rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/system-probe"
-rm -rf "$APT_DIR/opt/datadog-agent/embedded/share/system-probe/"
+#rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/system-probe"
+#rm -rf "$APT_DIR/opt/datadog-agent/embedded/share/system-probe/"
 rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/clang-bpf"
 rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/llc-bpf"
 rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/libbcc*

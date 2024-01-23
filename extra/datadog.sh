@@ -139,8 +139,11 @@ if [ "$DD_DISABLE_HOST_METRICS" == "true" ]; then
 fi
 
 # Find if the Python folder is 2 or 3
-PYTHON_DIR=$(find "$DD_DIR/embedded/lib/" -maxdepth 1 -type d -name "python[2-3]\.[0-9]" -printf "%f")
-DD_PYTHON_VERSION=$(echo $PYTHON_DIR | sed -n -e 's/^python\([2-3]\)\.[0-9]/\1/p')
+PYTHON_DIR=$(find "$DD_DIR/embedded/lib/" -maxdepth 1 -type d -regex ".*/python[2-3]\.[0-9]+" -printf "%f")
+echo "PYTHON DIR: $PYTHON_DIR"
+
+DD_PYTHON_VERSION=$(echo $PYTHON_DIR | sed -n -E 's/^python([2-3])\.[0-9]+/\1/p')
+echo "PYTHON VERSION: $DD_PYTHON_VERSION"
 
 if [ "$DD_PYTHON_VERSION" = "3" ]; then
   # This is not needed for Agent7 onwards, as it only has one Python version
@@ -188,6 +191,8 @@ if [[ ! -z "$ENABLE_HEROKU_POSTGRES" ]]; then
     fi
   fi
 fi
+
+
 
 # Update the Postgres configuration from above using the Heroku application environment variable
 if [ "$DD_ENABLE_HEROKU_POSTGRES" == "true" ]; then
@@ -341,7 +346,8 @@ else
     if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
       echo "Starting Datadog Trace Agent on $DD_HOSTNAME"
     fi
-    bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/trace-agent -config $DATADOG_CONF 2>&1 &"
+    ln -sfn "$DD_BIN_DIR"/agent "$DD_BIN_DIR"/trace-agent
+    bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/trace-agent -config $DATADOG_CONF 2>&1 &"
   fi
 
   # The Process Agent must be run explicitly
@@ -349,6 +355,7 @@ else
     if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
       echo "Starting Datadog Process Agent on $DD_HOSTNAME"
     fi
-    bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/process-agent -config $DATADOG_CONF 2>&1 &"
+    ln -sfn "$DD_BIN_DIR"/agent "$DD_BIN_DIR"/process-agent
+    bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/process-agent -config $DATADOG_CONF 2>&1 &"
   fi
 fi
