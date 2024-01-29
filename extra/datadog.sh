@@ -139,8 +139,8 @@ if [ "$DD_DISABLE_HOST_METRICS" == "true" ]; then
 fi
 
 # Find if the Python folder is 2 or 3
-PYTHON_DIR=$(find "$DD_DIR/embedded/lib/" -maxdepth 1 -type d -name "python[2-3]\.[0-9]" -printf "%f")
-DD_PYTHON_VERSION=$(echo $PYTHON_DIR | sed -n -e 's/^python\([2-3]\)\.[0-9]/\1/p')
+PYTHON_DIR=$(find "$DD_DIR/embedded/lib/" -maxdepth 1 -type d -regex ".*/python[2-3]\.[0-9]+" -printf "%f")
+DD_PYTHON_VERSION=$(echo $PYTHON_DIR | sed -n -E 's/^python([2-3])\.[0-9]+/\1/p')
 
 if [ "$DD_PYTHON_VERSION" = "3" ]; then
   # This is not needed for Agent7 onwards, as it only has one Python version
