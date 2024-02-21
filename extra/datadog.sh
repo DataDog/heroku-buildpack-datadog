@@ -155,6 +155,12 @@ if [ "$DD_PYTHON_VERSION" = "3" ]; then
     ln -sfn "$DD_DIR"/embedded/bin/pip3 "$DD_DIR"/embedded/bin/pip
 fi
 
+# Restore symlinks
+if [ "$DD_PYTHON_VERSION" = "2" ]; then
+  ln -sfn "$DD_DIR"/embedded/bin/pip2 "$DD_DIR"/embedded/bin/pip
+fi
+ln -sfn "$DD_DIR"/embedded/ssl/certs/cacert.pem "$DD_DIR"/embedded/ssl/cert.pem
+
 # Ensure all check and library locations are findable in the Python path.
 DD_PYTHONPATH="$DD_DIR/embedded/lib/$PYTHON_DIR"
 DD_PYTHONPATH="$DD_PYTHONPATH:$DD_DIR/embedded/lib/$PYTHON_DIR/site-packages"
