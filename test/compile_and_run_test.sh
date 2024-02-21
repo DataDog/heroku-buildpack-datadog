@@ -30,7 +30,7 @@ compileAndRunVersion()
 
   export HOME=${BUILD_DIR}
   export DD_TAGS="sampletag1:sample,sametag2:sample, sampletag3 sampletag4"
-  chmod +x ${BUILDPACK_HOME}/extra/datadog.sh 
+  chmod +x ${BUILDPACK_HOME}/extra/datadog.sh
   capture ${BUILDPACK_HOME}/extra/datadog.sh
   assertFileNotContains "error while loading shared libraries" ${STD_ERR}
   assertFileNotContains "Could not initialize Python" ${STD_ERR}
@@ -41,7 +41,7 @@ compileAndRunVersion()
   assertNotCaptured "ModuleNotFoundError"
   assertNotCaptured "Fatal Python error"
 
-  
+
   SIZE_BIN=$(du -s  $HOME/.apt/opt/datadog-agent/bin | cut -f1)
   SIZE_LIB=$(du -s  $HOME/.apt/opt/datadog-agent/embedded/lib | cut -f1)
   SIZE_EMB_BIN=$(du -s  $HOME/.apt/opt/datadog-agent/embedded/bin | cut -f1)
@@ -51,6 +51,9 @@ compileAndRunVersion()
     assertTrue "Embedded library folder is too big: ${SIZE_LIB}" "[ $SIZE_LIB -lt 180000 ]"
     assertTrue "Embedded binary folder is too big: ${SIZE_EMB_BIN}" "[ $SIZE_EMB_BIN -lt 80000 ]"
   fi
+
+  BROKEN_SYMLINKS=$(find $HOME/.apt/opt/datadog-agent -type l -exec test ! -e {} \; -print | wc -l)
+  assertEquals "Broken symlinks found: ${BROKEN_SYMLINKS}" 0 $BROKEN_SYMLINKS
 
   rm -rf $HOME/.apt/
 }
