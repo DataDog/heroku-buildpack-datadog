@@ -153,7 +153,6 @@ if [ "$DD_PYTHON_VERSION" = "3" ]; then
     ln -sfn "$DD_DIR"/embedded/bin/python3 "$DD_DIR"/embedded/bin/python
     ln -sfn "$DD_DIR"/embedded/bin/python3-config "$DD_DIR"/embedded/bin/python-config
     ln -sfn "$DD_DIR"/embedded/bin/pip3 "$DD_DIR"/embedded/bin/pip
-    ln -sfn "$DD_DIR"/embedded/bin/pydoc3 "$DD_DIR"/embedded/bin/pydoc
 fi
 
 # Ensure all check and library locations are findable in the Python path.
