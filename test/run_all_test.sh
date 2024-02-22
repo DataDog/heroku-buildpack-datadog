@@ -1,7 +1,5 @@
 #!/bin/sh
 
-. ./common.sh
-
 export DD_LOG_LEVEL="debug"
 
 testReleased6Versions()

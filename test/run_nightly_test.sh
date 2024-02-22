@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. ./common.sh
+. ${BUILDPACK_HOME}/test/common.sh
 
 export DD_LOG_LEVEL="debug"
 
