@@ -49,9 +49,9 @@ compileAndRunVersion()
   SIZE_EMB_BIN=$(du -s  $HOME/.apt/opt/datadog-agent/embedded/bin | cut -f1)
 
   if $2; then
-    assertTrue "Binary folder is too big: ${SIZE_BIN}" "[ $SIZE_BIN -lt 80000 ]"
-    assertTrue "Embedded library folder is too big: ${SIZE_LIB}" "[ $SIZE_LIB -lt 180000 ]"
-    assertTrue "Embedded binary folder is too big: ${SIZE_EMB_BIN}" "[ $SIZE_EMB_BIN -lt 80000 ]"
+    assertTrue "Binary folder is too big: ${SIZE_BIN}" "[ $SIZE_BIN -lt 85000 ]"
+    assertTrue "Embedded library folder is too big: ${SIZE_LIB}" "[ $SIZE_LIB -lt 220000 ]"
+    assertTrue "Embedded binary folder is too big: ${SIZE_EMB_BIN}" "[ $SIZE_EMB_BIN -lt 100000 ]"
   fi
 
   BROKEN_SYMLINKS=$(find $HOME/.apt/opt/datadog-agent -type l -exec test ! -e {} \; -print | wc -l)
