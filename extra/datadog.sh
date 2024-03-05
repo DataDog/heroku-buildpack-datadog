@@ -346,8 +346,7 @@ else
     if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
       echo "Starting Datadog Trace Agent on $DD_HOSTNAME"
     fi
-    ln -sfn "$DD_BIN_DIR"/agent "$DD_BIN_DIR"/trace-agent
-    bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/trace-agent -config $DATADOG_CONF 2>&1 &"
+    bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/trace-agent -config $DATADOG_CONF 2>&1 &"
   fi
 
   # The Process Agent must be run explicitly
