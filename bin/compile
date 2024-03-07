@@ -225,16 +225,31 @@ if [ -f "$ENV_DIR/DD_APM_ENABLED" ]; then
   fi
 fi
 
+DD_AGENT_BASE_VERSION="7.52.0"
 # If the process agent hasn't been explicitly enabled, delete the agent
 if [ -f "$ENV_DIR/DD_PROCESS_AGENT" ]; then
   DD_PROCESS_AGENT=$(cat "$ENV_DIR/DD_PROCESS_AGENT")
   if [ "$DD_PROCESS_AGENT" == "false" ]; then
     topic "DD_PROCESS_AGENT set to false. Removing the process agent."
     rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/process-agent"
+    # starting on 7.52.0, there is a binary of core+process agent
+    if [ "$DD_AGENT_VERSION" == "$(echo -e "$DD_AGENT_BASE_VERSION\n$DD_AGENT_VERSION" | sort -V | tail -n1)" ]; then
+      topic "---------- DD_AGENT_VERSION is $DD_AGENT_VERSION. Renaming the core-agent to agent."
+      mv -f "$APT_DIR/opt/datadog-agent/bin/agent/core-agent" "$APT_DIR/opt/datadog-agent/bin/agent/agent"
+    fi
+  else
+    if [ "$DD_AGENT_VERSION" == "$(echo -e "$DD_AGENT_BASE_VERSION\n$DD_AGENT_VERSION" | sort -V | tail -n1)" ]; then
+      topic "---------- DD_AGENT_VERSION is $DD_AGENT_VERSION. Removing core-agent."
+      rm -rf "$APT_DIR/opt/datadog-agent/bin/agent/core-agent"
+    fi
   fi
 else
   topic "DD_PROCESS_AGENT not set. Removing the process agent."
   rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/process-agent"
+  if [ "$DD_AGENT_VERSION" == "$(echo -e "$DD_AGENT_BASE_VERSION\n$DD_AGENT_VERSION" | sort -V | tail -n1)" ]; then
+      topic "---------- DD_AGENT_VERSION is $DD_AGENT_VERSION. Renaming the core-agent to agent."
+      mv -f "$APT_DIR/opt/datadog-agent/bin/agent/core-agent" "$APT_DIR/opt/datadog-agent/bin/agent/agent"
+  fi
 fi
 
 # We remove the unneeded version of Python
