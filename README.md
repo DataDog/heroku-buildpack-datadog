@@ -178,6 +178,10 @@ By default, this integration assumes the Redis connection URL is defined in an e
 If your connection URL is defined in a different environment variable, or you want to configure more than 1 Redis instance, set the `DD_REDIS_URL_VAR` environment variable to the comma-separated variable names of your connection strings. For example, if you're using both Heroku Redis and Redis Enterprise Cloud, set `DD_REDIS_URL_VAR` accordingly:
 
 ```
+heroku config:set REDIS_URL="redis://aaaaa:bbbbb@redis-url"
+heroku config:set REDISCLOUD_URL="redis://xxxxx:yyyyy@redis-cloud-url"
+
+# This env var must point to other env vars.
 heroku config:set DD_REDIS_URL_VAR=REDIS_URL,REDISCLOUD_URL
 ```
 
@@ -194,6 +198,10 @@ By default, this integration assumes the Postgres connection URL is defined in a
 If your connection URL is defined in a different environment variable, or you want to configure more than 1 Postgres instance, set the `DD_POSTGRES_URL_VAR` environment variable to the comma-separated variable names of your connection strings. For example, if you have 2 Postgres instances and the connection strings are stored in `POSTGRES_URL1` and `POSTGRES_URL2`, set `DD_POSTGRES_URL_VAR` accordingly:
 
 ```
+heroku config:set POSTGRES_URL1="postgres://aaaaa:bbbbb@postgres-url-1:5432/dbname"
+heroku config:set POSTGRES_URL2="postgres://xxxxx:yyyyy@postgres-url-2:5432/dbname"
+
+# This env var must point to other env vars.
 heroku config:set DD_POSTGRES_URL_VAR=POSTGRES_URL1,POSTGRES_URL2
 ```
 
