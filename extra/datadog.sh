@@ -37,6 +37,10 @@ sed -i -e"s|^.*additional_checksd:.*$|additional_checksd: $DD_CONF_DIR/checks.d\
 # Update the Datadog conf yaml to disable cloud provider metadata
 sed -i -e"s|^.*cloud_provider_metadata:.*$|cloud_provider_metadata: []|" "$DATADOG_CONF"
 
+version_equal_or_newer() {
+  [ "$1" == "$(echo -e "$1\n$2" | sort -V | tail -n1)" ]
+}
+
 # Include application's datadog configs
 APP_DATADOG_DEFAULT="/app/datadog"
 APP_DATADOG="${DD_HEROKU_CONF_FOLDER:=$APP_DATADOG_DEFAULT}"
@@ -141,6 +145,10 @@ fi
 # Find if the Python folder is 2 or 3
 PYTHON_DIR=$(find "$DD_DIR/embedded/lib/" -maxdepth 1 -type d -regex ".*/python[2-3]\.[0-9]+" -printf "%f")
 DD_PYTHON_VERSION=$(echo $PYTHON_DIR | sed -n -E 's/^python([2-3])\.[0-9]+/\1/p')
+
+# Get agent versions
+DD_AGENT_VERSION=$(agent-wrapper version | cut -d " " -f2)
+DD_AGENT_MAJOR_VERSION=$(echo $DD_AGENT_VERSION | cut -d'.' -f1)
 
 if [ "$DD_PYTHON_VERSION" = "3" ]; then
   # This is not needed for Agent7 onwards, as it only has one Python version
@@ -349,17 +357,22 @@ else
     bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/trace-agent -config $DATADOG_CONF 2>&1 &"
   fi
 
-  DD_AGENT_BASE_VERSION="7.52.0"
+  if [ "$DD_AGENT_MAJOR_VERSION" == "6" ]; then
+    DD_AGENT_BASE_VERSION="6.52.0"
+  else
+    DD_AGENT_BASE_VERSION="7.52.0"
+  fi
   # The Process Agent must be run explicitly
   if [ "$DD_PROCESS_AGENT" == "true" ]; then
     if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
       echo "Starting Datadog Process Agent on $DD_HOSTNAME"
     fi
-    if [ "$DD_AGENT_VERSION" == "$(echo -e "$DD_AGENT_BASE_VERSION\n$DD_AGENT_VERSION" | sort -V | head -n1)" ]; then
-      bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/process-agent -config $DATADOG_CONF 2>&1 &"
-    else
+    # Starting on Agent 7.52.0, the process agent is included in the agent binary
+    if version_equal_or_newer $DD_AGENT_VERSION $DD_AGENT_BASE_VERSION; then
       ln -sfn "$DD_BIN_DIR"/agent "$DD_BIN_DIR"/process-agent
       bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/process-agent -config $DATADOG_CONF 2>&1 &"
+    else
+      bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/process-agent -config $DATADOG_CONF 2>&1 &"
     fi
   fi
 fi
