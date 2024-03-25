@@ -229,7 +229,7 @@ if [ -f "$ENV_DIR/DD_APM_ENABLED" ]; then
   fi
 fi
 
-DD_AGENT_BASE_VERSION="7.51.0"
+DD_AGENT_BASE_VERSION="7.52.0"
 # If the process agent hasn't been explicitly enabled, delete the agent
 if [ -f "$ENV_DIR/DD_PROCESS_AGENT" ]; then
   DD_PROCESS_AGENT=$(cat "$ENV_DIR/DD_PROCESS_AGENT")

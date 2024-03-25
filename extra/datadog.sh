@@ -349,7 +349,7 @@ else
     bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/trace-agent -config $DATADOG_CONF 2>&1 &"
   fi
 
-  DD_AGENT_BASE_VERSION="7.51.0"
+  DD_AGENT_BASE_VERSION="7.52.0"
   # The Process Agent must be run explicitly
   if [ "$DD_PROCESS_AGENT" == "true" ]; then
     if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
@@ -358,6 +358,7 @@ else
     if [ "$DD_AGENT_VERSION" == "$(echo -e "$DD_AGENT_BASE_VERSION\n$DD_AGENT_VERSION" | sort -V | head -n1)" ]; then
       bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/process-agent -config $DATADOG_CONF 2>&1 &"
     else
+      ln -sfn "$DD_BIN_DIR"/agent "$DD_BIN_DIR"/process-agent
       bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/process-agent -config $DATADOG_CONF 2>&1 &"
     fi
   fi
