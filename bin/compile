@@ -38,15 +38,18 @@ echo "$STACK" > "$CACHE_DIR/.apt/STACK"
 # If a version hasn't been specified, use the pinned version
 if [ -f "$ENV_DIR/DD_AGENT_VERSION" ]; then
   DD_AGENT_VERSION=$(cat "$ENV_DIR/DD_AGENT_VERSION")
+  DD_AGENT_MAJOR_VERSION=$(echo $DD_AGENT_VERSION | cut -d'.' -f1)
 else
   if [ -f "$ENV_DIR/DD_AGENT_MAJOR_VERSION" ]; then
     DD_AGENT_MAJOR_VERSION=$(cat "$ENV_DIR/DD_AGENT_MAJOR_VERSION")
     if [ "$DD_AGENT_MAJOR_VERSION" == "6" ]; then
       DD_AGENT_VERSION="$DD_AGENT_PINNED_VERSION_6"
     else
+      DD_AGENT_MAJOR_VERSION="7"
       DD_AGENT_VERSION="$DD_AGENT_PINNED_VERSION_7"
     fi
   else
+    DD_AGENT_MAJOR_VERSION="7"
     DD_AGENT_VERSION="$DD_AGENT_PINNED_VERSION_7"
   fi
 fi
@@ -229,7 +232,12 @@ if [ -f "$ENV_DIR/DD_APM_ENABLED" ]; then
   fi
 fi
 
-DD_AGENT_BASE_VERSION="7.52.0"
+if [ "$DD_AGENT_MAJOR_VERSION" == "6" ]; then
+  DD_AGENT_BASE_VERSION="6.52.0"
+else
+  DD_AGENT_BASE_VERSION="7.52.0"
+fi
+
 # If the process agent hasn't been explicitly enabled, delete the agent
 if [ -f "$ENV_DIR/DD_PROCESS_AGENT" ]; then
   DD_PROCESS_AGENT=$(cat "$ENV_DIR/DD_PROCESS_AGENT")
