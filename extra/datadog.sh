@@ -90,13 +90,6 @@ if [ -n "$HEROKU_APP_NAME" ]; then
   DYNO_TAGS="$DYNO_TAGS appname:$HEROKU_APP_NAME"
 fi
 
-if [ -n "DD_SERVICE" ]; then
-  DYNO_TAGS="$DYNO_TAGS service:$DD_SERVICE"
-fi
-
-if [ -n "DD_VERSION" ]; then
-  DYNO_TAGS="$DYNO_TAGS version:$DD_VERSION"
-fi
 # Uncomment APM configs and add the log file location.
 sed -i -e"s|^# apm_config:$|apm_config:|" "$DATADOG_CONF"
 # Add the log file location.
