@@ -315,7 +315,7 @@ fi
 export DD_VERSION="$DD_VERSION"
 export DD_TAGS="$DD_TAGS"
 if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
-  echo "[DEBUG] Buildpack normalized tags: $DD_TAGS_NORMALIZED"
+  echo "[DEBUG] Buildpack normalized tags: $DD_TAGS"
 fi
 
 # Export host type as dyno
