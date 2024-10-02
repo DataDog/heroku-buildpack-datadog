@@ -344,7 +344,7 @@ else
     if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
       echo "Starting Datadog Trace Agent on $DD_HOSTNAME"
     fi
-    bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/trace-agent -config $DATADOG_CONF 2>&1 &"
+    bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/trace-agent --config $DATADOG_CONF 2>&1 &"
   fi
 
   if [ "$DD_AGENT_MAJOR_VERSION" == "6" ]; then
@@ -360,9 +360,9 @@ else
     # Starting on Agent 7.52.0, the process agent is included in the agent binary
     if version_equal_or_newer $DD_AGENT_VERSION $DD_AGENT_BASE_VERSION; then
       ln -sfn "$DD_BIN_DIR"/agent "$DD_BIN_DIR"/process-agent
-      bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/process-agent -config $DATADOG_CONF 2>&1 &"
+      bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/process-agent --config $DATADOG_CONF 2>&1 &"
     else
-      bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/process-agent -config $DATADOG_CONF 2>&1 &"
+      bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/process-agent --config $DATADOG_CONF 2>&1 &"
     fi
   fi
 fi
