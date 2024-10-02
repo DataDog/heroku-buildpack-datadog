@@ -237,6 +237,40 @@ instances:
 
 **Note**: See the sample [mcache.d/conf.yaml][22] for all available configuration options.
 
+#### Using the prerun.sh script to dynamically change the integration configuration
+
+If you have configuration details stored in environment variables (like database configuration or secrets), you can use the [prerun.sh script](#prerun-script) to dynamically add those to your Datadog Agent configuration before the Agent starts.
+
+For example, to enable the Postgres integration, the file `datadog/conf.d/postgres.d/conf.yaml` could be added with placeholders at the root of your application (or `/$DD_HEROKU_CONF_FOLDER/conf.d/mcache.d/conf.yaml` if you have changed this [configuration option](#configuration)):
+
+```yaml
+init_config:
+
+instances:
+  - host: <YOUR HOSTNAME>
+    port: <YOUR PORT>
+    username: <YOUR USERNAME>
+    password: <YOUR PASSWORD>
+    dbname: <YOUR DBNAME>
+    ssl: True
+```
+
+And then use the `prerun.sh` script to replace those placeholders with the actual values from the environment variables:
+
+```bash
+# Update the Postgres configuration from above using the Heroku application environment variable
+if [ -n "$DATABASE_URL" ]; then
+  POSTGREGEX='^postgres://([^:]+):([^@]+)@([^:]+):([^/]+)/(.*)$'
+  if [[ $DATABASE_URL =~ $POSTGREGEX ]]; then
+    sed -i "s/<YOUR HOSTNAME>/${BASH_REMATCH[3]}/" "$DD_CONF_DIR/conf.d/postgres.d/conf.yaml"
+    sed -i "s/<YOUR USERNAME>/${BASH_REMATCH[1]}/" "$DD_CONF_DIR/conf.d/postgres.d/conf.yaml"
+    sed -i "s/<YOUR PASSWORD>/${BASH_REMATCH[2]}/" "$DD_CONF_DIR/conf.d/postgres.d/conf.yaml"
+    sed -i "s/<YOUR PORT>/${BASH_REMATCH[4]}/" "$DD_CONF_DIR/conf.d/postgres.d/conf.yaml"
+    sed -i "s/<YOUR DBNAME>/${BASH_REMATCH[5]}/" "$DD_CONF_DIR/conf.d/postgres.d/conf.yaml"
+  fi
+fi
+```
+
 ### Community Integrations
 
 If the integration you are enabling is part of the [Community Integrations][23], install the package as part of the [prerun script](#prerun-script).
