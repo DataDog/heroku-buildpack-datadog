@@ -335,6 +335,17 @@ else
   fi
   bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/agent $RUN_COMMAND -c $DATADOG_CONF 2>&1 &"
 
+  # From version 7.48 onwards, the config flag for the trace agent changed to --config
+  if [ "$DD_AGENT_MAJOR_VERSION" == "6" ]; then
+    DD_AGENT_BASE_VERSION="6.48.0"
+  else
+    DD_AGENT_BASE_VERSION="7.48.0"
+  fi
+  if version_equal_or_newer $DD_AGENT_VERSION $DD_AGENT_BASE_VERSION; then
+    CONFIG_FLAG="--config"
+  else
+    CONFIG_FLAG="-config"
+  fi
   # The Trace Agent will run by default.
   if [ "$DD_APM_ENABLED" == "false" ]; then
     if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
@@ -344,9 +355,22 @@ else
     if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
       echo "Starting Datadog Trace Agent on $DD_HOSTNAME"
     fi
-    bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/trace-agent -config $DATADOG_CONF 2>&1 &"
+    bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/trace-agent $CONFIG_FLAG $DATADOG_CONF 2>&1 &"
   fi
 
+  # From version 7.36 onwards, the config flag for the process agent changed to --cfgpath
+  if [ "$DD_AGENT_MAJOR_VERSION" == "6" ]; then
+    DD_AGENT_BASE_VERSION="6.36.0"
+  else
+    DD_AGENT_BASE_VERSION="7.36.0"
+  fi
+  if version_equal_or_newer $DD_AGENT_VERSION $DD_AGENT_BASE_VERSION; then
+    CONFIG_FLAG="--cfgpath"
+  else
+    CONFIG_FLAG="--config"
+  fi
+
+  # Starting on Agent 7.52.0, the process agent is included in the agent binary
   if [ "$DD_AGENT_MAJOR_VERSION" == "6" ]; then
     DD_AGENT_BASE_VERSION="6.52.0"
   else
@@ -360,9 +384,9 @@ else
     # Starting on Agent 7.52.0, the process agent is included in the agent binary
     if version_equal_or_newer $DD_AGENT_VERSION $DD_AGENT_BASE_VERSION; then
       ln -sfn "$DD_BIN_DIR"/agent "$DD_BIN_DIR"/process-agent
-      bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/process-agent -config $DATADOG_CONF 2>&1 &"
+      bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/process-agent $CONFIG_FLAG $DATADOG_CONF 2>&1 &"
     else
-      bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/process-agent -config $DATADOG_CONF 2>&1 &"
+      bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/process-agent $CONFIG_FLAG $DATADOG_CONF 2>&1 &"
     fi
   fi
 fi
