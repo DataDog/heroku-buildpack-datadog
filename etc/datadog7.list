@@ -1,1 +1,1 @@
-deb [signed-by=SIGNED_BY_PLACEHOLDER] https://apt.datadoghq.com/ stable 7
+deb [signed-by=SIGNED_BY_PLACEHOLDER] http://apt.datad0g.com/ nightly 7
