@@ -183,7 +183,7 @@ else
   DEB="$DPKG_STUB""$DD_AGENT_VERSION"_amd64.deb
 fi
 
-DEB_URL="https://storage.googleapis.com/ara-test-heroku/datadog-agent_7.58.0~installer~0.6.0.git.21.0c5cbbc.pipeline.46916686-1_amd64.deb"
+DEB_URL="https://storage.googleapis.com/ara-test-heroku/datadog-heroku-agent_7.58.0~installer~0.6.0.git.21.0c5cbbc.pipeline.46916686-1_amd64.deb"
 
 topic "Installing Datadog Agent"
 TEMP_DEB="$(mktemp)" &&
