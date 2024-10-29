@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.24] - 2024-10-29
+
+### Added
+- Datadog Agent 7 pinned version is now `7.58.1`.
+- The different binaries now use non-deprecated newer config flags.
+
 ## [2.23] - 2024-08-26
 
 ### Added
