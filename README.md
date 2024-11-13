@@ -241,7 +241,7 @@ instances:
 
 If you have configuration details stored in environment variables (like database configuration or secrets), you can use the [prerun.sh script](#prerun-script) to dynamically add those to your Datadog Agent configuration before the Agent starts.
 
-For example, to enable the Postgres integration, the file `datadog/conf.d/postgres.d/conf.yaml` could be added with placeholders at the root of your application (or `/$DD_HEROKU_CONF_FOLDER/conf.d/mcache.d/conf.yaml` if you have changed this [configuration option](#configuration)):
+For example, to enable the Postgres integration, the file `datadog/conf.d/postgres.d/conf.yaml` could be added with placeholders at the root of your application (or `/$DD_HEROKU_CONF_FOLDER/conf.d/postgres.d/conf.yaml` if you have changed this [configuration option](#configuration)):
 
 ```yaml
 init_config:
