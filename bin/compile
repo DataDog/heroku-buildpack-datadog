@@ -183,12 +183,15 @@ else
   DEB="$DPKG_STUB""$DD_AGENT_VERSION"_amd64.deb
 fi
 
-DEB_URL="https://storage.googleapis.com/ara-test-heroku/datadog-heroku-agent_7.58.0~installer~0.6.0.git.21.0c5cbbc.pipeline.46916686-1_amd64.deb"
+
+DEB_URL="https://s3.amazonaws.com/apt.datad0g.com/pool/d/da/datadog-heroku-agent_7.61.0~devel.git.447.1b7481c.pipeline.49786700-1_amd64.deb"
 
 topic "Installing Datadog Agent"
 TEMP_DEB="$(mktemp)" &&
 wget -O "$TEMP_DEB" "$DEB_URL" &&
 dpkg -x "$TEMP_DEB" "$APT_DIR"
+
+topic "Temporary DEB file: $TEMP_DEB"
 
 # Removing unneeded content
 rm -rf "$APT_DIR"/opt/datadog-agent/sources \
