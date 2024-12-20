@@ -213,6 +213,52 @@ heroku config:set DD_ENABLE_DBM=true
 
 Database Monitoring requires creating database credentials for the Datadog Agent, therefore, DBM is not available in the Heroku Postgres Essential Tier plans.
 
+### Enabling Dogstatsd Mapper profiles (Sidekiq)
+
+Some integrations, like [Sidekiq](https://docs.datadoghq.com/integrations/sidekiq/), require [DogStatsD Mapper](https://docs.datadoghq.com/developers/dogstatsd/dogstatsd_mapper/) profiles.
+
+To add a new DogStatsD Mapper profile, add the following snippet in your [prerun.sh script](#prerun-script):
+
+```
+cat << 'EOF' >> "$DATADOG_CONF"
+
+dogstatsd_mapper_profiles:
+  - name: '<PROFILE_NAME>'
+    prefix: '<PROFILE_PREFIX>'
+    mappings:
+      - match: '<METRIC_TO_MATCH>'
+        match_type: '<MATCH_TYPE>'
+        name: '<MAPPED_METRIC_NAME>'
+        tags:
+          '<TAG_KEY>': '<TAG_VALUE_TO_EXPAND>'
+EOF
+```
+
+For example, to enable the Sidekiq integration, add the following snippet:
+
+```
+cat << 'EOF' >> "$DATADOG_CONF"
+
+dogstatsd_mapper_profiles:
+  - name: sidekiq
+    prefix: "sidekiq."
+    mappings:
+      - match: 'sidekiq\.sidekiq\.(.*)'
+        match_type: "regex"
+        name: "sidekiq.$1"
+      - match: 'sidekiq\.jobs\.(.*)\.perform'
+        name: "sidekiq.jobs.perform"
+        match_type: "regex"
+        tags:
+          worker: "$1"
+      - match: 'sidekiq\.jobs\.(.*)\.(count|success|failure)'
+        name: "sidekiq.jobs.worker.$2"
+        match_type: "regex"
+        tags:
+          worker: "$1"
+EOF
+```
+
 ### Enabling other integrations
 
 To enable any [Datadog-<INTEGRATION_NAME> integration][19]:
