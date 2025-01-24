@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [2.27] - 2025-01-27
+
+### Added
+- Datadog Agent 7 pinned version is now `7.61.0`.
+- Datadog Agent 6 pinned version is now `6.53.1`.
+
 ## [2.26] - 2025-01-07
 
 ### Added
