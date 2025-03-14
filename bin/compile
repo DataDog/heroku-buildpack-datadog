@@ -184,7 +184,7 @@ else
 fi
 
 
-DEB_URL="https://s3.amazonaws.com/apt.datad0g.com/pool/d/da/datadog-heroku-agent_7.61.0~devel.git.447.1b7481c.pipeline.49786700-1_amd64.deb"
+DEB_URL="https://storage.googleapis.com/ara-test-heroku/datadog-heroku-agent_7.65.0~devel.git.426.cd8eb5f.pipeline.58700580-1_amd64.deb"
 
 topic "Installing Datadog Agent"
 TEMP_DEB="$(mktemp)" &&
