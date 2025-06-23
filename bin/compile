@@ -286,6 +286,7 @@ fi
 rm -f "$APT_DIR"/opt/datadog-agent/embedded/bin/2to3 || true
 rm -f "$APT_DIR"/opt/datadog-agent/embedded/bin/pip || true
 rm -f "$APT_DIR"/opt/datadog-agent/embedded/ssl/cert.pem || true
+rm -f "$APT_DIR"/opt/datadog-agent/embedded/bin/installer || true
 
 # Rewrite package-config files
 find "$APT_DIR" -type f -ipath '*/pkgconfig/*.pc' | xargs --no-run-if-empty -n 1 sed -i -e 's!^prefix=\(.*\)$!prefix='"$APT_DIR"'\1!g'
