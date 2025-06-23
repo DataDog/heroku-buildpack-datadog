@@ -249,18 +249,18 @@ if [ -f "$ENV_DIR/DD_PROCESS_AGENT" ]; then
     rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/process-agent"
     # starting on 7.52.0, there is a binary of core+process agent
     if version_equal_or_newer $DD_AGENT_VERSION $DD_AGENT_BASE_VERSION; then
-      mv -f "$APT_DIR/opt/datadog-agent/bin/agent/core-agent" "$APT_DIR/opt/datadog-agent/bin/agent/agent"
+      mv -f "$APT_DIR/opt/datadog-agent/bin/agent/core-agent" "$APT_DIR/opt/datadog-agent/bin/agent/agent" || true
     fi
   else
     if version_equal_or_newer $DD_AGENT_VERSION $DD_AGENT_BASE_VERSION; then
-      rm -rf "$APT_DIR/opt/datadog-agent/bin/agent/core-agent"
+      rm -rf "$APT_DIR/opt/datadog-agent/bin/agent/core-agent" || true
     fi
   fi
 else
   topic "DD_PROCESS_AGENT not set. Removing the process agent."
   rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/process-agent"
   if version_equal_or_newer $DD_AGENT_VERSION $DD_AGENT_BASE_VERSION; then
-      mv -f "$APT_DIR/opt/datadog-agent/bin/agent/core-agent" "$APT_DIR/opt/datadog-agent/bin/agent/agent"
+      mv -f "$APT_DIR/opt/datadog-agent/bin/agent/core-agent" "$APT_DIR/opt/datadog-agent/bin/agent/agent" || true
   fi
 fi
 
