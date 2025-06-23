@@ -217,6 +217,9 @@ rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/llc-bpf"
 rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/libbcc*
 rm -rf "$APT_DIR"/opt/datadog-agent/embedded/nikos/
 
+# Remove the secret-generic-connector binary
+rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/secret-generic-connector"
+
 # Remove static libraries
 rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/*.a
 rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python*/config*/*.a
