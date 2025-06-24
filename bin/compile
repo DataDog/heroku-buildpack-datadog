@@ -12,7 +12,7 @@ set -o pipefail
 
 # Set agent pinned version
 DD_AGENT_PINNED_VERSION_6="6.53.1-1"
-DD_AGENT_PINNED_VERSION_7="7.66.0-1"
+DD_AGENT_PINNED_VERSION_7="7.67.0-1"
 
 # Parse and derive params
 BUILD_DIR=$1
@@ -217,6 +217,9 @@ rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/llc-bpf"
 rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/libbcc*
 rm -rf "$APT_DIR"/opt/datadog-agent/embedded/nikos/
 
+# Remove the secret-generic-connector binary
+rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/secret-generic-connector"
+
 # Remove static libraries
 rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/*.a
 rm -rf "$APT_DIR"/opt/datadog-agent/embedded/lib/python*/config*/*.a
@@ -246,18 +249,18 @@ if [ -f "$ENV_DIR/DD_PROCESS_AGENT" ]; then
     rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/process-agent"
     # starting on 7.52.0, there is a binary of core+process agent
     if version_equal_or_newer $DD_AGENT_VERSION $DD_AGENT_BASE_VERSION; then
-      mv -f "$APT_DIR/opt/datadog-agent/bin/agent/core-agent" "$APT_DIR/opt/datadog-agent/bin/agent/agent"
+      mv -f "$APT_DIR/opt/datadog-agent/bin/agent/core-agent" "$APT_DIR/opt/datadog-agent/bin/agent/agent" || true
     fi
   else
     if version_equal_or_newer $DD_AGENT_VERSION $DD_AGENT_BASE_VERSION; then
-      rm -rf "$APT_DIR/opt/datadog-agent/bin/agent/core-agent"
+      rm -rf "$APT_DIR/opt/datadog-agent/bin/agent/core-agent" || true
     fi
   fi
 else
   topic "DD_PROCESS_AGENT not set. Removing the process agent."
   rm -rf "$APT_DIR/opt/datadog-agent/embedded/bin/process-agent"
   if version_equal_or_newer $DD_AGENT_VERSION $DD_AGENT_BASE_VERSION; then
-      mv -f "$APT_DIR/opt/datadog-agent/bin/agent/core-agent" "$APT_DIR/opt/datadog-agent/bin/agent/agent"
+      mv -f "$APT_DIR/opt/datadog-agent/bin/agent/core-agent" "$APT_DIR/opt/datadog-agent/bin/agent/agent" || true
   fi
 fi
 
@@ -286,6 +289,7 @@ fi
 rm -f "$APT_DIR"/opt/datadog-agent/embedded/bin/2to3 || true
 rm -f "$APT_DIR"/opt/datadog-agent/embedded/bin/pip || true
 rm -f "$APT_DIR"/opt/datadog-agent/embedded/ssl/cert.pem || true
+rm -f "$APT_DIR"/opt/datadog-agent/embedded/bin/installer || true
 
 # Rewrite package-config files
 find "$APT_DIR" -type f -ipath '*/pkgconfig/*.pc' | xargs --no-run-if-empty -n 1 sed -i -e 's!^prefix=\(.*\)$!prefix='"$APT_DIR"'\1!g'
