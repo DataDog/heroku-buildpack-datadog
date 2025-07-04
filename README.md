@@ -141,6 +141,7 @@ By default, the Datadog Agent runs on each of the dynos that are part of the app
 To disable the Datadog Agent based on dyno type, add the following snippet to your [prerun.sh script](#prerun-script) (adapting it to the type of dynos you don't want to monitor):
 
 ```shell
+DYNOTYPE=${DYNO%%.*}
 # Disable the Datadog Agent based on dyno type
 if [ "$DYNOTYPE" == "run" ] || [ "$DYNOTYPE" == "scheduler" ] || [ "$DYNOTYPE" == "release" ]; then
   DISABLE_DATADOG_AGENT="true"
@@ -337,7 +338,8 @@ As the filesystem in a Heroku application will be shared by all dynos, if you en
 
 For example, if the Gunicorn integration only needs to run on `web` type dynos, add the following to your prerun script:
 
-```
+```shell
+DYNOTYPE=${DYNO%%.*}
 if [ "$DYNOTYPE" != "web" ]; then
   rm -f "$DD_CONF_DIR/conf.d/gunicorn.d/conf.yaml"
 fi
