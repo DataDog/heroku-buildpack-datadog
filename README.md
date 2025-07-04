@@ -370,6 +370,9 @@ The example below demonstrates a few of the things you can do in the `prerun.sh`
 ```shell
 #!/usr/bin/env bash
 
+# Extract dyno type from Heroku's '$DYNO' environment variable 
+DYNOTYPE="${DYNO%%.*}"
+
 # Disable the Datadog Agent based on dyno type
 if [ "$DYNOTYPE" == "run" ]; then
   DISABLE_DATADOG_AGENT="true"
