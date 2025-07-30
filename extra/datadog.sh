@@ -76,7 +76,7 @@ done
 
 # Add tags to the config file
 DYNOHOST="$(hostname )"
-DYNOTYPE=${DYNO%%.*}
+export DYNOTYPE=${DYNO%%.*}
 BUILDPACKVERSION="dev"
 DYNO_TAGS="dyno:$DYNO dynotype:$DYNOTYPE buildpackversion:$BUILDPACKVERSION"
 
