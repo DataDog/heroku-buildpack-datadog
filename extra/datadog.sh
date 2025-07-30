@@ -76,7 +76,7 @@ done
 
 # Add tags to the config file
 DYNOHOST="$(hostname )"
-DYNOTYPE=${DYNO%%.*}
+export DYNOTYPE=${DYNO%%.*}
 BUILDPACKVERSION="2.33"
 DYNO_TAGS="dyno:$DYNO dynotype:$DYNOTYPE buildpackversion:$BUILDPACKVERSION"
 
@@ -370,23 +370,25 @@ else
     CONFIG_FLAG="--config"
   fi
 
-  # Starting on Agent 7.52.0, the process agent is included in the agent binary
-  if [ "$DD_AGENT_MAJOR_VERSION" == "6" ]; then
-    DD_AGENT_BASE_VERSION="6.52.0"
-  else
-    DD_AGENT_BASE_VERSION="7.52.0"
-  fi
-  # The Process Agent must be run explicitly
-  if [ "$DD_PROCESS_AGENT" == "true" ]; then
-    if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
-      echo "Starting Datadog Process Agent on $DD_HOSTNAME"
-    fi
-    # Starting on Agent 7.52.0, the process agent is included in the agent binary
-    if version_equal_or_newer $DD_AGENT_VERSION $DD_AGENT_BASE_VERSION; then
-      ln -sfn "$DD_BIN_DIR"/agent "$DD_BIN_DIR"/process-agent
-      bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/process-agent $CONFIG_FLAG $DATADOG_CONF 2>&1 &"
+  if ! version_equal_or_newer "$DD_AGENT_VERSION" "7.68.0" || [ "$DD_AGENT_MAJOR_VERSION" == "6" ]; then
+    # Starting on Agent 7.52.0, and until 7.68.0, the process agent is included in the agent binary
+    if [ "$DD_AGENT_MAJOR_VERSION" == "6" ]; then
+      DD_AGENT_BASE_VERSION="6.52.0"
     else
-      bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/process-agent $CONFIG_FLAG $DATADOG_CONF 2>&1 &"
+      DD_AGENT_BASE_VERSION="7.52.0"
+    fi
+    # The Process Agent must be run explicitly
+    if [ "$DD_PROCESS_AGENT" == "true" ]; then
+      if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
+        echo "Starting Datadog Process Agent on $DD_HOSTNAME"
+      fi
+      # Starting on Agent 7.52.0, the process agent is included in the agent binary
+      if version_equal_or_newer $DD_AGENT_VERSION $DD_AGENT_BASE_VERSION; then
+        ln -sfn "$DD_BIN_DIR"/agent "$DD_BIN_DIR"/process-agent
+        bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/process-agent $CONFIG_FLAG $DATADOG_CONF 2>&1 &"
+      else
+        bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_DIR/embedded/bin/process-agent $CONFIG_FLAG $DATADOG_CONF 2>&1 &"
+      fi
     fi
   fi
 fi
