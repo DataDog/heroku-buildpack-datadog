@@ -636,7 +636,7 @@ After an upgrade of the buildpack or Agent, you must recompile your application'
 [15]: https://docs.datadoghq.com/logs/guide/collect-heroku-logs
 [16]: https://docs.datadoghq.com/logs/logs_to_metrics/
 [17]: https://docs.datadoghq.com/database_monitoring/
-[18]: https://docs.datadoghq.com/database_monitoring/setup_postgres/selfhosted/?tab=postgres10#grant-the-agent-access
+[18]: https://docs.datadoghq.com/database_monitoring/guide/heroku-postgres/
 [19]: https://docs.datadoghq.com/integrations/
 [20]: https://docs.datadoghq.com/getting_started/integrations/#configuring-agent-integrations
 [21]: https://docs.datadoghq.com/integrations/mcache/
