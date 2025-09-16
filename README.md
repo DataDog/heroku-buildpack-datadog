@@ -4,7 +4,9 @@ This [Heroku buildpack][1] installs the Datadog Agent in your Heroku dyno to col
 
 ## Installation
 
-This guide assumes that you already have your application running on Heroku. See the Heroku documentation to learn how to deploy your application to Heroku.
+Follow the [in-app installation guide in Fleet Automation][33] to install the Datadog Agent on Heroku.
+
+This guide assumes that you already have your application running on Heroku. See the [Heroku documentation][34] to learn how to deploy your application to Heroku.
 
 1. Go to [Datadog API settings][3] and copy your Datadog API key. Export it to an environment variable:
 
@@ -651,3 +653,5 @@ After an upgrade of the buildpack or Agent, you must recompile your application'
 [30]: https://github.com/DataDog/heroku-buildpack-datadog
 [31]: https://github.com/miketheman/heroku-buildpack-datadog
 [32]: https://github.com/DataDog/heroku-buildpack-datadog/blob/master/CHANGELOG.md
+[33]: https://app.datadoghq.com/fleet/install-agent/latest?platform=heroku
+[34]: https://devcenter.heroku.com/categories/deployment
