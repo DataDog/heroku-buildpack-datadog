@@ -145,7 +145,7 @@ To disable the Datadog Agent based on dyno type, add the following snippet to yo
 ```shell
 DYNOTYPE=${DYNO%%.*}
 # Disable the Datadog Agent based on dyno type
-if [ "$DYNOTYPE" == "run" ] || [ "$DYNOTYPE" == "scheduler" ] || [ "$DYNOTYPE" == "release" ]; then
+if [[ "$DYNOTYPE" == "run" || "$DYNOTYPE" == "scheduler" || "$DYNOTYPE" == "release" || "$DYNOTYPE" == advanced-scheduler* ]]; then
   DISABLE_DATADOG_AGENT="true"
 fi
 ```
@@ -374,7 +374,7 @@ The example below demonstrates a few of the things you can do in the `prerun.sh`
 ```shell
 #!/usr/bin/env bash
 
-# Extract dyno type from Heroku's '$DYNO' environment variable 
+# Extract dyno type from Heroku's '$DYNO' environment variable
 DYNOTYPE="${DYNO%%.*}"
 
 # Disable the Datadog Agent based on dyno type
