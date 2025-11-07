@@ -2,6 +2,11 @@
 
 This [Heroku buildpack][1] installs the Datadog Agent in your Heroku dyno to collect system metrics, custom application metrics, and traces. To collect custom application metrics or traces, include the language appropriate [DogStatsD or Datadog APM library][2] in your application.
 
+## Fork changes
+This fork allows running the trace agent on its own without the main datadog agent running at all. 
+* Ensure `DD_APM_ENABLED` is not set to `false`
+* Set `DD_DISABLE_AGENT` to `true`
+
 ## Installation
 
 Follow the [in-app installation guide in Fleet Automation][33] to install the Datadog Agent on Heroku.
