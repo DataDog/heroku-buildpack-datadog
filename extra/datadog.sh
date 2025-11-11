@@ -333,7 +333,7 @@ else
   if [ "$DD_LOG_LEVEL_LOWER" == "debug" ]; then
     echo "Starting Datadog Agent on $DD_HOSTNAME"
   fi
-  bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/agent $RUN_COMMAND -c $DATADOG_CONF 2>&1 &"
+  #bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/agent $RUN_COMMAND -c $DATADOG_CONF 2>&1 &"
 
   # From version 7.48 onwards, the config flag for the trace agent changed to --config
   if [ "$DD_AGENT_MAJOR_VERSION" == "6" ]; then
