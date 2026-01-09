@@ -77,7 +77,7 @@ done
 # Add tags to the config file
 DYNOHOST="$(hostname )"
 export DYNOTYPE=${DYNO%%.*}
-BUILDPACKVERSION="dev"
+BUILDPACKVERSION="2.37"
 DYNO_TAGS="dyno:$DYNO dynotype:$DYNOTYPE buildpackversion:$BUILDPACKVERSION"
 
 # We want always to have the Dyno ID as a host alias to improve correlation
