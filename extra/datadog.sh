@@ -335,6 +335,41 @@ else
   fi
   bash -c "PYTHONPATH=\"$DD_PYTHONPATH\" LD_LIBRARY_PATH=\"$DD_LD_LIBRARY_PATH\" $DD_BIN_DIR/agent $RUN_COMMAND -c $DATADOG_CONF 2>&1 &"
 
+  # Wait for the API Server to be ready
+  if [ -z "$DD_CMD_PORT" ]; then
+    DD_CMD_PORT="5001"
+  fi
+
+  i=0
+  while ! nc -z localhost $DD_CMD_PORT; do
+    sleep 1
+    i=$((i+1))
+    if [ $i -gt 10 ]; then
+      echo "WARNING: API server not ready after 10 seconds."
+      break
+    fi
+  done
+
+  echo "API server is ready."
+
+
+  # Wait for the auth_token before starting the rest of the agents
+  if [ -z "$DD_AUTH_TOKEN_FILE_PATH" ]; then
+    DD_AUTH_TOKEN_FILE_PATH=${DD_CONF_DIR}/auth_token
+  fi
+
+  i=0
+  while ! [ -f ${DD_AUTH_TOKEN_FILE_PATH} ]; do
+    sleep 1
+    i=$((i+1))
+    if [ $i -gt 10 ]; then
+      echo "WARNING: Auth token file not found after 10 seconds."
+      break
+    fi
+  done
+
+  echo "Auth token file is ready."
+
   # From version 7.48 onwards, the config flag for the trace agent changed to --config
   if [ "$DD_AGENT_MAJOR_VERSION" == "6" ]; then
     DD_AGENT_BASE_VERSION="6.48.0"
