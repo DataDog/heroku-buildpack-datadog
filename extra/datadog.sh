@@ -46,6 +46,7 @@ APP_DATADOG_CHECKS_DIR="$APP_DATADOG/checks.d"
 
 # Agent integrations configuration
 for dir in "$APP_DATADOG_CONF_DIR"/*; do
+  echo "-------Copying $dir into $DD_CONF_DIR/conf.d"
   test -d "$dir" || continue # only match directories
   cp -R "$dir" "$DD_CONF_DIR/conf.d/"
 done
