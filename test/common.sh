@@ -10,7 +10,7 @@ getAvailableVersions()
   mkdir -p "$APT_STATE_DIR/lists/partial"
   mkdir -p "$APT_DIR"
   APT_REPO_FILE="${BUILDPACK_HOME}/etc/${1}"
-  APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR -o Dir::Etc::SourceList=$APT_REPO_FILE"
+  APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR -o Dir::Etc::SourceList=$APT_REPO_FILE -o Dir::Etc::SourceParts=/dev/null"
   apt-get $APT_OPTIONS update
   if [ -z "$2" ]; then
     AGENT_VERSIONS=$(apt-cache $APT_OPTIONS show datadog-agent | grep "Version: " | sed 's/Version: 1://g')
