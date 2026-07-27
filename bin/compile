@@ -136,7 +136,7 @@ sed -i "s|SIGNED_BY_PLACEHOLDER|${DATADOG_APT_KEYRING}|" $APT_REPO_FILE
 
 # Install Datadog Agent
 topic "Updating apt caches for Datadog Agent"
-APT_OPTIONS="$APT_OPTIONS -o Dir::Etc::SourceList=$APT_REPO_FILE"
+APT_OPTIONS="$APT_OPTIONS -o Dir::Etc::SourceList=$APT_REPO_FILE -o Dir::Etc::SourceParts=/dev/null"
 apt-get $APT_OPTIONS update | indent
 
 # Accommodate for earlier pinned versions. Give deprecation warning.
