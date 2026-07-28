@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 - Datadog Agent 7 pinned version is now `7.81.2`.
+- Scope apt-get update to the Datadog APT repository - #444
 
 ## [2.43] - 2026-06-22
 
